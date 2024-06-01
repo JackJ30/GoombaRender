@@ -24,7 +24,7 @@ public:
 
         m_Window.MakeContextCurrent();
 
-        if (!gladLoadGL(glfwGetProcAddress))
+        if (!gladLoadGL(GoombaRender::Window::GetProcAddress))
         {
             spdlog::critical("failed to load OpenGL");
             Stop();
@@ -36,7 +36,7 @@ public:
     {
         if (m_Window.ShouldClose()) Stop();
 
-        glfwPollEvents();
+        GoombaRender::Window::PollEvents();
             
         glClearColor(.3, 1, .3, 1);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -58,3 +58,11 @@ int main(int argc, char *argv[])
     Game game;
     game.Start();
 }
+
+// TODO LIST
+// ---------
+// - Add support for resizing the window
+// - Add event system
+// - Escape to exit window
+// - Render loop and tick system
+// - Render pipeline
