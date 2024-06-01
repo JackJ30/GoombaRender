@@ -1,6 +1,6 @@
 #include "application.h"
 
-namespace GoombaRender
+namespace GoombaEngine
 {
     void Application::Start()
     {
@@ -14,6 +14,6 @@ namespace GoombaRender
             Update();
         }
 
-        Destroy();
+        Finish();
     }
 }

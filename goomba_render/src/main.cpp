@@ -1,23 +1,25 @@
 #include <iostream>
 #include <glad/gl.h>
-#include <spdlog/spdlog.h>
 
 #include "window.h"
+#include "engine.h"
 #include "application.h"
+#include "log.h"
 
-class Game : public GoombaRender::Application
+class Game : public GoombaEngine::Application
 {
 public:
     Game() = default;
     virtual ~Game() = default;
 
+private:
     virtual void Init() override
     {
         m_Window = GoombaRender::Window(1280, 720, "Goomba Render", GoombaRender::CreateDefaultOpenGLContext);
 
         if (!m_Window.GetHandle())
         {
-            spdlog::critical("failed to create window");
+            GoombaEngine::GetLogger()->critical("failed to create window");
             Stop();
             return;
         }
@@ -26,7 +28,7 @@ public:
 
         if (!gladLoadGL(GoombaRender::Window::GetProcAddress))
         {
-            spdlog::critical("failed to load OpenGL");
+            GoombaEngine::GetLogger()->critical("failed to load OpenGL");
             Stop();
             return;
         }
@@ -42,9 +44,9 @@ public:
         glClear(GL_COLOR_BUFFER_BIT);
 
         m_Window.SwapBuffers();
-    }
+    } 
 
-    virtual void Destroy() override
+    virtual void Finish() override
     {
 
     }
@@ -56,13 +58,21 @@ private:
 int main(int argc, char *argv[])
 {
     Game game;
-    game.Start();
+    
+    GoombaEngine::RunApplication(game);
 }
 
 // TODO LIST
 // ---------
-// - Add support for resizing the window
-// - Add event system
-// - Escape to exit window
-// - Render loop and tick system
-// - Render pipeline
+// - [x] Logger
+// - [ ] Add event system
+// - [ ] Add support for resizing the window
+// - [ ] ImGUI
+// - [ ] Escape to exit window
+// - [ ] Render loop and tick system
+// - [ ] Basic OpenGL Abstractions
+// - [ ] Render pipeline
+// - [ ] State system?
+// - [ ] Scene system
+// - [ ] Material system
+// - [ ] Deferred rendering for specific materials

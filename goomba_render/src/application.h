@@ -1,7 +1,12 @@
-namespace GoombaRender
+#ifndef APPLICATION_H
+#define APPLICATION_H
+
+namespace GoombaEngine
 {
     class Application
     {
+        friend class Engine;
+
     public:
         Application() = default;
         virtual ~Application() = default;
@@ -12,14 +17,14 @@ namespace GoombaRender
         {
             m_Running = false;
         }
-
-        virtual void Init() = 0;
-        virtual void Update() = 0;
-        virtual void Destroy() = 0;
     
     private:
         bool m_Running = false;
-    };
 
-    //Application* GetApplication();
+        virtual void Init() = 0;
+        virtual void Update() = 0;
+        virtual void Finish() = 0;
+    };
 }
+
+#endif // APPLICATION_H
