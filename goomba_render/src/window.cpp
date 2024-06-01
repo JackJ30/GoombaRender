@@ -10,7 +10,7 @@ namespace GoombaRender
         {
             glfwSetErrorCallback([](int error_code, const char* description)
             {
-                GoombaEngine::GetLogger()->error("glfw error {:#x}: {}", error_code, description);
+                GOOMBA_CRITICAL("glfw error {:#x}: {}", error_code, description);
             });
 
             if (!glfwInit())

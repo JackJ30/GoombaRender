@@ -76,3 +76,8 @@ int main(int argc, char *argv[])
 // - [ ] Material system
 // - [ ] Deferred rendering for specific materials
 // - [ ] Move to sdl?
+
+// DEV LOG
+// -------
+// 6/1/2024 - I found a conflict between stb image and the fmt included by spdlog. This is the third times fmt has caused issues for me. I had to add a definition before including spdlog in the pch that I found in some github issue. Don't know what it does.
+// 6/1/2024 - I'm thinking about what to do for events/layers/windows. TheCherno's system from the Hazel series seems a little bit overkill. I will probably add some of it it.

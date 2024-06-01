@@ -14,7 +14,7 @@
 
 #include <sstream>
 
-#define FMT_GCC_PRAGMA(...) // workaround for stb fmt conflict see https://github.com/nothings/stb/discussions/1432
+#define FMT_GCC_PRAGMA(...) // WORKAROUND - stb fmt conflict see https://github.com/nothings/stb/discussions/1432
 #include "log.h" 
 
 #endif // GOOMBAPCH
