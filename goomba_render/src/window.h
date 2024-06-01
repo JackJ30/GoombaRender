@@ -1,7 +1,6 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <utility>
 #include <glfw/glfw3.h>
 
 namespace GoombaRender
