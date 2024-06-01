@@ -10,12 +10,12 @@ namespace GoombaRender
         {
             glfwSetErrorCallback([](int error_code, const char* description)
             {
-                GOOMBA_CRITICAL("glfw error {:#x}: {}", error_code, description);
+                GLogCritical("glfw error {:#x}: {}", error_code, description);
             });
 
             if (!glfwInit())
             {
-                GOOMBA_CRITICAL("failed to initialize glfw");
+                GLogCritical("failed to initialize glfw");
             }
         }
 

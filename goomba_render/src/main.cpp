@@ -17,7 +17,7 @@ private:
 
         if (!m_Window.GetHandle())
         {
-            GOOMBA_CRITICAL("failed to create window");
+            GLogCritical("failed to create window");
             Stop();
             return;
         }
@@ -26,7 +26,7 @@ private:
 
         if (!gladLoadGL(GoombaRender::Window::GetProcAddress))
         {
-            GOOMBA_CRITICAL("failed to load OpenGL");
+            GLogCritical("failed to load OpenGL");
             Stop();
             return;
         }
@@ -76,6 +76,11 @@ int main(int argc, char *argv[])
 // - [ ] Material system
 // - [ ] Deferred rendering for specific materials
 // - [ ] Move to sdl?
+//
+// Wishlist
+// --------
+// - [ ] Ray tracing
+// - [ ] Offline rendering
 
 // DEV LOG
 // -------
