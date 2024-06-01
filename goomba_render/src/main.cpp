@@ -1,10 +1,8 @@
-#include <iostream>
 #include <glad/gl.h>
 
 #include "window.h"
 #include "engine.h"
 #include "application.h"
-#include "log.h"
 
 class Game : public GoombaEngine::Application
 {

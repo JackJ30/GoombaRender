@@ -1,7 +1,5 @@
 #include "window.h"
 
-#include <spdlog/spdlog.h>
-
 namespace GoombaRender
 {
     static size_t s_Count = 0;
@@ -12,12 +10,12 @@ namespace GoombaRender
         {
             glfwSetErrorCallback([](int error_code, const char* description)
             {
-                spdlog::error("glfw error {:#x}: {}", error_code, description);
+                GoombaEngine::GetLogger()->error("glfw error {:#x}: {}", error_code, description);
             });
 
             if (!glfwInit())
             {
-                spdlog::error("failed to initialize glfw");
+                GOOMBA_CRITICAL("failed to initialize glfw");
             }
         }
 
