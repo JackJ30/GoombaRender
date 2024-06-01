@@ -6,6 +6,8 @@ namespace GoombaRender
 
     Window::Window(int width, int height, const char *title, void(*createContext)() = CreateDefaultOpenGLContext)
     {
+        GLogTrace("Creating window...");
+
         if (s_Count == 0)
         {
             glfwSetErrorCallback([](int error_code, const char* description)
@@ -24,6 +26,7 @@ namespace GoombaRender
         if (createContext) createContext();
 
         m_Handle = glfwCreateWindow(width, height, title, nullptr, nullptr);
+        GLogInfo("Window '{}' created", title);
     }
 
     Window::~Window()
@@ -40,6 +43,8 @@ namespace GoombaRender
                 glfwTerminate();
                 glfwSetErrorCallback(nullptr);
             }
+
+            GLogInfo("Window terminated");
         }
     }
 
@@ -59,6 +64,7 @@ namespace GoombaRender
     
     void CreateDefaultOpenGLContext()
     {
+        GLogInfo("Creating OpenGL GLFW Context");
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
