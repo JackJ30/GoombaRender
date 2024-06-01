@@ -19,11 +19,11 @@ namespace GoombaEngine
         auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
         console_sink->set_level(spdlog::level::warn);
 
-        auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/render.txt", true);
+        auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/goomba.txt", true);
         file_sink->set_level(spdlog::level::trace);
 
         spdlog::sinks_init_list sink_list = { file_sink, console_sink };
 
-        renderLogger = std::make_shared<spdlog::logger>("renderLogger", sink_list.begin(), sink_list.end());
+        renderLogger = std::make_shared<spdlog::logger>("goombaLogger", sink_list.begin(), sink_list.end());
     }
 }

@@ -19,7 +19,7 @@ private:
 
         if (!m_Window.GetHandle())
         {
-            GoombaEngine::GetLogger()->critical("failed to create window");
+            GOOMBA_CRITICAL("failed to create window");
             Stop();
             return;
         }
@@ -28,7 +28,7 @@ private:
 
         if (!gladLoadGL(GoombaRender::Window::GetProcAddress))
         {
-            GoombaEngine::GetLogger()->critical("failed to load OpenGL");
+            GOOMBA_CRITICAL("failed to load OpenGL");
             Stop();
             return;
         }
@@ -58,7 +58,7 @@ private:
 int main(int argc, char *argv[])
 {
     Game game;
-    
+
     GoombaEngine::RunApplication(game);
 }
 
