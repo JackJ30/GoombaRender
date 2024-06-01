@@ -1,4 +1,4 @@
-# Goomba Render + Engine
+# Goomba Render + Engine (WIP)
 This is a work in progress repo. The engine doesn't function at this point.
 Right now this is loosely based on TheCherno's game engine and opengl series. I will also be using [this renderer](https://github.com/htmlboss/OpenGL-Renderer) for some reference.
 
