@@ -66,6 +66,7 @@ int main(int argc, char *argv[])
 // ---------
 // - [x] Logger
 // - [ ] Add event system
+// - [ ] Move opengl context stuff to a subclass of window? Or maybe it should be in a renderer class
 // - [ ] Add support for resizing the window
 // - [ ] ImGUI
 // - [ ] Escape to exit window
@@ -76,3 +77,4 @@ int main(int argc, char *argv[])
 // - [ ] Scene system
 // - [ ] Material system
 // - [ ] Deferred rendering for specific materials
+// - [ ] Move to sdl?
