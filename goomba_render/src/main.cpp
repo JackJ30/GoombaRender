@@ -1,8 +1,8 @@
 #include <glad/gl.h>
 
-#include "window.h"
-#include "engine.h"
-#include "application.h"
+#include "renderer/window.h"
+#include "engine/engine.h"
+#include "engine/application.h"
 
 class Game : public GoombaEngine::Application
 {

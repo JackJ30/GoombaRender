@@ -1,7 +1,7 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include "application.h"
+#include "engine/application.h"
 
 namespace GoombaEngine
 {
