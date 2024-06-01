@@ -23,6 +23,7 @@ set(GOOMBARENDERDIR ${CMAKE_SOURCE_DIR}/goomba_render)
 set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/main.cpp
 	${GOOMBARENDERDIR}/src/window.cpp
+	${GOOMBARENDERDIR}/src/application.cpp
 )
 
 set(IMGUI_SOURCES

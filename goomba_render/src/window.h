@@ -10,7 +10,7 @@ namespace GoombaRender
     {
     public:
         Window() = default;
-        Window(int width, int height, const char* title);
+        Window(int width, int height, const char* title, void(*func)());
         ~Window();
         Window(const Window&) = delete;
         Window& operator=(const Window&) = delete;
@@ -35,6 +35,8 @@ namespace GoombaRender
     private:
         GLFWwindow* m_Handle = nullptr;
     };
+
+    void CreateDefaultOpenGLContext();
 }
 
 #endif // WINDOW_H

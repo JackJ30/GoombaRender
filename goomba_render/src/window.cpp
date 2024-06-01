@@ -6,7 +6,7 @@ namespace GoombaRender
 {
     static size_t s_Count = 0;
 
-    Window::Window(int width, int height, const char *title)
+    Window::Window(int width, int height, const char *title, void(*createContext)() = CreateDefaultOpenGLContext)
     {
         if (s_Count == 0)
         {
@@ -23,25 +23,25 @@ namespace GoombaRender
 
         ++s_Count;
 
-        m_Handle = glfwCreateWindow(width, height, title, nullptr, nullptr);
+        if (createContext) createContext();
 
-        if (!m_Handle)
-        {
-            spdlog::error("failed to create window");
-        }
+        m_Handle = glfwCreateWindow(width, height, title, nullptr, nullptr);
     }
 
     Window::~Window()
     {
-        if (m_Handle) glfwDestroyWindow(m_Handle);
-        m_Handle = nullptr;
-
-        --s_Count;
-
-        if (s_Count == 0)
+        if (m_Handle)
         {
-            glfwTerminate();
-            glfwSetErrorCallback(nullptr);
+            if (m_Handle) glfwDestroyWindow(m_Handle);
+            m_Handle = nullptr;
+
+            --s_Count;
+
+            if (s_Count == 0)
+            {
+                glfwTerminate();
+                glfwSetErrorCallback(nullptr);
+            }
         }
     }
 
@@ -57,5 +57,13 @@ namespace GoombaRender
         other.m_Handle = nullptr;
 
         return *this;
+    }
+    
+    void CreateDefaultOpenGLContext()
+    {
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
     }
 }
