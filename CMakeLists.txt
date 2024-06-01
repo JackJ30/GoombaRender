@@ -17,12 +17,11 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/external/glfw/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/glm/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/fmt/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/assimp/)
-add_subdirectory(${CMAKE_SOURCE_DIR}/external/pugixml/)
 
-
+set(GOOMBARENDERDIR ${CMAKE_SOURCE_DIR}/goomba_renderer)
 
 set(SOURCE_FILES
-	src/main.cpp
+	${GOOMBARENDERDIR}/src/main.cpp
 )
 
 set(IMGUI_SOURCES
@@ -45,5 +44,5 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${SINGLE_HEADER_IMPLEMENTATION} $
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)
 
 # link and inculde
-target_link_libraries(${PROJECT_NAME} PUBLIC glad glfw assimp glm fmt pugixml OpenGL::GL)
+target_link_libraries(${PROJECT_NAME} PUBLIC glad glfw assimp glm fmt OpenGL::GL)
 target_include_directories(${PROJECT_NAME} PUBLIC src ${CMAKE_SOURCE_DIR}/external/imgui ${CMAKE_SOURCE_DIR}/external/stb/include)
