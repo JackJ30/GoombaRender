@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5.0)
-project (GoombaRenderer)
+project (GoombaRender)
 cmake_policy(SET CMP0072 NEW)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -15,13 +15,14 @@ set(ASSIMP_WARNINGS_AS_ERRORS OFF)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/glad/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/glfw/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/glm/)
-add_subdirectory(${CMAKE_SOURCE_DIR}/external/fmt/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/assimp/)
+add_subdirectory(${CMAKE_SOURCE_DIR}/external/spdlog/)
 
-set(GOOMBARENDERDIR ${CMAKE_SOURCE_DIR}/goomba_renderer)
+set(GOOMBARENDERDIR ${CMAKE_SOURCE_DIR}/goomba_render)
 
 set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/main.cpp
+	${GOOMBARENDERDIR}/src/window.cpp
 )
 
 set(IMGUI_SOURCES
@@ -44,5 +45,5 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${SINGLE_HEADER_IMPLEMENTATION} $
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)
 
 # link and inculde
-target_link_libraries(${PROJECT_NAME} PUBLIC glad glfw assimp glm fmt OpenGL::GL)
-target_include_directories(${PROJECT_NAME} PUBLIC src ${CMAKE_SOURCE_DIR}/external/imgui ${CMAKE_SOURCE_DIR}/external/stb/include)
+target_link_libraries(${PROJECT_NAME} PUBLIC glad glfw assimp glm spdlog OpenGL::GL)
+target_include_directories(${PROJECT_NAME} PUBLIC ${GOOMBARENDERDIR}/src ${CMAKE_SOURCE_DIR}/external/imgui ${CMAKE_SOURCE_DIR}/external/stb/include)
