@@ -2,47 +2,42 @@
 #define WINDOW_H
 
 #include "goombapch.h"
-
-#include <glfw/glfw3.h>
+#include "engine/events/event.h"
 
 namespace GoombaEngine
 {
-    class Window final
+    struct WindowProps
+	{
+		std::string Title;
+		unsigned int Width;
+		unsigned int Height;
+
+		WindowProps(const std::string& title = "GoombaRender",
+			        unsigned int width = 1280,
+			        unsigned int height = 720)
+			: Title(title), Width(width), Height(height)
+		{
+		}
+	};
+
+    class Window
     {
     public:
-        Window() = default;
-        Window(int width, int height, const char* title, void(*func)());
-        ~Window();
-        Window(const Window&) = delete;
-        Window& operator=(const Window&) = delete;
-        Window(Window&& other) noexcept;
-        Window& operator=(Window&& other) noexcept;
+        using EventCallbackFn = std::function<void(Event&)>;
 
-        inline GLFWwindow* GetHandle() const 
-        {
-            return m_Handle;
-        }
-        inline bool ShouldClose() const { return glfwWindowShouldClose(m_Handle); }
-        inline void MakeContextCurrent() { glfwMakeContextCurrent(m_Handle); }
-        inline void SwapBuffers() { glfwSwapBuffers(m_Handle); }
-        inline std::pair<int, int> GetSize() const
-        {
-            int w,h;
-            glfwGetFramebufferSize(m_Handle, &w, &h);
-            return { w, h };
-        }
+        virtual ~Window() {};
 
-        inline static void PollEvents()
-        {
-            glfwPollEvents();
-        }
-        inline static GLFWglproc GetProcAddress(const char *procName) { return glfwGetProcAddress(procName); }
+        virtual void Update() = 0;
+        virtual void SwapBuffers() = 0;
 
-    private:
-        GLFWwindow* m_Handle = nullptr;
+        virtual unsigned int GetWidth() const = 0;
+		virtual unsigned int GetHeight() const = 0;
+
+		// Window attributes
+		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
+		virtual void SetVSync(bool enabled) = 0;
+		virtual bool IsVSyncEnabled() const = 0;
     };
-
-    void CreateDefaultOpenGLContext();
 }
 
 #endif // WINDOW_H

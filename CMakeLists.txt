@@ -24,7 +24,7 @@ set(GOOMBARENDERDIR ${CMAKE_SOURCE_DIR}/goomba_render)
 set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/main.cpp
 	${GOOMBARENDERDIR}/src/engine/engine.cpp
-	${GOOMBARENDERDIR}/src/engine/window/window.cpp
+	${GOOMBARENDERDIR}/src/engine/window/gl_framework_window.cpp
 	${GOOMBARENDERDIR}/src/engine/application.cpp
 	${GOOMBARENDERDIR}/src/engine/log.cpp
 )

@@ -1,6 +1,6 @@
 #include <glad/gl.h>
 
-#include "engine/window.h"
+#include "engine/window/gl_framework_window.h"
 #include "engine/engine.h"
 #include "engine/application.h"
 
@@ -13,17 +13,11 @@ public:
 private:
     virtual void Init() override
     {
-        m_Window = GoombaEngine::Window(1280, 720, "Goomba Render", GoombaEngine::CreateDefaultOpenGLContext);
+        m_Window = std::make_unique<GoombaEngine::GLFrameworkWindow>(GoombaEngine::WindowProps(), GoombaEngine::CreateDefaultOpenGLContext);
 
-        if (!m_Window.GetHandle())
-        {
-            GLogCritical("failed to create window");
-            Stop();
-            return;
-        }
+        // GLAD stuff
 
-        m_Window.MakeContextCurrent();
-
+        m_Window->MakeContextCurrent();
         if (!gladLoadGL(GoombaEngine::Window::GetProcAddress))
         {
             GLogCritical("failed to load OpenGL");
@@ -34,14 +28,12 @@ private:
 
     virtual void Update() override
     {
-        if (m_Window.ShouldClose()) Stop();
-
-        GoombaEngine::Window::PollEvents();
+        m_Window->Update();
             
         glClearColor(.3, 1, .3, 1);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        m_Window.SwapBuffers();
+        m_Window->SwapBuffers();
     } 
 
     virtual void Finish() override
@@ -50,7 +42,7 @@ private:
     }
 
 private:
-    GoombaEngine::Window m_Window;
+    std::unique_ptr<GoombaEngine::Window> m_Window;
 };
 
 int main(int argc, char *argv[])

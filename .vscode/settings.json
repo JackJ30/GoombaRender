@@ -94,6 +94,7 @@
         "numbers": "cpp",
         "semaphore": "cpp",
         "text_encoding": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "csignal": "cpp"
     }
 }
