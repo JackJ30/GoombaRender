@@ -17,6 +17,7 @@
 #include <unordered_set>
 
 #include <sstream>
+#include <ostream>
 
 #define FMT_GCC_PRAGMA(...) // WORKAROUND - stb fmt conflict see https://github.com/nothings/stb/discussions/1432
 #include "engine/log.h" 

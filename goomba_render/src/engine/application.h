@@ -1,6 +1,8 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include "goombapch.h"
+
 namespace GoombaEngine
 {
     class Application

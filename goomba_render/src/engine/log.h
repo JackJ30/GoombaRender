@@ -1,6 +1,8 @@
 #ifndef LOG_H
 #define LOG_H
 
+#include "goombapch.h"
+
 #include <spdlog/spdlog.h>
 
 namespace GoombaEngine
