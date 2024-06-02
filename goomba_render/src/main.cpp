@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
 // - [ ] Render loop and tick system
 // - [ ] Basic OpenGL Abstractions
 // - [ ] Render pipeline
+// - [ ] Rewrite event dispatching, add event queue/bus
 // - [ ] State system?
 // - [ ] Scene system
 // - [ ] Material system
