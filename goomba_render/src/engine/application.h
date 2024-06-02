@@ -1,24 +1,24 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include "goombapch.h"
+
 namespace GoombaEngine
 {
     class Application
     {
-        friend class Engine;
-
     public:
         Application() = default;
         virtual ~Application() = default;
 
-        void Start();
+        virtual void Run();
 
         inline void Stop()
         {
             m_Running = false;
         }
     
-    private:
+    protected:
         bool m_Running = false;
 
         virtual void Init() = 0;

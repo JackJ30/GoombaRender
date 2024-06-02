@@ -2,7 +2,7 @@
 
 namespace GoombaEngine
 {
-    void Application::Start()
+    void Application::Run()
     {
         if (m_Running) return;
         m_Running = true;

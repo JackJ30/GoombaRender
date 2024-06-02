@@ -1,11 +1,9 @@
 #include <glad/gl.h>
 
-#include "window.h"
-#include "engine.h"
-#include "application.h"
+#include "engine/engine.h"
+#include "engine/window_application.h"
 
-class Game : public GoombaEngine::Application
-{
+class Game : public GoombaEngine::WindowApplication { 
 public:
     Game() = default;
     virtual ~Game() = default;
@@ -13,64 +11,39 @@ public:
 private:
     virtual void Init() override
     {
-        m_Window = GoombaRender::Window(1280, 720, "Goomba Render", GoombaRender::CreateDefaultOpenGLContext);
 
-        if (!m_Window.GetHandle())
-        {
-            GLogCritical("failed to create window");
-            Stop();
-            return;
-        }
-
-        m_Window.MakeContextCurrent();
-
-        if (!gladLoadGL(GoombaRender::Window::GetProcAddress))
-        {
-            GLogCritical("failed to load OpenGL");
-            Stop();
-            return;
-        }
     }
 
     virtual void Update() override
     {
-        if (m_Window.ShouldClose()) Stop();
-
-        GoombaRender::Window::PollEvents();
-            
         glClearColor(.3, 1, .3, 1);
         glClear(GL_COLOR_BUFFER_BIT);
-
-        m_Window.SwapBuffers();
     } 
 
     virtual void Finish() override
     {
 
     }
-
-private:
-    GoombaRender::Window m_Window;
 };
 
 int main(int argc, char *argv[])
 {
     Game game;
-
     GoombaEngine::RunApplication(game);
 }
 
 // TODO LIST
 // ---------
 // - [x] Logger
-// - [ ] Add event system
-// - [ ] Move opengl context stuff to a subclass of window? Or maybe it should be in a renderer class
+// - [x] Add event system
+// - [x] Move opengl context stuff to a subclass of window? Or maybe it should be in a renderer class (update: I meod it to glad_context_creator and used another function pointer in glfwwindow)
 // - [ ] Add support for resizing the window
 // - [ ] ImGUI
 // - [ ] Escape to exit window
 // - [ ] Render loop and tick system
 // - [ ] Basic OpenGL Abstractions
 // - [ ] Render pipeline
+// - [ ] Rewrite event dispatching, add event queue/bus
 // - [ ] State system?
 // - [ ] Scene system
 // - [ ] Material system

@@ -6,6 +6,6 @@ namespace GoombaEngine
     {
         InitLogger();
         GLogInfo("Starting Application...");
-        application.Start(); // TODO - The friend class thing isn't working so I can't put the start logic in this function. Do that ASAP
+        application.Run();
     }
 }
