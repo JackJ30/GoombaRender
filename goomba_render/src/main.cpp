@@ -13,17 +13,7 @@ public:
 private:
     virtual void Init() override
     {
-        m_Window = std::make_unique<GoombaEngine::GLFrameworkWindow>(GoombaEngine::WindowProps(), GoombaEngine::CreateDefaultOpenGLContext);
-
-        // GLAD stuff
-
-        m_Window->MakeContextCurrent();
-        if (!gladLoadGL(GoombaEngine::Window::GetProcAddress))
-        {
-            GLogCritical("failed to load OpenGL");
-            Stop();
-            return;
-        }
+        m_Window = std::make_unique<GoombaEngine::GLFrameworkWindow>(GoombaEngine::WindowProps(), GoombaEngine::ConfigureGLFWOpenGLContext, GoombaEngine::CreateGLFWOpenGLContext);
     }
 
     virtual void Update() override

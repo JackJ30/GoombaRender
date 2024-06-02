@@ -37,6 +37,8 @@ namespace GoombaEngine
 		EVENT_CLASS_TYPE(WindowClose)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
+
+	// TODO - Implement gained focus, lost focus, and moved events
 }
 
 #endif

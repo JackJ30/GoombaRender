@@ -3,13 +3,11 @@
 #include "engine/events/input_event.h"
 #include "engine/events/window_event.h"
 
-#include <GLFW/glfw3.h>
-
 namespace GoombaEngine
 {
     static size_t s_Count = 0;
 
-    GLFrameworkWindow::GLFrameworkWindow(const WindowProps& props, void(*createGraphicsContext)())
+    GLFrameworkWindow::GLFrameworkWindow(const WindowProps& props, void(*configureGraphicsContextSettings)(GLFWwindow*), void(*createGraphicsContext)(GLFWwindow*))
     {
         GLogTrace("Creating GLFW window...");
 
@@ -33,14 +31,18 @@ namespace GoombaEngine
 
         ++s_Count;
 
-        if (createGraphicsContext) createGraphicsContext();
+        if (configureGraphicsContextSettings) configureGraphicsContextSettings(m_Handle);
 
+        // Create window
         m_Handle = glfwCreateWindow(m_Data.Width, m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);
         glfwSetWindowUserPointer(m_Handle, &m_Data);
-        SetVSync(true);
-
         GLogInfo("GLFWWindow '{}' created", m_Data.Title);
 
+        // Create opengl context
+        if (createGraphicsContext) createGraphicsContext(m_Handle);
+        SetVSync(true);
+
+        // Events
         BindEvents();
     }
 
@@ -178,12 +180,26 @@ namespace GoombaEngine
         GLogInfo("GLFWWindow '{}' events bound", m_Data.Title);
     }
 
-    void CreateDefaultOpenGLContext()
+    void ConfigureGLFWOpenGLContext(GLFWwindow* window)
     {
-        GLogInfo("Creating OpenGL GLFW Context");
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+        GLogInfo("Configured GLFW OpenGL Context");
+    }
+
+    void CreateGLFWOpenGLContext(GLFWwindow* window)
+    {
+        GLogTrace("Creating OpenGL GLFW Context...");
+
+        glfwMakeContextCurrent(window);
+        if (!gladLoadGL(glfwGetProcAddress))
+        {
+            GLogCritical("failed to load OpenGL");
+            return;
+        }
+
+        GLogInfo("Created OpenGL GLFW Context");
     }
 }
