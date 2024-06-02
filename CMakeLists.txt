@@ -26,7 +26,9 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/engine/engine.cpp
 	${GOOMBARENDERDIR}/src/engine/window/gl_framework_window.cpp
 	${GOOMBARENDERDIR}/src/engine/application.cpp
+	${GOOMBARENDERDIR}/src/engine/window_application.cpp
 	${GOOMBARENDERDIR}/src/engine/log.cpp
+	${GOOMBARENDERDIR}/src/renderer/glad_context_creator.cpp
 )
 
 set(IMGUI_SOURCES

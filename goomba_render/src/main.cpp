@@ -1,11 +1,9 @@
 #include <glad/gl.h>
 
-#include "engine/window/gl_framework_window.h"
 #include "engine/engine.h"
-#include "engine/application.h"
+#include "engine/window_application.h"
 
-class Game : public GoombaEngine::Application
-{
+class Game : public GoombaEngine::WindowApplication { 
 public:
     Game() = default;
     virtual ~Game() = default;
@@ -13,32 +11,24 @@ public:
 private:
     virtual void Init() override
     {
-        m_Window = std::make_unique<GoombaEngine::GLFrameworkWindow>(GoombaEngine::WindowProps(), GoombaEngine::ConfigureGLFWOpenGLContext, GoombaEngine::CreateGLFWOpenGLContext);
+
     }
 
     virtual void Update() override
     {
-        m_Window->Update();
-            
         glClearColor(.3, 1, .3, 1);
         glClear(GL_COLOR_BUFFER_BIT);
-
-        m_Window->SwapBuffers();
     } 
 
     virtual void Finish() override
     {
 
     }
-
-private:
-    std::unique_ptr<GoombaEngine::Window> m_Window;
 };
 
 int main(int argc, char *argv[])
 {
     Game game;
-
     GoombaEngine::RunApplication(game);
 }
 

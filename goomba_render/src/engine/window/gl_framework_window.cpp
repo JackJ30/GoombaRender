@@ -99,6 +99,8 @@ namespace GoombaEngine
         glfwSetWindowSizeCallback(m_Handle, [](GLFWwindow* window, int width, int height)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            DEBUG_ASSERT(data.EventCallback, "Event Callback MUST be set for window.");
+
 			data.Width = width;
 			data.Height = height;
 
@@ -109,6 +111,8 @@ namespace GoombaEngine
 		glfwSetWindowCloseCallback(m_Handle, [](GLFWwindow* window)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            DEBUG_ASSERT(data.EventCallback, "Event Callback MUST be set for window.");
+
 			WindowCloseEvent event;
 			data.EventCallback(event);
 		});
@@ -116,6 +120,7 @@ namespace GoombaEngine
 		glfwSetKeyCallback(m_Handle, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            DEBUG_ASSERT(data.EventCallback, "Event Callback MUST be set for window.");
 
 			switch (action)
 			{
@@ -143,6 +148,7 @@ namespace GoombaEngine
 		glfwSetMouseButtonCallback(m_Handle, [](GLFWwindow* window, int button, int action, int mods)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            DEBUG_ASSERT(data.EventCallback, "Event Callback MUST be set for window.");
 
 			switch (action)
 			{
@@ -164,6 +170,7 @@ namespace GoombaEngine
 		glfwSetScrollCallback(m_Handle, [](GLFWwindow* window, double xOffset, double yOffset)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            DEBUG_ASSERT(data.EventCallback, "Event Callback MUST be set for window.");
 
 			MouseScrolledEvent event((float)xOffset, (float)yOffset);
 			data.EventCallback(event);
@@ -172,34 +179,12 @@ namespace GoombaEngine
 		glfwSetCursorPosCallback(m_Handle, [](GLFWwindow* window, double xPos, double yPos)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            DEBUG_ASSERT(data.EventCallback, "Event Callback MUST be set for window.");
 
 			MouseMovedEvent event((float)xPos, (float)yPos);
 			data.EventCallback(event);
 		});
         
         GLogInfo("GLFWWindow '{}' events bound", m_Data.Title);
-    }
-
-    void ConfigureGLFWOpenGLContext(GLFWwindow* window)
-    {
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-        GLogInfo("Configured GLFW OpenGL Context");
-    }
-
-    void CreateGLFWOpenGLContext(GLFWwindow* window)
-    {
-        GLogTrace("Creating OpenGL GLFW Context...");
-
-        glfwMakeContextCurrent(window);
-        if (!gladLoadGL(glfwGetProcAddress))
-        {
-            GLogCritical("failed to load OpenGL");
-            return;
-        }
-
-        GLogInfo("Created OpenGL GLFW Context");
     }
 }

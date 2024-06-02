@@ -1,20 +1,17 @@
 #ifndef GLTF_WINDOW_H
 #define GLTF_WINDOW_H
 
+#include "goombapch.h"
 #include "window.h"
 
-#include <glad/gl.h>
 #include <glfw/glfw3.h>
 
 namespace GoombaEngine
 {
-    void ConfigureGLFWOpenGLContext(GLFWwindow* window);
-    void CreateGLFWOpenGLContext(GLFWwindow* window);
-
     class GLFrameworkWindow : public Window // Named it this because I couldn't name it "GLFWWindow" (I technically could have, but it would have been unclear)
     {
     public:
-        GLFrameworkWindow(const WindowProps& props, void(*configureGraphicsContextSettings)(GLFWwindow*) = ConfigureGLFWOpenGLContext, void(*createGraphicsContext)(GLFWwindow*) = CreateGLFWOpenGLContext);
+        GLFrameworkWindow(const WindowProps& props, void(*configureGraphicsContextSettings)(GLFWwindow*), void(*createGraphicsContext)(GLFWwindow*));
         virtual ~GLFrameworkWindow();
 
         GLFrameworkWindow(const GLFrameworkWindow&) = delete;
