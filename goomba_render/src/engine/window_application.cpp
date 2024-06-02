@@ -3,22 +3,40 @@
 #include "renderer/glad_context_creator.h"
 #include "engine/window/gl_framework_window.h"
 
-void GoombaEngine::WindowApplication::Run()
+namespace GoombaEngine
 {
-    if (m_Running) return;
-    m_Running = true;
+    #define BIND_EVENT_FN(x) std::bind(&WindowApplication::x, this, std::placeholders::_1)
 
-    m_Window = std::make_unique<GoombaEngine::GLFrameworkWindow>(GoombaEngine::WindowProps(), GoombaRender::ConfigureGLFWOpenGLContext, GoombaRender::CreateGLFWOpenGLContext);
-    Init();
-
-    while (m_Running)
+    void WindowApplication::Run()
     {
-        m_Window->Update();
+        if (m_Running) return;
+        m_Running = true;
 
-        Update();
+        m_Window = std::make_unique<GoombaEngine::GLFrameworkWindow>(GoombaEngine::WindowProps(), GoombaRender::ConfigureGLFWOpenGLContext, GoombaRender::CreateGLFWOpenGLContext);
+        m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+        Init();
 
-        m_Window->SwapBuffers();
+        while (m_Running)
+        {
+            m_Window->Update();
+
+            Update();
+
+            m_Window->SwapBuffers();
+        }
+
+        Finish();
     }
 
-    Finish();
+    void WindowApplication::OnEvent(Event &event)
+    {
+        EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+    }
+
+    bool WindowApplication::OnWindowClose(WindowCloseEvent& event)
+	{
+		Stop();
+		return true;
+	}
 }

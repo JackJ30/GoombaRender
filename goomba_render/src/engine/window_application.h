@@ -6,6 +6,8 @@
 #include "engine/application.h"
 #include "engine/window/window.h"
 
+#include "engine/events/window_event.h"
+
 namespace GoombaEngine
 {
     class WindowApplication : public Application
@@ -15,6 +17,9 @@ namespace GoombaEngine
 
     private:
         std::unique_ptr<GoombaEngine::Window> m_Window;
+
+        void OnEvent(Event& event);
+        bool OnWindowClose(WindowCloseEvent& event);
     };
 }
 
