@@ -1,6 +1,6 @@
 #include "window.h"
 
-namespace GoombaRender
+namespace GoombaEngine
 {
     static size_t s_Count = 0;
 

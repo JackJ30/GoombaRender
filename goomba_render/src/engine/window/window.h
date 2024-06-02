@@ -1,9 +1,11 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include "goombapch.h"
+
 #include <glfw/glfw3.h>
 
-namespace GoombaRender
+namespace GoombaEngine
 {
     class Window final
     {

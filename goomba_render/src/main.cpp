@@ -1,6 +1,6 @@
 #include <glad/gl.h>
 
-#include "renderer/window.h"
+#include "engine/window.h"
 #include "engine/engine.h"
 #include "engine/application.h"
 
@@ -13,7 +13,7 @@ public:
 private:
     virtual void Init() override
     {
-        m_Window = GoombaRender::Window(1280, 720, "Goomba Render", GoombaRender::CreateDefaultOpenGLContext);
+        m_Window = GoombaEngine::Window(1280, 720, "Goomba Render", GoombaEngine::CreateDefaultOpenGLContext);
 
         if (!m_Window.GetHandle())
         {
@@ -24,7 +24,7 @@ private:
 
         m_Window.MakeContextCurrent();
 
-        if (!gladLoadGL(GoombaRender::Window::GetProcAddress))
+        if (!gladLoadGL(GoombaEngine::Window::GetProcAddress))
         {
             GLogCritical("failed to load OpenGL");
             Stop();
@@ -36,7 +36,7 @@ private:
     {
         if (m_Window.ShouldClose()) Stop();
 
-        GoombaRender::Window::PollEvents();
+        GoombaEngine::Window::PollEvents();
             
         glClearColor(.3, 1, .3, 1);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -50,7 +50,7 @@ private:
     }
 
 private:
-    GoombaRender::Window m_Window;
+    GoombaEngine::Window m_Window;
 };
 
 int main(int argc, char *argv[])
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 // TODO LIST
 // ---------
 // - [x] Logger
-// - [ ] Add event system
+// - [x] Add event system
 // - [ ] Move opengl context stuff to a subclass of window? Or maybe it should be in a renderer class
 // - [ ] Add support for resizing the window
 // - [ ] ImGUI
