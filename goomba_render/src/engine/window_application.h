@@ -15,9 +15,10 @@ namespace GoombaEngine
     public:
         void Run() override;
 
-    private:
+    protected:
         std::unique_ptr<GoombaEngine::Window> m_Window;
 
+    private:
         void OnEvent(Event& event);
         bool OnWindowClose(WindowCloseEvent& event);
     };

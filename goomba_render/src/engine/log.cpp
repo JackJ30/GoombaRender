@@ -18,7 +18,7 @@ namespace GoombaEngine
         console_sink->set_level(spdlog::level::info);
 
         auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/goomba.txt", true);
-        file_sink->set_level(spdlog::level::trace);
+        file_sink->set_level(spdlog::level::trace); // FIXME - Why aren't traces being logged to the file?
 
         spdlog::sinks_init_list sink_list = { file_sink, console_sink };
 

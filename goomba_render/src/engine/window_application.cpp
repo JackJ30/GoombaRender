@@ -19,10 +19,7 @@ namespace GoombaEngine
         while (m_Running)
         {
             m_Window->Update();
-
             Update();
-
-            m_Window->SwapBuffers();
         }
 
         Finish();
