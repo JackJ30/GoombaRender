@@ -29,7 +29,8 @@ namespace GoombaEngine
 
     #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
 
-    class Event
+	// TODO - strip name stuff out of event in release
+	class Event
     {
         friend class EventDispatcher;
     public:

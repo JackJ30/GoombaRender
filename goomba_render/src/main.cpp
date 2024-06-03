@@ -39,8 +39,10 @@ int main(int argc, char *argv[])
 // - [x] Add event system
 // - [x] Move opengl context stuff to a subclass of window? Or maybe it should be in a renderer class (update: I meod it to glad_context_creator and used another function pointer in glfwwindow)
 // - [ ] Add layers
-// - [ ] Add support for resizing the window and escape to exit window
+// - [ ] Escape to exit window
 // - [ ] ImGUI
+// - [ ] 3D Rendering Layer
+// - [ ] Add support for resizing the window
 // - [ ] Render loop and tick system
 // - [ ] Basic OpenGL Abstractions
 // - [ ] Render pipeline

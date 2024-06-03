@@ -2,6 +2,8 @@
 
 namespace GoombaRender
 {
+    // OpenGL + GLFW
+
     void ConfigureGLFWOpenGLContext(GLFWwindow* window)
     {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -24,4 +26,6 @@ namespace GoombaRender
 
         GLogInfo("Created OpenGL GLFW Context");
     }
+
+    // Supporting other rendering APIs is not something I am prioritizing at all, but it might be cool to have in the future so I'm (futilely) leaving the door open in some places.
 }

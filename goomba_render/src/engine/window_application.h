@@ -13,7 +13,7 @@ namespace GoombaEngine
     class WindowApplication : public Application
     {
     public:
-        void Run() override;
+        void Run() override final;
 
     protected:
         std::unique_ptr<GoombaEngine::Window> m_Window;
