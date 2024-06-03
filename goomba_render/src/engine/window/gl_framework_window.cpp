@@ -27,7 +27,7 @@ namespace GoombaEngine
                 GLogCritical("failed to initialize glfw");
             }
         }
-        else { GLogCritical("GoombaEngine does NOT currently support multiple windows."); } // TODO - Make it support multiple windows
+        else { GLogCritical("GoombaEngine does NOT currently support multiple windows."); } // TODO - Make it support multiple windows. I think this can be done by confirming the context is current before running these actions (maybe make a boolean for verifying current-ness of context). I'm not sure, should look into it.
 
         ++s_Count;
 

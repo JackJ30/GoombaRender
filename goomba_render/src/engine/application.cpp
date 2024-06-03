@@ -7,13 +7,13 @@ namespace GoombaEngine
         if (m_Running) return;
         m_Running = true;
 
-        Init();
+        OnInit();
 
         while (m_Running)
         {
-            Update();
+            OnUpdate();
         }
 
-        Finish();
+        OnFinish();
     }
 }

@@ -9,19 +9,19 @@ public:
     virtual ~Game() = default;
 
 private:
-    virtual void Init() override
+    virtual void OnInit() override
     {
 
     }
 
-    virtual void Update() override
+    virtual void OnUpdate() override
     {
         glClearColor(.3, 1, .3, 1);
         glClear(GL_COLOR_BUFFER_BIT);
         m_Window->SwapBuffers();
     } 
 
-    virtual void Finish() override
+    virtual void OnFinish() override
     {
 
     }

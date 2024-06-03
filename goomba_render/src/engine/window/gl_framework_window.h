@@ -22,7 +22,7 @@ namespace GoombaEngine
         // Properties
         inline GLFWwindow* GetHandle() const { return m_Handle; }
 
-        inline void Update() override { glfwPollEvents(); } // TODO - Support multiple windows
+        inline void Update() override { glfwPollEvents(); } // TODO - Support multiple windows (maybe this specifically should be static)
         inline void SwapBuffers() override { glfwSwapBuffers(m_Handle); }
         inline unsigned int GetWidth() const override { return m_Data.Width; }
 		inline unsigned int GetHeight() const override { return m_Data.Height; }

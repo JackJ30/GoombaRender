@@ -14,15 +14,15 @@ namespace GoombaEngine
 
         m_Window = std::make_unique<GoombaEngine::GLFrameworkWindow>(GoombaEngine::WindowProps(), GoombaRender::ConfigureGLFWOpenGLContext, GoombaRender::CreateGLFWOpenGLContext);
         m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
-        Init();
+        OnInit();
 
         while (m_Running)
         {
             m_Window->Update();
-            Update();
+            OnUpdate();
         }
 
-        Finish();
+        OnFinish();
     }
 
     void WindowApplication::OnEvent(Event &event)

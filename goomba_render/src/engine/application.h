@@ -21,9 +21,9 @@ namespace GoombaEngine
     protected:
         bool m_Running = false;
 
-        virtual void Init() = 0;
-        virtual void Update() = 0;
-        virtual void Finish() = 0;
+        virtual void OnInit() = 0;
+        virtual void OnUpdate() = 0;
+        virtual void OnFinish() = 0;
     };
 }
 

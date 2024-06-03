@@ -5,6 +5,7 @@
 - Event System
 - Application + Layers System
 - Input System
+- Render/Tick Loop
 - API Management (Long Shot)
 - ECS (Long Shot)
 
@@ -34,6 +35,7 @@
 - Material system
 - Code based scene system
 - Forward rendering lighting
+- Basic render loop
 
 ## Phase 2:
 - Event and input system
@@ -41,10 +43,12 @@
 - Deferred rendering
 - Shadow mapping
 - Blending
+- Clearing and framebuffer management
 
 ## Phase 3:
 - Resource importing
 - Data based scenes
+- Tick loop
 - PBR
 - Clustered forward rendering
 
