@@ -4,21 +4,21 @@ namespace GoombaRender
 {
     // OpenGL + GLFW
 
-    void ConfigureGLFWOpenGLContext(GLFWwindow* window)
+    void ConfigureSDLOpenGLContext()
     {
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-        GLogInfo("Configured GLFW OpenGL Context");
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+        GLogInfo("Configured SDL OpenGL Context");
     }
 
-    void CreateGLFWOpenGLContext(GLFWwindow* window)
+    void CreateSDLOpenGLContext(SDL_Window* window)
     {
-        GLogTrace("Creating OpenGL GLFW Context...");
+        GLogTrace("Creating OpenGL SDL Context...");
 
-        glfwMakeContextCurrent(window);
-        if (!gladLoadGL(glfwGetProcAddress))
+        SDL_GL_CreateContext(window);
+        if (!gladLoadGL(SDL_GL_GetProcAddress))
         {
             GLogCritical("failed to load OpenGL");
             return;

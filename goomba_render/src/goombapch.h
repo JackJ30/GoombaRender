@@ -3,8 +3,6 @@
 
 #include "core.h"
 
-#include <libassert/assert.hpp>
-
 #include <iostream>
 #include <memory>
 #include <algorithm>

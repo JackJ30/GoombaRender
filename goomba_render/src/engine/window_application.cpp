@@ -1,7 +1,7 @@
 #include "window_application.h"
 
 #include "renderer/glad_context_creator.h"
-#include "engine/window/gl_framework_window.h"
+#include "engine/window/sdl_window.h"
 
 namespace GoombaEngine
 {
@@ -12,8 +12,7 @@ namespace GoombaEngine
         if (m_Running) return;
         m_Running = true;
 
-        m_Window = std::make_unique<GoombaEngine::GLFrameworkWindow>(GoombaEngine::WindowProps(), GoombaRender::ConfigureGLFWOpenGLContext, GoombaRender::CreateGLFWOpenGLContext);
-        m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+        //m_Window = std::make_unique<GoombaEngine::SDLWindow>(GoombaEngine::WindowProps(), GoombaRender::ConfigureSDLOpenGLContext, GoombaRender::CreateSDLOpenGLContext);
         OnInit();
 
         while (m_Running)
@@ -24,16 +23,4 @@ namespace GoombaEngine
 
         OnFinish();
     }
-
-    void WindowApplication::OnEvent(Event &event)
-    {
-        EventDispatcher dispatcher(event);
-		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
-    }
-
-    bool WindowApplication::OnWindowClose(WindowCloseEvent& event)
-	{
-		Stop();
-		return true;
-	}
 }

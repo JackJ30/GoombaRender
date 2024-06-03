@@ -2,12 +2,12 @@
 #define GLAD_CONTEXT_CREATOR_H
 
 #include <glad/gl.h>
-#include <glfw/glfw3.h>
+#include <SDL3/SDL.h>
 
 namespace GoombaRender
 {
-    void ConfigureGLFWOpenGLContext(GLFWwindow* window);
-    void CreateGLFWOpenGLContext(GLFWwindow* window);
+    void ConfigureSDLOpenGLContext();
+    void CreateSDLOpenGLContext(SDL_Window* window);
 }
 
 #endif // GLAD_CONTEXT_CREATOR_H

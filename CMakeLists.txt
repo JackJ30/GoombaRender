@@ -13,7 +13,6 @@ set(ASSIMP_BUILD_STATIC_LIB ON)
 set(ASSIMP_WARNINGS_AS_ERRORS OFF)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/glad/)
-add_subdirectory(${CMAKE_SOURCE_DIR}/external/glfw/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/glm/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/assimp/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/spdlog/)
@@ -25,7 +24,6 @@ set(GOOMBARENDERDIR ${CMAKE_SOURCE_DIR}/goomba_render)
 set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/main.cpp
 	${GOOMBARENDERDIR}/src/engine/engine.cpp
-	${GOOMBARENDERDIR}/src/engine/window/gl_framework_window.cpp
 	${GOOMBARENDERDIR}/src/engine/application.cpp
 	${GOOMBARENDERDIR}/src/engine/window_application.cpp
 	${GOOMBARENDERDIR}/src/engine/log.cpp
@@ -39,7 +37,6 @@ set(IMGUI_SOURCES
     ${CMAKE_SOURCE_DIR}/external/imgui/imgui_tables.cpp
     ${CMAKE_SOURCE_DIR}/external/imgui/imgui_widgets.cpp
 	${CMAKE_SOURCE_DIR}/external/imgui/backends/imgui_impl_opengl3.cpp
-	${CMAKE_SOURCE_DIR}/external/imgui/backends/imgui_impl_glfw.cpp
 )
 
 set(SINGLE_HEADER_IMPLEMENTATION
@@ -52,7 +49,7 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${SINGLE_HEADER_IMPLEMENTATION} $
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)
 
 # link and inculde
-target_link_libraries(${PROJECT_NAME} PUBLIC glad glfw assimp glm spdlog libassert::assert SDL3::SDL3 OpenGL::GL)
+target_link_libraries(${PROJECT_NAME} PUBLIC glad assimp glm spdlog libassert::assert SDL3::SDL3 OpenGL::GL)
 target_include_directories(${PROJECT_NAME} PUBLIC ${GOOMBARENDERDIR}/src ${CMAKE_SOURCE_DIR}/external/imgui ${CMAKE_SOURCE_DIR}/external/stb/include)
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${GOOMBARENDERDIR}/src/goombapch.h)
 

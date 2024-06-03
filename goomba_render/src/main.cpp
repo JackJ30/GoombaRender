@@ -4,6 +4,7 @@
 
 #include "engine/engine.h"
 #include "engine/window_application.h"
+#include "renderer/glad_context_creator.h"
 
 class Game : public GoombaEngine::Application { 
 public:
@@ -12,7 +13,6 @@ public:
 
 private:
     SDL_Window* window;
-    SDL_Renderer* renderer = nullptr;
     SDL_Event event;
 
     virtual void OnInit() override
@@ -21,14 +21,17 @@ private:
         if (result < 0)
         {
             GLogCritical("SDL failed to initialize: {}", SDL_GetError());
-            return;
         }
 
-        SDL_CreateWindowAndRenderer("Goomba Render", 1280, 720, SDL_WINDOW_OPENGL, &window, &renderer);
+        GoombaRender::ConfigureSDLOpenGLContext();
+
+        window = SDL_CreateWindow("Goomba Render", 1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
         if (result < 0)
         {
-            GLogCritical("SDL failed to create window and renderer: {}", SDL_GetError());
+            GLogCritical("SDL failed to create window: {}", SDL_GetError());
         }
+
+        GoombaRender::CreateSDLOpenGLContext(window);
     }
 
     virtual void OnUpdate() override
@@ -42,17 +45,24 @@ private:
                     Stop();
                     break;
                 }
+                case SDL_EVENT_KEY_DOWN:
+                {
+                    if (event.key.keysym.sym == SDLK_ESCAPE) 
+                    {
+                        Stop();
+                        break;
+                    }
+                }
             }
         }
 
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
-        SDL_RenderClear(renderer);
-        SDL_RenderPresent(renderer);
+        glClearColor(0.1f, 0.2f, 0.3f, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        SDL_GL_SwapWindow(window);
     }
 
     virtual void OnFinish() override
     {
-        SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
     }
 };

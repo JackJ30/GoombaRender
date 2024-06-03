@@ -23,8 +23,6 @@ namespace GoombaEngine
     class Window
     {
     public:
-        using EventCallbackFn = std::function<void(Event&)>;
-
         virtual ~Window() {};
 
         virtual void Update() = 0;
@@ -34,7 +32,6 @@ namespace GoombaEngine
 		virtual unsigned int GetHeight() const = 0;
 
 		// Window attributes
-		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSyncEnabled() const = 0;
     };
