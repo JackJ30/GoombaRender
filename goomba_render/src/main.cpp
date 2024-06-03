@@ -13,37 +13,47 @@ public:
 private:
     SDL_Window* window;
     SDL_Renderer* renderer = nullptr;
+    SDL_Event event;
 
     virtual void OnInit() override
     {
         int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
         if (result < 0)
         {
-            GLogCritical("SDL_Init failed: {}", SDL_GetError());
+            GLogCritical("SDL failed to initialize: {}", SDL_GetError());
             return;
         }
 
-        window = SDL_CreateWindow("Goomba Render", 1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOWPOS_CENTERED);
-        if (!window)
+        SDL_CreateWindowAndRenderer("Goomba Render", 1280, 720, SDL_WINDOW_OPENGL, &window, &renderer);
+        if (result < 0)
         {
-            GLogCritical("SDL failed to create window: {}", SDL_GetError());
-            return;
+            GLogCritical("SDL failed to create window and renderer: {}", SDL_GetError());
         }
-
-        renderer = SDL_CreateRenderer()
     }
 
     virtual void OnUpdate() override
     {
-        //glClearColor(.3, 1, .3, 1);
-        //glClear(GL_COLOR_BUFFER_BIT);
-        //m_Window->SwapBuffers();
-        Stop();
-    } 
+        while (SDL_PollEvent (&event))
+        {
+            switch(event.type)
+            {
+                case SDL_EVENT_QUIT: 
+                {
+                    Stop();
+                    break;
+                }
+            }
+        }
+
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
+        SDL_RenderClear(renderer);
+        SDL_RenderPresent(renderer);
+    }
 
     virtual void OnFinish() override
     {
-
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
     }
 };
 
@@ -51,6 +61,8 @@ int main(int argc, char *argv[])
 {
     Game game;
     GoombaEngine::RunApplication(game);
+
+    return 0;
 }
 
 // TODO LIST
