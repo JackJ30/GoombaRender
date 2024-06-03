@@ -1,24 +1,44 @@
 #include <glad/gl.h>
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_main.h>
 
 #include "engine/engine.h"
 #include "engine/window_application.h"
 
-class Game : public GoombaEngine::WindowApplication { 
+class Game : public GoombaEngine::Application { 
 public:
     Game() = default;
     virtual ~Game() = default;
 
 private:
+    SDL_Window* window;
+    SDL_Renderer* renderer = nullptr;
+
     virtual void OnInit() override
     {
+        int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+        if (result < 0)
+        {
+            GLogCritical("SDL_Init failed: {}", SDL_GetError());
+            return;
+        }
 
+        window = SDL_CreateWindow("Goomba Render", 1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOWPOS_CENTERED);
+        if (!window)
+        {
+            GLogCritical("SDL failed to create window: {}", SDL_GetError());
+            return;
+        }
+
+        renderer = SDL_CreateRenderer()
     }
 
     virtual void OnUpdate() override
     {
-        glClearColor(.3, 1, .3, 1);
-        glClear(GL_COLOR_BUFFER_BIT);
-        m_Window->SwapBuffers();
+        //glClearColor(.3, 1, .3, 1);
+        //glClear(GL_COLOR_BUFFER_BIT);
+        //m_Window->SwapBuffers();
+        Stop();
     } 
 
     virtual void OnFinish() override

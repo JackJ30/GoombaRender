@@ -16,3 +16,6 @@
 [submodule "external/libassert"]
 	path = external/libassert
 	url = https://github.com/jeremy-rifkin/libassert
+[submodule "external/sdl"]
+	path = external/sdl
+	url = https://github.com/libsdl-org/SDL

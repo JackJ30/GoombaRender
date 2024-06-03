@@ -18,6 +18,7 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/external/glm/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/assimp/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/spdlog/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/libassert/)
+add_subdirectory(${CMAKE_SOURCE_DIR}/external/sdl/)
 
 set(GOOMBARENDERDIR ${CMAKE_SOURCE_DIR}/goomba_render)
 
@@ -51,7 +52,7 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${SINGLE_HEADER_IMPLEMENTATION} $
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)
 
 # link and inculde
-target_link_libraries(${PROJECT_NAME} PUBLIC glad glfw assimp glm spdlog libassert::assert OpenGL::GL)
+target_link_libraries(${PROJECT_NAME} PUBLIC glad glfw assimp glm spdlog libassert::assert SDL3::SDL3 OpenGL::GL)
 target_include_directories(${PROJECT_NAME} PUBLIC ${GOOMBARENDERDIR}/src ${CMAKE_SOURCE_DIR}/external/imgui ${CMAKE_SOURCE_DIR}/external/stb/include)
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${GOOMBARENDERDIR}/src/goombapch.h)
 

@@ -44,6 +44,7 @@
 - Shadow mapping
 - Blending
 - Clearing and framebuffer management
+- Draw call management
 
 ## Phase 3:
 - Resource importing
