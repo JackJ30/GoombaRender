@@ -7,5 +7,6 @@ namespace GoombaEngine
         InitLogger();
         GLogInfo("Starting Application...");
         application.Run();
+        GLogInfo("Shutting Down...");
     }
 }

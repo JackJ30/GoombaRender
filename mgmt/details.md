@@ -36,6 +36,7 @@
 - Code based scene system
 - Forward rendering lighting
 - Basic render loop
+- Basic delta time
 
 ## Phase 2:
 - Event and input system
@@ -44,6 +45,7 @@
 - Shadow mapping
 - Blending
 - Clearing and framebuffer management
+- Draw call management
 
 ## Phase 3:
 - Resource importing

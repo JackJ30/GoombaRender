@@ -2,20 +2,23 @@
 #define WINDOW_H
 
 #include "goombapch.h"
-#include "engine/events/event.h"
+
+#include <glad/gl.h>
 
 namespace GoombaEngine
 {
-    struct WindowProps
+    struct WindowProperties
 	{
 		std::string Title;
 		unsigned int Width;
 		unsigned int Height;
+		bool VSync;
 
-		WindowProps(const std::string& title = "GoombaRender",
+		WindowProperties(const std::string& title = "GoombaRender",
 			        unsigned int width = 1280,
-			        unsigned int height = 720)
-			: Title(title), Width(width), Height(height)
+			        unsigned int height = 720,
+					bool vSync = true)
+			: Title{title}, Width{width}, Height{height}, VSync{vSync}
 		{
 		}
 	};
@@ -23,18 +26,17 @@ namespace GoombaEngine
     class Window
     {
     public:
-        using EventCallbackFn = std::function<void(Event&)>;
-
         virtual ~Window() {};
 
-        virtual void Update() = 0;
+        virtual void MakeContextCurrent() = 0;
+        virtual void PollEvents() = 0;
         virtual void SwapBuffers() = 0;
 
         virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
+		virtual GladGLContext& GetGladContext() = 0;
 
 		// Window attributes
-		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSyncEnabled() const = 0;
     };

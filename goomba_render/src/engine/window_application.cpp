@@ -1,7 +1,6 @@
 #include "window_application.h"
 
-#include "renderer/glad_context_creator.h"
-#include "engine/window/gl_framework_window.h"
+#include "engine/window/sdl_window.h"
 
 namespace GoombaEngine
 {
@@ -12,28 +11,37 @@ namespace GoombaEngine
         if (m_Running) return;
         m_Running = true;
 
-        m_Window = std::make_unique<GoombaEngine::GLFrameworkWindow>(GoombaEngine::WindowProps(), GoombaRender::ConfigureGLFWOpenGLContext, GoombaRender::CreateGLFWOpenGLContext);
-        m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+        m_Window = std::make_unique<GoombaEngine::SDLWindow>(GoombaEngine::WindowProperties());
+        m_Window->RegisterEventCallback(BIND_EVENT_FN(OnEvent));
         OnInit();
 
         while (m_Running)
         {
-            m_Window->Update();
+            m_Window->PollEvents();
             OnUpdate();
+            m_Window->SwapBuffers();
         }
 
         OnFinish();
     }
 
-    void WindowApplication::OnEvent(Event &event)
+    void WindowApplication::OnEvent(SDL_Event &event)
     {
-        EventDispatcher dispatcher(event);
-		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+        switch(event.type)
+        {
+            case SDL_EVENT_QUIT: 
+            {
+                Stop();
+                break;
+            }
+            case SDL_EVENT_KEY_DOWN:
+            {
+                if (event.key.keysym.sym == SDLK_ESCAPE) 
+                {
+                    Stop();
+                    break;
+                }
+            }
+        }
     }
-
-    bool WindowApplication::OnWindowClose(WindowCloseEvent& event)
-	{
-		Stop();
-		return true;
-	}
 }

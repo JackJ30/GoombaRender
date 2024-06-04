@@ -1,6 +1,3 @@
-[submodule "external/glfw"]
-	path = external/glfw
-	url = https://github.com/glfw/glfw
 [submodule "external/glm"]
 	path = external/glm
 	url = https://github.com/g-truc/glm
@@ -16,3 +13,6 @@
 [submodule "external/libassert"]
 	path = external/libassert
 	url = https://github.com/jeremy-rifkin/libassert
+[submodule "external/sdl"]
+	path = external/sdl
+	url = https://github.com/libsdl-org/SDL
