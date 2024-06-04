@@ -3,7 +3,7 @@
 	url = https://github.com/g-truc/glm
 [submodule "external/imgui"]
 	path = external/imgui
-	url = https://github.com/ocornut/imgui
+	url = https://github.com/UhGoomba/imgui
 [submodule "external/assimp"]
 	path = external/assimp
 	url = https://github.com/assimp/assimp
