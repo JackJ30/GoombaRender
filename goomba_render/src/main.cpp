@@ -4,7 +4,8 @@
 
 #include "engine/engine.h"
 #include "engine/window_application.h"
-#include "renderer/glad_context_creator.h"
+
+#include "engine/window/sdl_window.h"
 
 class Game : public GoombaEngine::Application { 
 public:
@@ -12,58 +13,38 @@ public:
     virtual ~Game() = default;
 
 private:
-    SDL_Window* window;
-    SDL_Event event;
+    std::unique_ptr<GoombaEngine::Window> window;
+    std::unique_ptr<GoombaEngine::Window> window2;
 
     virtual void OnInit() override
     {
-        int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
-        if (result < 0)
-        {
-            GLogCritical("SDL failed to initialize: {}", SDL_GetError());
-        }
-
-        GoombaRender::ConfigureSDLOpenGLContext();
-
-        window = SDL_CreateWindow("Goomba Render", 1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-        if (result < 0)
-        {
-            GLogCritical("SDL failed to create window: {}", SDL_GetError());
-        }
-
-        GoombaRender::CreateSDLOpenGLContext(window);
+        window = std::make_unique<GoombaEngine::SDLWindow>(GoombaEngine::WindowProperties());
+        window2 = std::make_unique<GoombaEngine::SDLWindow>(GoombaEngine::WindowProperties());
     }
 
     virtual void OnUpdate() override
     {
-        while (SDL_PollEvent (&event))
-        {
-            switch(event.type)
-            {
-                case SDL_EVENT_QUIT: 
-                {
-                    Stop();
-                    break;
-                }
-                case SDL_EVENT_KEY_DOWN:
-                {
-                    if (event.key.keysym.sym == SDLK_ESCAPE) 
-                    {
-                        Stop();
-                        break;
-                    }
-                }
-            }
-        }
+        window->MakeContextCurrent();
+        window->PollEvents();
 
-        glClearColor(0.1f, 0.2f, 0.3f, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT);
-        SDL_GL_SwapWindow(window);
+        window->GetGladContext().ClearColor(0.1f, 0.2f, 0.3f, 1.0f);
+        window->GetGladContext().Clear(GL_COLOR_BUFFER_BIT);
+
+        window->SwapBuffers();
+
+
+        window2->MakeContextCurrent();
+        window2->PollEvents();
+
+        window2->GetGladContext().ClearColor(0.7f, 0.2f, 0.3f, 1.0f);
+        window2->GetGladContext().Clear(GL_COLOR_BUFFER_BIT);
+
+        window2->SwapBuffers();
     }
 
     virtual void OnFinish() override
     {
-        SDL_DestroyWindow(window);
+        
     }
 };
 

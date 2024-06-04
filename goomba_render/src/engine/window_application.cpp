@@ -12,12 +12,12 @@ namespace GoombaEngine
         if (m_Running) return;
         m_Running = true;
 
-        //m_Window = std::make_unique<GoombaEngine::SDLWindow>(GoombaEngine::WindowProps(), GoombaRender::ConfigureSDLOpenGLContext, GoombaRender::CreateSDLOpenGLContext);
+        //m_Window = std::make_unique<GoombaEngine::SDLWindow>(GoombaEngine::WindowProperties(), GoombaRender::ConfigureSDLOpenGLContext, GoombaRender::CreateSDLOpenGLContext);
         OnInit();
 
         while (m_Running)
         {
-            m_Window->Update();
+            //m_Window->Update();
             OnUpdate();
         }
 

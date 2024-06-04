@@ -13,18 +13,14 @@ namespace GoombaRender
         GLogInfo("Configured SDL OpenGL Context");
     }
 
-    void CreateSDLOpenGLContext(SDL_Window* window)
+    void RetrieveSDLOpenGLFunctionPtrs(GladGLContext& context)
     {
-        GLogTrace("Creating OpenGL SDL Context...");
-
-        SDL_GL_CreateContext(window);
-        if (!gladLoadGL(SDL_GL_GetProcAddress))
+        if (!gladLoadGLContext(&context, SDL_GL_GetProcAddress))
         {
-            GLogCritical("failed to load OpenGL");
+            GLogCritical("failed to load OpenGL function ptrs");
             return;
         }
-
-        GLogInfo("Created OpenGL GLFW Context");
+        GLogInfo("Retrieved OpenGL SDL function ptrs");
     }
 
     // Supporting other rendering APIs is not something I am prioritizing at all, but it might be cool to have in the future so I'm (futilely) leaving the door open in some places.
