@@ -42,20 +42,17 @@ int main(int argc, char *argv[])
 // - [x] Logger
 // - [x] Add event system
 // - [x] Move opengl context stuff to a subclass of window? Or maybe it should be in a renderer class (update: I meod it to glad_context_creator and used another function pointer in glfwwindow)
-// - [ ] Add layers
-// - [ ] Escape to exit window
-// - [ ] ImGUI
-// - [ ] 3D Rendering Layer
-// - [ ] Add support for resizing the window
-// - [ ] Render loop and tick system
-// - [ ] Basic OpenGL Abstractions
-// - [ ] Render pipeline
-// - [ ] Rewrite event dispatching, add event queue/bus
-// - [ ] State system?
-// - [ ] Scene system
+// - [x] Escape to exit window
+// - [ ] Maybe create renderer_window? Decide on where the renderer will exist, and how it will interact with multiple windows.
+// - [ ] Hardcoded ImGUI
+// - [ ] OpenGL abstractions
+// - [ ] Hardcoded render pipeline
+// - [ ] Model loading
 // - [ ] Material system
-// - [ ] Deferred rendering for specific materials
-// - [ ] Move to sdl?
+// - [ ] Code based scene system
+// - [ ] Forward rendering lighting
+// - [ ] Basic render loop
+// - [ ] Basic delta time
 //
 // Wishlist
 // --------
