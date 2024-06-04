@@ -111,6 +111,17 @@ namespace GoombaEngine
         return m_GladContext;
     }
 
+    SDL_GLContext &SDLWindow::GetSDLContext()
+    {
+        DEBUG_ASSERT(m_ContextCurrent, "The window's context must be current before getting SDL context.");
+        return m_Context;
+    }
+
+    SDL_WindowID SDLWindow::GetSDLWindowID()
+    {
+        return SDL_GetWindowID(m_Handle);
+    }
+
     void SDLWindow::SetVSync(bool enabled)
     {
         DEBUG_ASSERT(m_ContextCurrent, "The window's context must be current before setting vsync.");

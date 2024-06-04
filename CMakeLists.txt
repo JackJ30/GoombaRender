@@ -26,6 +26,7 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/engine/engine.cpp
 	${GOOMBARENDERDIR}/src/engine/application.cpp
 	${GOOMBARENDERDIR}/src/engine/window/sdl_window.cpp
+	${GOOMBARENDERDIR}/src/engine/imgui_layer.cpp
 	${GOOMBARENDERDIR}/src/engine/log.cpp
 	${GOOMBARENDERDIR}/src/renderer/renderer_application.cpp
 )
@@ -37,6 +38,7 @@ set(IMGUI_SOURCES
     ${CMAKE_SOURCE_DIR}/external/imgui/imgui_tables.cpp
     ${CMAKE_SOURCE_DIR}/external/imgui/imgui_widgets.cpp
 	${CMAKE_SOURCE_DIR}/external/imgui/backends/imgui_impl_opengl3.cpp
+	${CMAKE_SOURCE_DIR}/external/imgui/backends/imgui_impl_sdl3.cpp
 )
 
 set(SINGLE_HEADER_IMPLEMENTATION
