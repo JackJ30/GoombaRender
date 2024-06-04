@@ -4,9 +4,7 @@
 #include "goombapch.h"
 
 #include "engine/application.h"
-#include "engine/window/window.h"
-
-#include "engine/events/window_event.h"
+#include "engine/window/sdl_window.h"
 
 namespace GoombaEngine
 {
@@ -16,11 +14,10 @@ namespace GoombaEngine
         void Run() override final;
 
     protected:
-        std::unique_ptr<GoombaEngine::Window> m_Window;
+        std::unique_ptr<GoombaEngine::SDLWindow> m_Window;
 
     private:
-        void OnEvent(Event& event);
-        bool OnWindowClose(WindowCloseEvent& event);
+        void OnEvent(SDL_Event& event);
     };
 }
 

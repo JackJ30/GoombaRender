@@ -93,23 +93,7 @@ namespace GoombaEngine
         SDL_Event event;
         while (SDL_PollEvent(&event))
         {
-            // Send the event somewhere
-            /* switch(event.type)
-            {
-                case SDL_EVENT_QUIT: 
-                {
-                    Stop();
-                    break;
-                }
-                case SDL_EVENT_KEY_DOWN:
-                {
-                    if (event.key.keysym.sym == SDLK_ESCAPE) 
-                    {
-                        Stop();
-                        break;
-                    }
-                }
-            } */
+            if (m_EventCallback) m_EventCallback(event);
         }
     }
 
@@ -120,8 +104,9 @@ namespace GoombaEngine
         ASSERT(result == 0, "SDL failed to swap the window buffers: {}", SDL_GetError());
     }
 
-    GladGLContext &SDLWindow::GetGladContext()
+    GladGLContext& SDLWindow::GetGladContext()
     {
+        // TODO - This can be bypassed by saving the returned reference. I'm how to avoid this atm.
         DEBUG_ASSERT(m_ContextCurrent, "The window's context must be current before getting glad context.");
         return m_GladContext;
     }
@@ -132,6 +117,11 @@ namespace GoombaEngine
         int result = SDL_GL_SetSwapInterval(enabled ? 1 : 0);
         ASSERT(result == 0, "SDL failed to set swap interval: {}", SDL_GetError());
         m_Properties.VSync = enabled;
+    }
+
+    void SDLWindow::RegisterEventCallback(std::function<void(SDL_Event&)> eventCallback)
+    {
+        m_EventCallback = eventCallback;
     }
 
     void SDLWindow::UnmarkContextCurrency()

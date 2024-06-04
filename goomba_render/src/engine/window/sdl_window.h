@@ -19,28 +19,29 @@ namespace GoombaEngine
         SDLWindow(SDLWindow&& other) = delete;
         SDLWindow& operator=(SDLWindow&& other) = delete;
 
-        inline SDL_Window* GetHandle() const { return m_Handle; }
 
         void MakeContextCurrent() override;
         void PollEvents() override;
         void SwapBuffers() override;
 
+		virtual void SetVSync(bool enabled);
+        void RegisterEventCallback(std::function<void(SDL_Event&)> eventCallback);
+
+        inline SDL_Window* GetHandle() const { return m_Handle; }
         inline unsigned int GetWidth() const { return m_Properties.Width; }
 		inline unsigned int GetHeight() const { return m_Properties.Height; }
         GladGLContext& GetGladContext();
-
-		// Window attributes
-		virtual void SetVSync(bool enabled);
 		virtual bool IsVSyncEnabled() const { return m_Properties.VSync; }
 
         void UnmarkContextCurrency();
 
     private:
+        WindowProperties m_Properties;
+        bool m_ContextCurrent = false; 
         SDL_Window* m_Handle = nullptr;
         SDL_GLContext m_Context = nullptr;
         GladGLContext m_GladContext;
-        bool m_ContextCurrent = false; 
-        WindowProperties m_Properties;
+        std::function<void(SDL_Event&)> m_EventCallback;
     };
 }
 

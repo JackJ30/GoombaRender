@@ -6,38 +6,21 @@
 #include "engine/window_application.h"
 #include "engine/window/sdl_window.h"
 
-class Game : public GoombaEngine::Application { 
+class Game : public GoombaEngine::WindowApplication { 
 public:
     Game() = default;
     virtual ~Game() = default;
 
 private:
-    std::unique_ptr<GoombaEngine::Window> window;
-    std::unique_ptr<GoombaEngine::Window> window2;
-
     virtual void OnInit() override
     {
-        window = std::make_unique<GoombaEngine::SDLWindow>(GoombaEngine::WindowProperties());
-        window2 = std::make_unique<GoombaEngine::SDLWindow>(GoombaEngine::WindowProperties());
+
     }
 
     virtual void OnUpdate() override
     {
-        window->MakeContextCurrent();
-        window->PollEvents();
-
-        window->GetGladContext().ClearColor(0.1f, 0.2f, 0.3f, 1.0f);
-        window->GetGladContext().Clear(GL_COLOR_BUFFER_BIT);
-
-        window->SwapBuffers();
-
-        window2->MakeContextCurrent();
-        window2->PollEvents();
-
-        window2->GetGladContext().ClearColor(0.7f, 0.2f, 0.3f, 1.0f);
-        window2->GetGladContext().Clear(GL_COLOR_BUFFER_BIT);
-
-        window2->SwapBuffers();
+        m_Window->GetGladContext().ClearColor(0.1f, 0.2f, 0.3f, 1.0f);
+        m_Window->GetGladContext().Clear(GL_COLOR_BUFFER_BIT);
     }
 
     virtual void OnFinish() override
