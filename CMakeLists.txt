@@ -25,9 +25,9 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/main.cpp
 	${GOOMBARENDERDIR}/src/engine/engine.cpp
 	${GOOMBARENDERDIR}/src/engine/application.cpp
-	${GOOMBARENDERDIR}/src/engine/window_application.cpp
 	${GOOMBARENDERDIR}/src/engine/window/sdl_window.cpp
 	${GOOMBARENDERDIR}/src/engine/log.cpp
+	${GOOMBARENDERDIR}/src/renderer/renderer_application.cpp
 )
 
 set(IMGUI_SOURCES

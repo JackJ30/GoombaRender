@@ -3,35 +3,11 @@
 #include <SDL3/SDL_main.h>
 
 #include "engine/engine.h"
-#include "engine/window_application.h"
-#include "engine/window/sdl_window.h"
-
-class Game : public GoombaEngine::WindowApplication { 
-public:
-    Game() = default;
-    virtual ~Game() = default;
-
-private:
-    virtual void OnInit() override
-    {
-
-    }
-
-    virtual void OnUpdate() override
-    {
-        m_Window->GetGladContext().ClearColor(0.1f, 0.2f, 0.3f, 1.0f);
-        m_Window->GetGladContext().Clear(GL_COLOR_BUFFER_BIT);
-    }
-
-    virtual void OnFinish() override
-    {
-        
-    }
-};
+#include "renderer/renderer_application.h"
 
 int main(int argc, char *argv[])
 {
-    Game game;
+    GoombaRenderer::RendererApplication game;
     GoombaEngine::RunApplication(game);
 
     return 0;
