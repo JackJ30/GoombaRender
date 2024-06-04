@@ -27,13 +27,13 @@ namespace GoombaEngine
 
         inline unsigned int GetWidth() const { return m_Properties.Width; }
 		inline unsigned int GetHeight() const { return m_Properties.Height; }
-        inline GladGLContext& GetGladContext() { return m_GladContext; }
+        GladGLContext& GetGladContext();
 
 		// Window attributes
 		virtual void SetVSync(bool enabled);
 		virtual bool IsVSyncEnabled() const { return m_Properties.VSync; }
 
-        void MakeContextNotCurrent();
+        void UnmarkContextCurrency();
 
     private:
         SDL_Window* m_Handle = nullptr;

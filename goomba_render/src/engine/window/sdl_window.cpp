@@ -78,14 +78,10 @@ namespace GoombaEngine
     {
         // Make the SDL GL Context Current
         int result = SDL_GL_MakeCurrent(m_Handle, m_Context);
-        if (result < 0)
-        {
-            GLogError("SDL failed to make context current: {}", SDL_GetError());
-            return;
-        }
+        ASSERT(result == 0, "SDL failed make GL context current: {}", SDL_GetError());
 
         // If a different SDL window has the current context, set it as not current
-        if(s_CurrentContextOwner != nullptr) s_CurrentContextOwner->MakeContextNotCurrent();
+        if(s_CurrentContextOwner != nullptr) s_CurrentContextOwner->UnmarkContextCurrency();
 
         // Make myself the current context owner
         s_CurrentContextOwner = this;
@@ -121,26 +117,24 @@ namespace GoombaEngine
     {
         DEBUG_ASSERT(m_ContextCurrent, "The window's context must be current before swapping buffers.");
         int result = SDL_GL_SwapWindow(m_Handle);
-        if (result < 0)
-        {
-            GLogError("SDL failed to swap the window buffers: {}", SDL_GetError());
-            return;
-        }
+        ASSERT(result == 0, "SDL failed to swap the window buffers: {}", SDL_GetError());
+    }
+
+    GladGLContext &SDLWindow::GetGladContext()
+    {
+        DEBUG_ASSERT(m_ContextCurrent, "The window's context must be current before getting glad context.");
+        return m_GladContext;
     }
 
     void SDLWindow::SetVSync(bool enabled)
     {
         DEBUG_ASSERT(m_ContextCurrent, "The window's context must be current before setting vsync.");
         int result = SDL_GL_SetSwapInterval(enabled ? 1 : 0);
-        if (result < 0)
-        {
-            GLogError("SDL failed to set swap interval: {}", SDL_GetError());
-            return;
-        }
+        ASSERT(result == 0, "SDL failed to set swap interval: {}", SDL_GetError());
         m_Properties.VSync = enabled;
     }
 
-    void SDLWindow::MakeContextNotCurrent()
+    void SDLWindow::UnmarkContextCurrency()
     {
         m_ContextCurrent = false;
         s_CurrentContextOwner = nullptr;
