@@ -28,7 +28,6 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/engine/window_application.cpp
 	${GOOMBARENDERDIR}/src/engine/window/sdl_window.cpp
 	${GOOMBARENDERDIR}/src/engine/log.cpp
-	${GOOMBARENDERDIR}/src/renderer/glad_context_creator.cpp
 )
 
 set(IMGUI_SOURCES

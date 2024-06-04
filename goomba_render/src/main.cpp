@@ -4,7 +4,6 @@
 
 #include "engine/engine.h"
 #include "engine/window_application.h"
-
 #include "engine/window/sdl_window.h"
 
 class Game : public GoombaEngine::Application { 
@@ -31,7 +30,6 @@ private:
         window->GetGladContext().Clear(GL_COLOR_BUFFER_BIT);
 
         window->SwapBuffers();
-
 
         window2->MakeContextCurrent();
         window2->PollEvents();

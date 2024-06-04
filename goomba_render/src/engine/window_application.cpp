@@ -1,6 +1,5 @@
 #include "window_application.h"
 
-#include "renderer/glad_context_creator.h"
 #include "engine/window/sdl_window.h"
 
 namespace GoombaEngine
