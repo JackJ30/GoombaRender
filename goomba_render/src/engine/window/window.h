@@ -2,7 +2,6 @@
 #define WINDOW_H
 
 #include "goombapch.h"
-#include "engine/events/event.h"
 
 #include <glad/gl.h>
 
