@@ -23,5 +23,6 @@ namespace GoombaEngine
         spdlog::sinks_init_list sink_list = { file_sink, console_sink };
 
         renderLogger = std::make_shared<spdlog::logger>("goombaLogger", sink_list.begin(), sink_list.end());
+        renderLogger->flush_on(spdlog::level::trace);
     }
 }
