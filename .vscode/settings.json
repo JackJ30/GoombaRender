@@ -96,5 +96,6 @@
         "text_encoding": "cpp",
         "typeindex": "cpp",
         "csignal": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": true
 }
