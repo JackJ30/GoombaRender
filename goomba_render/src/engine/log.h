@@ -1,5 +1,5 @@
-#ifndef LOG_H
-#define LOG_H
+#ifndef GOOMBARENDER_LOG_H
+#define GOOMBARENDER_LOG_H
 
 #include "goombapch.h"
 

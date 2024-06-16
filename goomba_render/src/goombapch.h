@@ -1,5 +1,5 @@
-#ifndef GOOMBAPCH
-#define GOOMBAPCH
+#ifndef GOOMBARENDER_GOOMBAPCH
+#define GOOMBARENDER_GOOMBAPCH
 
 #include "core.h"
 

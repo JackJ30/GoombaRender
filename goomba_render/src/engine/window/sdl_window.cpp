@@ -39,18 +39,13 @@ namespace GoombaEngine
         m_Context = SDL_GL_CreateContext(m_Handle);
         if (m_Context == NULL)
         {
-            GLogCritical("SDL failed to create context: {}", SDL_GetError());
+            GLogCritical("SDL failed to create sdl-ogl context: {}", SDL_GetError());
         }
         GLogTrace("OpenGL SDL context created");
 
         // Load GLAD functions pointers for the context
         MakeContextCurrent();
-        if (!gladLoadGLContext(&m_GladContext, SDL_GL_GetProcAddress))
-        {
-            GLogCritical("failed to load OpenGL function ptrs");
-            return;
-        }
-        GLogTrace("OpenGL SDL context setup");
+        m_GraphicsContext.CreateContext(SDL_GL_GetProcAddress);
 
         SetVSync(m_Properties.VSync);
 
@@ -104,11 +99,11 @@ namespace GoombaEngine
         ASSERT(result == 0, "SDL failed to swap the window buffers: {}", SDL_GetError());
     }
 
-    GladGLContext& SDLWindow::GetGladContext()
+    GraphicsContext & SDLWindow::GetGraphicsContext()
     {
         // TODO - This can be bypassed by saving the returned reference. I'm how to avoid this atm.
         DEBUG_ASSERT(m_ContextCurrent, "The window's context must be current before getting glad context.");
-        return m_GladContext;
+        return m_GraphicsContext;
     }
 
     SDL_GLContext &SDLWindow::GetSDLContext()

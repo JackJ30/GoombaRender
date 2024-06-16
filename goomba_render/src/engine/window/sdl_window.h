@@ -1,8 +1,9 @@
-#ifndef SDL_WINDOW_H
-#define SDL_WINDOW_H
+#ifndef GOOMBARENDER_SDL_WINDOW_H
+#define GOOMBARENDER_SDL_WINDOW_H
 
 #include "goombapch.h"
 #include "window.h"
+#include "engine/graphics_context.h"
 
 #include <SDL3/SDL.h>
 
@@ -24,13 +25,13 @@ namespace GoombaEngine
         void PollEvents() override;
         void SwapBuffers() override;
 
-		virtual void SetVSync(bool enabled);
+		void SetVSync(bool enabled) override;
         void RegisterEventCallback(std::function<void(SDL_Event&)> eventCallback);
 
         inline SDL_Window* GetHandle() const { return m_Handle; }
         inline unsigned int GetWidth() const { return m_Properties.Width; }
 		inline unsigned int GetHeight() const { return m_Properties.Height; }
-        GladGLContext& GetGladContext();
+        GraphicsContext & GetGraphicsContext();
         SDL_GLContext& GetSDLContext();
         SDL_WindowID GetSDLWindowID();
 		virtual bool IsVSyncEnabled() const { return m_Properties.VSync; }
@@ -42,7 +43,7 @@ namespace GoombaEngine
         bool m_ContextCurrent = false; 
         SDL_Window* m_Handle = nullptr;
         SDL_GLContext m_Context = nullptr;
-        GladGLContext m_GladContext;
+        GraphicsContext m_GraphicsContext;
         std::function<void(SDL_Event&)> m_EventCallback;
     };
 }

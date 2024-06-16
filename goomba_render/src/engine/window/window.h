@@ -1,7 +1,8 @@
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef GOOMBARENDER_WINDOW_H
+#define GOOMBARENDER_WINDOW_H
 
 #include "goombapch.h"
+#include "engine/graphics_context.h"
 
 #include <glad/gl.h>
 
@@ -34,7 +35,7 @@ namespace GoombaEngine
 
         virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
-		virtual GladGLContext& GetGladContext() = 0;
+		virtual GraphicsContext & GetGraphicsContext() = 0;
 
 		// Window attributes
 		virtual void SetVSync(bool enabled) = 0;

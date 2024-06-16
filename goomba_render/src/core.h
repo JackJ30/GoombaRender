@@ -1,6 +1,6 @@
-#ifndef GOOMBA_CORE
-#define GOOMBA_CORE
+#ifndef GOOMBARENDER_GOOMBA_CORE
+#define GOOMBARENDER_GOOMBA_CORE
 
-#define BIT(x) (1 << x)
+#define GOOMBARENDER_BIT(x) (1 << x)
 
 #endif

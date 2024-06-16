@@ -28,7 +28,9 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/engine/window/sdl_window.cpp
 	${GOOMBARENDERDIR}/src/engine/imgui_layer.cpp
 	${GOOMBARENDERDIR}/src/engine/log.cpp
+	${GOOMBARENDERDIR}/src/engine/graphics_context.cpp
 	${GOOMBARENDERDIR}/src/renderer/renderer_application.cpp
+	${GOOMBARENDERDIR}/src/renderer/mesh.cpp
 )
 
 set(IMGUI_SOURCES

@@ -1,5 +1,5 @@
-#ifndef IMGUI_LAYER_H
-#define IMGUI_LAYER_H
+#ifndef GOOMBARENDER_IMGUI_LAYER_H
+#define GOOMBARENDER_IMGUI_LAYER_H
 
 #include "engine/window/sdl_window.h"
 
