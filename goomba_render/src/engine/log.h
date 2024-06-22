@@ -1,8 +1,6 @@
 #ifndef GOOMBARENDER_LOG_H
 #define GOOMBARENDER_LOG_H
 
-#include "goombapch.h"
-
 #include <spdlog/spdlog.h>
 #include <libassert/assert.hpp>
 

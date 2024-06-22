@@ -30,6 +30,8 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/engine/log.cpp
 	${GOOMBARENDERDIR}/src/engine/graphics_context.cpp
 	${GOOMBARENDERDIR}/src/renderer/renderer_application.cpp
+	${GOOMBARENDERDIR}/src/renderer/vertex_buffer.cpp
+	${GOOMBARENDERDIR}/src/renderer/index_buffer.cpp
 	${GOOMBARENDERDIR}/src/renderer/mesh.cpp
 )
 
