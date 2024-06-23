@@ -1,0 +1,11 @@
+#ifndef GOOMBARENDER_BUFFER_LAYOUT_H
+#define GOOMBARENDER_BUFFER_LAYOUT_H
+
+
+class BufferLayout
+{
+
+};
+
+
+#endif //GOOMBARENDER_BUFFER_LAYOUT_H

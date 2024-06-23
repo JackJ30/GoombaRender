@@ -1,7 +1,6 @@
 #ifndef GOOMBARENDER_APPLICATION_H
 #define GOOMBARENDER_APPLICATION_H
 
-#include "goombapch.h"
 
 namespace GoombaEngine
 {

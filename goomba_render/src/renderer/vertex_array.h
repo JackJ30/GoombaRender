@@ -1,0 +1,11 @@
+#ifndef GOOMBARENDER_VERTEX_ARRAY_H
+#define GOOMBARENDER_VERTEX_ARRAY_H
+
+
+class VertexArray
+{
+
+};
+
+
+#endif //GOOMBARENDER_VERTEX_ARRAY_H

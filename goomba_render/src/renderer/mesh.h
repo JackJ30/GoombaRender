@@ -1,7 +1,6 @@
 #ifndef GOOMBARENDER_MESH_H
 #define GOOMBARENDER_MESH_H
 
-#include "goombapch.h"
 #include "engine/graphics_context.h"
 
 namespace GoombaRender
