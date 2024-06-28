@@ -19,8 +19,13 @@ namespace GoombaRenderer
         GoombaEngine::ImGUIStartFrame();
 
         GoombaEngine::GraphicsContext& context = m_Window->GetGraphicsContext();
-        context.GetGladContext().ClearColor(.1f, .2f, .3f, 1.0f);
-        context.GetGladContext().Clear(GL_COLOR_BUFFER_BIT);
+        
+        {
+            context.GetGlad().ClearColor(.1f, .2f, .3f, 1.0f);
+            context.GetGlad().Clear(GL_COLOR_BUFFER_BIT);
+            
+            context.GetGlad().
+        }
 
         ImGui::Begin("Hello, world!");
         ImGui::Text("This is some useful text.");
