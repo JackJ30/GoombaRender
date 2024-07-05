@@ -6,7 +6,7 @@ namespace GoombaRender
         : m_Context(context)
     {
         m_Context.GetGlad().GenBuffers(1, &m_RendererID);
-        Bind();
+        m_Context.GetGlad().BindBuffer(GL_ARRAY_BUFFER, m_RendererID);
         m_Context.GetGlad().BufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
     }
     
@@ -14,7 +14,7 @@ namespace GoombaRender
         : m_Context(context)
     {
         m_Context.GetGlad().GenBuffers(1, &m_RendererID);
-        Bind();
+        m_Context.GetGlad().BindBuffer(GL_ARRAY_BUFFER, m_RendererID);
         m_Context.GetGlad().BufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
     }
     
@@ -35,7 +35,7 @@ namespace GoombaRender
     
     void VertexBuffer::SetData(const void *vertices, size_t size)
     {
-        Bind();
+        m_Context.GetGlad().BindBuffer(GL_ARRAY_BUFFER, m_RendererID);
         m_Context.GetGlad().BufferSubData(GL_ARRAY_BUFFER, 0, size, vertices);
     }
 } // GoombaRender

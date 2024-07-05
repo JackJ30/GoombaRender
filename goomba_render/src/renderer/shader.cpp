@@ -48,7 +48,7 @@ unsigned int Shader::CompileShader(const ShaderProgramSource& source) // removed
 {
     const char* vertexSource = source.VertexSource.c_str();
     const char* fragmentSource = source.FragmentSource.c_str();
-
+    
     GLuint vertexShader = m_Context.GetGlad().CreateShader(GL_VERTEX_SHADER);
     m_Context.GetGlad().ShaderSource(vertexShader, 1, &vertexSource, NULL);
     m_Context.GetGlad().CompileShader(vertexShader);

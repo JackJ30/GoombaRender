@@ -5,7 +5,7 @@
 #include "engine/application.h"
 #include "engine/window/sdl_window.h"
 
-namespace GoombaRenderer
+namespace GoombaRender
 {
     class RendererApplication : public GoombaEngine::Application
     {

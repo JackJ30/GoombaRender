@@ -19,7 +19,7 @@ namespace GoombaRender
         void SetData(const void* vertices, size_t size);
         
         inline const BufferLayout& GetLayout() const { return m_Layout; }
-        inline void SetLayout(const BufferLayout& layout)  { m_Layout = layout; }
+        inline void SetLayout(const BufferLayout layout)  { m_Layout = layout; }
     private:
         unsigned int m_RendererID;
         GoombaEngine::GraphicsContext m_Context;
