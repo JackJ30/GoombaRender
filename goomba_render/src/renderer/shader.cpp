@@ -52,12 +52,16 @@ unsigned int Shader::CompileShader(const ShaderProgramSource& source) // removed
     GLuint vertexShader = m_Context.GetGlad().CreateShader(GL_VERTEX_SHADER);
     m_Context.GetGlad().ShaderSource(vertexShader, 1, &vertexSource, NULL);
     m_Context.GetGlad().CompileShader(vertexShader);
-    /* glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    
+    GLint success;
+    GLsizei log_length = 0;
+    GLchar message[1024];
+    m_Context.GetGlad().GetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
     if(!success)
     {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-    } */
+        m_Context.GetGlad().GetShaderInfoLog(vertexShader, 1024, &log_length, message);
+        GLogError("Vertex Shader Compilation Failed:\n{}", message);
+    }
 
     GLuint fragmentShader = m_Context.GetGlad().CreateShader(GL_FRAGMENT_SHADER);
     m_Context.GetGlad().ShaderSource(fragmentShader, 1, &fragmentSource, NULL);
