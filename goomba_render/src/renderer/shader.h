@@ -14,10 +14,6 @@ struct ShaderProgramSource
 
 class Shader
 {
-private:
-    std::string m_Filepath;
-    unsigned int m_RendererID;
-    std::unordered_map<std::string, int> m_UniformLocationCache;
 public:
     Shader(const GoombaEngine::GraphicsContext& context, const std::string& filepath);
     ~Shader();
@@ -40,9 +36,13 @@ public:
     void SetUniformMat4(const std::string &name, const glm::mat4 &mat);
 private:
     GoombaEngine::GraphicsContext m_Context;
+    std::string m_Filepath;
+    unsigned int m_RendererID;
+    std::unordered_map<std::string, int> m_UniformLocationCache;
+    GLchar m_ErrorMessage[1024];
     
     ShaderProgramSource ParseShader();
-    unsigned int CompileShader(const ShaderProgramSource& source);
+    void CompileShader(const ShaderProgramSource& source);
     int GetUniformLocation(const std::string& name);
 };
 

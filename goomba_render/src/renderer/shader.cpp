@@ -6,7 +6,7 @@
 
 Shader::Shader(const GoombaEngine::GraphicsContext& context, const std::string& filepath) : m_Context(context), m_Filepath(filepath), m_RendererID(0)
 {
-    m_RendererID = CompileShader(ParseShader());
+    CompileShader(ParseShader());
 }
 
 Shader::~Shader()
@@ -44,57 +44,69 @@ ShaderProgramSource Shader::ParseShader()
     return { ss[0].str(), ss[1].str() };
 }
 
-unsigned int Shader::CompileShader(const ShaderProgramSource& source) // removed error checking... for now
+void Shader::CompileShader(const ShaderProgramSource& source) // removed error checking... for now
 {
     const char* vertexSource = source.VertexSource.c_str();
     const char* fragmentSource = source.FragmentSource.c_str();
+    GLint success;
     
+    // Vertex shader
     GLuint vertexShader = m_Context.GetGlad().CreateShader(GL_VERTEX_SHADER);
     m_Context.GetGlad().ShaderSource(vertexShader, 1, &vertexSource, NULL);
     m_Context.GetGlad().CompileShader(vertexShader);
-    
-    GLint success;
-    GLsizei log_length = 0;
-    GLchar message[1024];
+
+    #ifdef DEBUG
     m_Context.GetGlad().GetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
     if(!success)
     {
-        m_Context.GetGlad().GetShaderInfoLog(vertexShader, 1024, &log_length, message);
-        GLogError("Vertex Shader Compilation Failed:\n{}", message);
+        m_Context.GetGlad().GetShaderInfoLog(vertexShader, 1024, nullptr, m_ErrorMessage);
+        GLogError("Vertex shader from '{}' compilation failed:\n{}", m_Filepath, m_ErrorMessage);
     }
+    #endif
 
+    // Fragment shader
     GLuint fragmentShader = m_Context.GetGlad().CreateShader(GL_FRAGMENT_SHADER);
     m_Context.GetGlad().ShaderSource(fragmentShader, 1, &fragmentSource, NULL);
     m_Context.GetGlad().CompileShader(fragmentShader);
-    /* glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+
+    #ifdef DEBUG
+    m_Context.GetGlad().GetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
     if(!success)
     {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-    } */
+        m_Context.GetGlad().GetShaderInfoLog(fragmentShader, 1024, nullptr, m_ErrorMessage);
+        GLogError("Fragment shader from '{}' compilation failed:\n{}", m_Filepath, m_ErrorMessage);
+    }
+    #endif
 
-    unsigned int id = m_Context.GetGlad().CreateProgram();
-    m_Context.GetGlad().AttachShader(id, vertexShader);
-    m_Context.GetGlad().AttachShader(id, fragmentShader);
-    m_Context.GetGlad().LinkProgram(id);
+    // Program and linking
+    m_RendererID = m_Context.GetGlad().CreateProgram();
+    m_Context.GetGlad().AttachShader(m_RendererID, vertexShader);
+    m_Context.GetGlad().AttachShader(m_RendererID, fragmentShader);
+    m_Context.GetGlad().LinkProgram(m_RendererID);
 
-    /* glGetProgramiv(id, GL_LINK_STATUS, &success);
-    if(!success) {
-        glGetProgramInfoLog(id, 512, NULL, infoLog);
-        std::cout << "Shader Linking Error:\n" << infoLog << std::endl;
-    } */
+    #ifdef DEBUG
+    m_Context.GetGlad().GetProgramiv(m_RendererID, GL_LINK_STATUS, &success);
+    if(!success)
+    {
+        m_Context.GetGlad().GetProgramInfoLog(m_RendererID, 1024, nullptr, m_ErrorMessage);
+        GLogError("Shader from '{}' failed to link:\n{}", m_Filepath, m_ErrorMessage);
+    }
+    #endif
     
-    m_Context.GetGlad().ValidateProgram(id);
-    /* glGetProgramiv(id, GL_VALIDATE_STATUS, &success);
-    if(!success) {
-        glGetProgramInfoLog(id, 512, NULL, infoLog);
-        std::cout << "Shader Validation Error:\n" << infoLog << std::endl;
-    } */
+    // Validation
+    m_Context.GetGlad().ValidateProgram(m_RendererID);
+
+    #ifdef DEBUG
+    m_Context.GetGlad().GetProgramiv(m_RendererID, GL_VALIDATE_STATUS, &success);
+    if(!success)
+    {
+        m_Context.GetGlad().GetProgramInfoLog(m_RendererID, 1024, nullptr, m_ErrorMessage);
+        GLogError("Shader from '{}' failed to validate:\n{}", m_Filepath, m_ErrorMessage);
+    }
+    #endif
     
     m_Context.GetGlad().DeleteShader(vertexShader);
     m_Context.GetGlad().DeleteShader(fragmentShader);
-
-    return id;
 }
 
 void Shader::Bind() const
