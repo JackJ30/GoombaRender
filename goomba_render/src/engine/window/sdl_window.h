@@ -1,7 +1,6 @@
 #ifndef GOOMBARENDER_SDL_WINDOW_H
 #define GOOMBARENDER_SDL_WINDOW_H
 
-#include "goombapch.h"
 #include "window.h"
 #include "engine/graphics_context.h"
 

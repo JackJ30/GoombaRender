@@ -30,6 +30,8 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/engine/log.cpp
 	${GOOMBARENDERDIR}/src/engine/graphics_context.cpp
 	${GOOMBARENDERDIR}/src/renderer/renderer_application.cpp
+	${GOOMBARENDERDIR}/src/renderer/shader.cpp
+	${GOOMBARENDERDIR}/src/renderer/vertex_array.cpp
 	${GOOMBARENDERDIR}/src/renderer/vertex_buffer.cpp
 	${GOOMBARENDERDIR}/src/renderer/index_buffer.cpp
 	${GOOMBARENDERDIR}/src/renderer/mesh.cpp
@@ -52,16 +54,19 @@ set(SINGLE_HEADER_IMPLEMENTATION
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${SINGLE_HEADER_IMPLEMENTATION} ${IMGUI_SOURCES})
 
 # copy resources folder
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)
 
 # link and inculde
 target_link_libraries(${PROJECT_NAME} PUBLIC glad assimp glm spdlog libassert::assert SDL3::SDL3 OpenGL::GL)
+
+# copy DLLS
 if(${WIN32})
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:${PROJECT_NAME}> $<TARGET_RUNTIME_DLLS:${PROJECT_NAME}>
   COMMAND_EXPAND_LISTS
 )
 endif()
+
 target_include_directories(${PROJECT_NAME} PUBLIC ${GOOMBARENDERDIR}/src ${CMAKE_SOURCE_DIR}/external/imgui ${CMAKE_SOURCE_DIR}/external/stb/include)
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${GOOMBARENDERDIR}/src/goombapch.h)
 

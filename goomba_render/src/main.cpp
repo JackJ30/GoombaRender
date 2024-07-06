@@ -7,7 +7,7 @@
 
 int main(int argc, char *argv[])
 {
-    GoombaRenderer::RendererApplication game;
+    GoombaRender::RendererApplication game;
     GoombaEngine::RunApplication(game);
 
     return 0;
