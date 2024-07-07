@@ -32,7 +32,7 @@ namespace GoombaEngine
         {
             GLogCritical("SDL failed to create window: {}", SDL_GetError());
         }
-        ++s_Count;
+        s_Count++;
         GLogTrace("SDL window created");
 
         // Have SDL create OpenGL context
@@ -45,7 +45,7 @@ namespace GoombaEngine
 
         // Load GLAD functions pointers for the context
         MakeContextCurrent();
-        m_GraphicsContext.CreateContext(SDL_GL_GetProcAddress);
+        m_GraphicsContext.LoadContext(SDL_GL_GetProcAddress);
 
         SetVSync(m_Properties.VSync);
 

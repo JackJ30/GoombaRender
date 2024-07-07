@@ -13,6 +13,11 @@ namespace GoombaRender
     std::shared_ptr<IndexBuffer> indexBuffer;
     std::shared_ptr<Shader> shader;
     
+    RendererApplication::RendererApplication()
+    {
+    
+    }
+    
     void RendererApplication::OnInit()
     {
         m_Window = std::make_unique<GoombaEngine::SDLWindow>(GoombaEngine::WindowProperties());

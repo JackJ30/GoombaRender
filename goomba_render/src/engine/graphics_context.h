@@ -7,7 +7,7 @@ namespace GoombaEngine {
 
     class GraphicsContext {
     public:
-        void CreateContext(GLADloadfunc func);
+        void LoadContext(GLADloadfunc func);
 
         inline const GladGLContext& GetGlad() const { return m_GladContext; }
     private:

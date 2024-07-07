@@ -35,6 +35,7 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/renderer/vertex_buffer.cpp
 	${GOOMBARENDERDIR}/src/renderer/index_buffer.cpp
 	${GOOMBARENDERDIR}/src/renderer/mesh.cpp
+	${GOOMBARENDERDIR}/src/renderer/camera.cpp
 )
 
 set(IMGUI_SOURCES

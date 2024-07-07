@@ -10,6 +10,8 @@ namespace GoombaRender
     class RendererApplication : public GoombaEngine::Application
     {
     public:
+        RendererApplication();
+        
         void OnInit() override;
         void OnUpdate() override;
         void OnFinish() override;
