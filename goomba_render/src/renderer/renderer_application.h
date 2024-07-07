@@ -4,6 +4,7 @@
 
 #include "engine/application.h"
 #include "engine/window/sdl_window.h"
+#include "engine/graphics_context.h"
 
 namespace GoombaRender
 {
@@ -20,6 +21,8 @@ namespace GoombaRender
         std::unique_ptr<GoombaEngine::SDLWindow> m_Window;
 
     private:
+        GoombaEngine::GraphicsContext m_Context;
+        
         void OnEvent(SDL_Event& event);
     };
 }

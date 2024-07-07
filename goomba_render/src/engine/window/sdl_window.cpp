@@ -42,9 +42,6 @@ namespace GoombaEngine
         }
         GLogTrace("OpenGL SDL context created");
 
-        // Load GLAD functions pointers for the context
-        m_GraphicsContext.LoadContext(SDL_GL_GetProcAddress);
-
         SetVSync(m_Properties.VSync);
 
         GLogInfo("SDL3 window created");
@@ -96,5 +93,11 @@ namespace GoombaEngine
     void SDLWindow::RegisterEventCallback(std::function<void(SDL_Event&)> eventCallback)
     {
         m_EventCallback = eventCallback;
+    }
+    
+    GLADloadfunc SDLWindow::GetProcAddress()
+    {
+        SDL_GL_MakeCurrent(m_Handle, m_Context);
+        return SDL_GL_GetProcAddress;
     }
 }

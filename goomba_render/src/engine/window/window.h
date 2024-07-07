@@ -33,7 +33,6 @@ namespace GoombaEngine
 
         virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
-		virtual GraphicsContext & GetGraphicsContext() = 0;
 
 		// Window attributes
 		virtual void SetVSync(bool enabled) = 0;

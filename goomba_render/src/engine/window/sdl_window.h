@@ -2,7 +2,6 @@
 #define GOOMBARENDER_SDL_WINDOW_H
 
 #include "window.h"
-#include "engine/graphics_context.h"
 
 #include <SDL3/SDL.h>
 
@@ -29,7 +28,7 @@ namespace GoombaEngine
         inline unsigned int GetWidth() const { return m_Properties.Width; }
 		inline unsigned int GetHeight() const { return m_Properties.Height; }
         inline SDL_GLContext& GetSDLContext() { return m_Context; };
-        inline GraphicsContext& GetGraphicsContext() { return m_GraphicsContext; };
+        GLADloadfunc GetProcAddress();
         SDL_WindowID GetSDLWindowID();
 		virtual bool IsVSyncEnabled() const { return m_Properties.VSync; }
 
@@ -37,7 +36,6 @@ namespace GoombaEngine
         WindowProperties m_Properties;
         SDL_Window* m_Handle = nullptr;
         SDL_GLContext m_Context = nullptr;
-        GraphicsContext m_GraphicsContext;
         std::function<void(SDL_Event&)> m_EventCallback;
     };
 }

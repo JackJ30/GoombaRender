@@ -24,7 +24,8 @@ namespace GoombaRender
         m_Window->RegisterEventCallback(std::bind(&RendererApplication::OnEvent, this, std::placeholders::_1));
         GoombaEngine::ImGUISetup(*m_Window);
         
-        GoombaEngine::GraphicsContext& context = m_Window->GetGraphicsContext();
+        // Load GLAD functions pointers for the context
+        m_Context.LoadContext(m_Window->GetProcAddress());
         
         float vertices[3 * 7] = {
                 -0.5, -0.5, 0.0, 1.0, 0.0, 0.0, 1.0,
@@ -40,32 +41,30 @@ namespace GoombaRender
                 { ShaderDataType::Float4, "a_Color" }
         };
         
-        vertexBuffer = std::make_shared<VertexBuffer>(context, vertices, sizeof(vertices));
+        vertexBuffer = std::make_shared<VertexBuffer>(m_Context, vertices, sizeof(vertices));
         vertexBuffer->SetLayout(layout);
-        indexBuffer = std::make_shared<IndexBuffer>(context, indices, 3);
+        indexBuffer = std::make_shared<IndexBuffer>(m_Context, indices, 3);
         
-        vertexArray = std::make_shared<VertexArray>(context);
+        vertexArray = std::make_shared<VertexArray>(m_Context);
         vertexArray->AddVertexBuffer(vertexBuffer);
         vertexArray->SetIndexBuffer(indexBuffer);
         
-        shader = std::make_shared<Shader>(context, "resources/shaders/test.glsl");
+        shader = std::make_shared<Shader>(m_Context, "resources/shaders/test.glsl");
     }
 
     void RendererApplication::OnUpdate()
     {
         m_Window->PollEvents();
         GoombaEngine::ImGUIStartFrame();
-
-        GoombaEngine::GraphicsContext& context = m_Window->GetGraphicsContext();
         
         {
-            context.GetGlad().ClearColor(.1f, .2f, .3f, 1.0f);
-            context.GetGlad().Clear(GL_COLOR_BUFFER_BIT);
+            m_Context.GetGlad().ClearColor(.1f, .2f, .3f, 1.0f);
+            m_Context.GetGlad().Clear(GL_COLOR_BUFFER_BIT);
             
             shader->Bind();
             vertexArray->Bind();
             
-            context.GetGlad().DrawElements(GL_TRIANGLES, indexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+            m_Context.GetGlad().DrawElements(GL_TRIANGLES, indexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
         }
 
         ImGui::Begin("Hello, world!");
