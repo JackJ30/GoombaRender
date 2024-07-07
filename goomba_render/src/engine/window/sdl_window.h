@@ -18,9 +18,7 @@ namespace GoombaEngine
         SDLWindow& operator=(const SDLWindow&) = delete;
         SDLWindow(SDLWindow&& other) = delete;
         SDLWindow& operator=(SDLWindow&& other) = delete;
-
-
-        void MakeContextCurrent() override;
+        
         void PollEvents() override;
         void SwapBuffers() override;
 
@@ -30,16 +28,13 @@ namespace GoombaEngine
         inline SDL_Window* GetHandle() const { return m_Handle; }
         inline unsigned int GetWidth() const { return m_Properties.Width; }
 		inline unsigned int GetHeight() const { return m_Properties.Height; }
-        GraphicsContext & GetGraphicsContext();
-        SDL_GLContext& GetSDLContext();
+        inline SDL_GLContext& GetSDLContext() { return m_Context; };
+        inline GraphicsContext& GetGraphicsContext() { return m_GraphicsContext; };
         SDL_WindowID GetSDLWindowID();
 		virtual bool IsVSyncEnabled() const { return m_Properties.VSync; }
 
-        void UnmarkContextCurrency();
-
     private:
         WindowProperties m_Properties;
-        bool m_ContextCurrent = false; 
         SDL_Window* m_Handle = nullptr;
         SDL_GLContext m_Context = nullptr;
         GraphicsContext m_GraphicsContext;

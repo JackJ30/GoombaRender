@@ -28,7 +28,6 @@ namespace GoombaEngine
     public:
         virtual ~Window() {};
 
-        virtual void MakeContextCurrent() = 0;
         virtual void PollEvents() = 0;
         virtual void SwapBuffers() = 0;
 

@@ -54,7 +54,6 @@ namespace GoombaRender
     void RendererApplication::OnUpdate()
     {
         m_Window->PollEvents();
-        m_Window->MakeContextCurrent();
         GoombaEngine::ImGUIStartFrame();
 
         GoombaEngine::GraphicsContext& context = m_Window->GetGraphicsContext();
