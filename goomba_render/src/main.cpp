@@ -22,10 +22,15 @@ int main(int argc, char *argv[])
 // - [x] Maybe create renderer_window? Decide on where the renderer will exist, and how it will interact with multiple windows.
 // - [x] Hardcoded ImGUI
 // - [x] OpenGL abstractions
+// - [x] SDL input
+// - [ ] Camera
+// - [ ] Textures
+// - [ ] Allow OpenGL abstraction objects to be bound to context later
 // - [ ] Hardcoded render pipeline
 // - [ ] Model loading
-// - [ ] Material system
 // - [ ] Code based scene system
+// - [ ] Generalized pipeline
+// - [ ] Material system
 // - [ ] Forward rendering lighting
 // - [ ] Basic render loop
 // - [ ] Basic delta time

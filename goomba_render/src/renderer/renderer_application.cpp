@@ -5,6 +5,7 @@
 
 #include "renderer/vertex_array.h"
 #include "renderer/shader.h"
+#include "renderer/camera.h"
 
 namespace GoombaRender
 {
@@ -12,6 +13,8 @@ namespace GoombaRender
     std::shared_ptr<VertexBuffer> vertexBuffer;
     std::shared_ptr<IndexBuffer> indexBuffer;
     std::shared_ptr<Shader> shader;
+    glm::mat4 transform;
+    Camera camera;
     
     RendererApplication::RendererApplication()
     {
@@ -49,6 +52,8 @@ namespace GoombaRender
         vertexArray->AddVertexBuffer(vertexBuffer);
         vertexArray->SetIndexBuffer(indexBuffer);
         
+        transform = glm::translate(glm::mat4(1.0f),{0.0f, 0.0f, 0.0f});
+        
         shader = std::make_shared<Shader>(m_Context, "resources/shaders/test.glsl");
     }
 
@@ -62,6 +67,9 @@ namespace GoombaRender
             m_Context.GetGlad().Clear(GL_COLOR_BUFFER_BIT);
             
             shader->Bind();
+            shader->SetUniformMat4("u_Transform", transform);
+            shader->SetUniformMat4("u_View", camera.GetViewMatrix());
+            shader->SetUniformMat4("u_Projection", camera.GetProjectionMatrix());
             vertexArray->Bind();
             
             m_Context.GetGlad().DrawElements(GL_TRIANGLES, indexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
@@ -98,11 +106,15 @@ namespace GoombaRender
             }
             case SDL_EVENT_KEY_DOWN:
             {
-                if (event.key.keysym.sym == SDLK_ESCAPE) 
+                switch (event.key.keysym.sym)
                 {
-                    Stop();
-                    break;
+                    case SDLK_ESCAPE:
+                    {
+                        Stop();
+                        break;
+                    }
                 }
+                break;
             }
         }
     }
