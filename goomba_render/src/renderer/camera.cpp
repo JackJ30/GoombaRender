@@ -3,7 +3,7 @@
 namespace GoombaRender
 {
     Camera::Camera(glm::vec3 position, float pitch, float yaw, glm::vec3 worldUp)
-        : m_Position(position), m_Pitch(pitch), m_Yaw(yaw), m_WorldUp(worldUp), m_Sensitivity(1.0f), m_Speed(1.0f)
+        : m_Position(position), m_Pitch(pitch), m_Yaw(yaw), m_WorldUp(worldUp), m_Sensitivity(1.0f), m_Speed(0.05f)
     {
         CalculateCameraVectors();
     }
@@ -20,7 +20,7 @@ namespace GoombaRender
     
     void Camera::ProcessMovementInput(glm::vec3 amount)
     {
-        m_Position += (m_Right * amount.x) + (m_Front * amount.z) + (m_Up * amount.y);
+        m_Position += m_Speed * ((m_Right * amount.x) + (m_Front * amount.z) + (m_Up * amount.y));
     }
     
     void Camera::ProcessRotationInput(glm::vec2 amount)

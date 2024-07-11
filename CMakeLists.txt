@@ -37,6 +37,7 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/renderer/mesh.cpp
 	${GOOMBARENDERDIR}/src/renderer/camera.cpp
 	${GOOMBARENDERDIR}/src/renderer/perspective_camera.cpp
+	${GOOMBARENDERDIR}/src/engine/input.cpp
 )
 
 set(IMGUI_SOURCES

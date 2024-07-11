@@ -3,12 +3,15 @@
 
 #include <imgui.h>
 
+#include "engine/input.h"
 #include "renderer/vertex_array.h"
 #include "renderer/shader.h"
 #include "renderer/camera.h"
 
 namespace GoombaRender
 {
+    GoombaEngine::Input input;
+    
     std::shared_ptr<VertexArray> vertexArray;
     std::shared_ptr<VertexBuffer> vertexBuffer;
     std::shared_ptr<IndexBuffer> indexBuffer;
@@ -62,6 +65,9 @@ namespace GoombaRender
         m_Window->PollEvents();
         GoombaEngine::ImGUIStartFrame();
         
+        glm::vec3 move_direction(input.IsKeyPressed(SDLK_d) - input.IsKeyPressed(SDLK_a), input.IsKeyPressed(SDLK_e) - input.IsKeyPressed(SDLK_q), input.IsKeyPressed(SDLK_w) - input.IsKeyPressed(SDLK_s));
+        camera.ProcessMovementInput(move_direction);
+        
         {
             m_Context.GetGlad().ClearColor(.1f, .2f, .3f, 1.0f);
             m_Context.GetGlad().Clear(GL_COLOR_BUFFER_BIT);
@@ -91,6 +97,7 @@ namespace GoombaRender
     void RendererApplication::OnEvent(SDL_Event &event)
     {
         GoombaEngine::ImGUIProcessEvent(&event);
+        input.ProcessEvent(event);
 
         switch(event.type)
         {
