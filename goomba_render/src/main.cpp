@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
 // - [x] OpenGL abstractions
 // - [x] SDL input
 // - [ ] Camera
+// - [ ] Refactor application to run on construction
 // - [ ] Textures
 // - [ ] Allow OpenGL abstraction objects to be bound to context later
 // - [ ] Hardcoded render pipeline

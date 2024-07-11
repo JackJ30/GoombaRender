@@ -8,12 +8,12 @@ namespace GoombaRender
         CalculateCameraVectors();
     }
     
-    glm::mat4 Camera::GetViewMatrix()
+    glm::mat4 Camera::GetViewMatrix() const
     {
         return glm::lookAt(m_Position, m_Position + m_Front, m_Up);
     }
     
-    glm::mat4 Camera::GetProjectionMatrix()
+    glm::mat4 Camera::GetProjectionMatrix() const
     {
         return glm::mat4(1);
     }

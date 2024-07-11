@@ -12,8 +12,8 @@ namespace GoombaRender
     public:
         Camera(glm::vec3 position = {0.0f, 0.0f, 0.0f}, float pitch = 0.0f, float yaw = -90.0f, glm::vec3 worldUp = {0.0f, 1.0f, 0.0f});
         
-        glm::mat4 GetViewMatrix();
-        virtual glm::mat4 GetProjectionMatrix();
+        virtual glm::mat4 GetViewMatrix() const;
+        virtual glm::mat4 GetProjectionMatrix() const;
         
         void ProcessMovementInput(glm::vec3 amount);
         void ProcessRotationInput(glm::vec2 amount);

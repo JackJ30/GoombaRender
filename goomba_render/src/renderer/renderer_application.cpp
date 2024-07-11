@@ -6,7 +6,7 @@
 #include "engine/input.h"
 #include "renderer/vertex_array.h"
 #include "renderer/shader.h"
-#include "renderer/camera.h"
+#include "renderer/perspective_camera.h"
 
 namespace GoombaRender
 {
@@ -17,11 +17,11 @@ namespace GoombaRender
     std::shared_ptr<IndexBuffer> indexBuffer;
     std::shared_ptr<Shader> shader;
     glm::mat4 transform;
-    Camera camera;
+    
+    PerspectiveCamera camera;
     
     RendererApplication::RendererApplication()
     {
-    
     }
     
     void RendererApplication::OnInit()
@@ -32,6 +32,8 @@ namespace GoombaRender
         
         // Load GLAD functions pointers for the context
         m_Context.LoadContext(m_Window->GetProcAddress());
+        
+        camera.SetAspect((float)(m_Window->GetWidth()) / (float)(m_Window->GetHeight()));
         
         float vertices[3 * 7] = {
                 -0.5, -0.5, 0.0, 1.0, 0.0, 0.0, 1.0,
