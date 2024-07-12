@@ -15,8 +15,8 @@ namespace GoombaRender
         virtual glm::mat4 GetViewMatrix() const;
         virtual glm::mat4 GetProjectionMatrix() const = 0;
         
-        void ProcessMovementInput(glm::vec3 amount);
-        void ProcessRotationInput(glm::vec2 amount);
+        void ProcessMovementInput(glm::vec3 amount, double delta);
+        void ProcessRotationInput(glm::vec2 amount, double delta);
         
         inline void SetAspect(float aspect) { m_Aspect = aspect; }
         inline void SetSensitivity(float sensitivity) {m_Sensitivity = sensitivity; }

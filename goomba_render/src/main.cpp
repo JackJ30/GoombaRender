@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 // - [x] OpenGL abstractions
 // - [x] SDL input
 // - [x] Camera
-// - [ ] Refactor application to run on construction
+// - [x] Refactor application
 // - [ ] Delta, loop, and debug
 // - [ ] Textures
 // - [ ] Advanced transform

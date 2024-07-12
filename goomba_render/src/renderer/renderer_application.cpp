@@ -71,14 +71,11 @@ namespace GoombaRender
         
         GoombaEngine::ImGUIShutdown();
     }
-
+    
     void RendererApplication::Render(double delta, double interpolation)
     {
         m_Window->PollEvents();
         GoombaEngine::ImGUIStartFrame();
-        
-        glm::vec3 move_direction(input.IsKeyPressed(SDLK_d) - input.IsKeyPressed(SDLK_a), input.IsKeyPressed(SDLK_e) - input.IsKeyPressed(SDLK_q), input.IsKeyPressed(SDLK_w) - input.IsKeyPressed(SDLK_s));
-        camera.ProcessMovementInput(move_direction);
         
         {
             m_Context.GetGlad().ClearColor(.1f, .2f, .3f, 1.0f);
@@ -93,8 +90,9 @@ namespace GoombaRender
             m_Context.GetGlad().DrawElements(GL_TRIANGLES, indexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
         }
 
-        ImGui::Begin("Hello, world!");
-        ImGui::Text("This is some useful text.");
+        ImGui::Begin("Loop Debug");
+        ImGui::Text("Frame time: %f seconds", m_Loop.GetFrameTime());
+        ImGui::Text("Tick rate : %f seconds", m_Loop.GetTickRate());
         ImGui::End();
 
         GoombaEngine::ImGUIRender();
@@ -132,13 +130,15 @@ namespace GoombaRender
             }
             case SDL_EVENT_MOUSE_MOTION:
             {
-                camera.ProcessRotationInput({event.motion.xrel, -event.motion.yrel});
+                // Rotation input is event based, so we don't want to worry about delta, just use a random value
+                camera.ProcessRotationInput({event.motion.xrel, -event.motion.yrel}, 0.01);
             }
         }
     }
     
     void RendererApplication::Tick(double delta)
     {
-    
+        glm::vec3 move_direction(input.IsKeyPressed(SDLK_d) - input.IsKeyPressed(SDLK_a), input.IsKeyPressed(SDLK_e) - input.IsKeyPressed(SDLK_q), input.IsKeyPressed(SDLK_w) - input.IsKeyPressed(SDLK_s));
+        camera.ProcessMovementInput(move_direction, delta);
     }
 }

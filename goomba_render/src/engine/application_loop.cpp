@@ -4,6 +4,8 @@
 
 namespace GoombaEngine
 {
+    double cachedFrameTime;
+    
     double GetCurrentTimeInSeconds()
     {
         return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count() / pow(10,9);
@@ -29,6 +31,7 @@ namespace GoombaEngine
         {
             double newTime = GetCurrentTimeInSeconds();
             double frameTime = newTime - currentTime;
+            cachedFrameTime = frameTime;
             if ( frameTime > m_MaxFrameTime ) frameTime = m_MaxFrameTime;
             currentTime = newTime;
             
@@ -52,5 +55,10 @@ namespace GoombaEngine
         m_Running = false;
         
         GLogInfo("Application loop stopping...");
+    }
+    
+    double ApplicationLoop::GetFrameTime() const
+    {
+        return cachedFrameTime;
     }
 } // GoombaEngine
