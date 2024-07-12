@@ -19,13 +19,21 @@ int main(int argc, char *argv[])
 // - [x] Add event system
 // - [x] Move opengl context stuff to a subclass of window? Or maybe it should be in a renderer class (update: I meod it to glad_context_creator and used another function pointer in glfwwindow)
 // - [x] Escape to exit window
-// - [ ] Maybe create renderer_window? Decide on where the renderer will exist, and how it will interact with multiple windows.
-// - [ ] Hardcoded ImGUI
-// - [ ] OpenGL abstractions
+// - [x] Maybe create renderer_window? Decide on where the renderer will exist, and how it will interact with multiple windows.
+// - [x] Hardcoded ImGUI
+// - [x] OpenGL abstractions
+// - [x] SDL input
+// - [x] Camera
+// - [x] Refactor application
+// - [x] Delta, loop, and debug
+// - [ ] Textures
+// - [ ] Advanced transform (refactor from camera)
+// - [ ] OpenGL abstraction objects should not make API calls in constructor
 // - [ ] Hardcoded render pipeline
 // - [ ] Model loading
-// - [ ] Material system
 // - [ ] Code based scene system
+// - [ ] Generalized pipeline
+// - [ ] Material system
 // - [ ] Forward rendering lighting
 // - [ ] Basic render loop
 // - [ ] Basic delta time

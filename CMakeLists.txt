@@ -29,12 +29,16 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/engine/imgui_layer.cpp
 	${GOOMBARENDERDIR}/src/engine/log.cpp
 	${GOOMBARENDERDIR}/src/engine/graphics_context.cpp
+	${GOOMBARENDERDIR}/src/engine/input.cpp
+	${GOOMBARENDERDIR}/src/engine/application_loop.cpp
 	${GOOMBARENDERDIR}/src/renderer/renderer_application.cpp
 	${GOOMBARENDERDIR}/src/renderer/shader.cpp
 	${GOOMBARENDERDIR}/src/renderer/vertex_array.cpp
 	${GOOMBARENDERDIR}/src/renderer/vertex_buffer.cpp
 	${GOOMBARENDERDIR}/src/renderer/index_buffer.cpp
 	${GOOMBARENDERDIR}/src/renderer/mesh.cpp
+	${GOOMBARENDERDIR}/src/renderer/camera.cpp
+	${GOOMBARENDERDIR}/src/renderer/perspective_camera.cpp
 )
 
 set(IMGUI_SOURCES

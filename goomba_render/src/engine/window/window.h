@@ -28,13 +28,11 @@ namespace GoombaEngine
     public:
         virtual ~Window() {};
 
-        virtual void MakeContextCurrent() = 0;
         virtual void PollEvents() = 0;
         virtual void SwapBuffers() = 0;
 
         virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
-		virtual GraphicsContext & GetGraphicsContext() = 0;
 
 		// Window attributes
 		virtual void SetVSync(bool enabled) = 0;

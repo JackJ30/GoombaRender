@@ -4,20 +4,26 @@
 
 #include "engine/application.h"
 #include "engine/window/sdl_window.h"
+#include "engine/graphics_context.h"
+#include "engine/application_loop.h"
 
 namespace GoombaRender
 {
     class RendererApplication : public GoombaEngine::Application
     {
     public:
-        void OnInit() override;
-        void OnUpdate() override;
-        void OnFinish() override;
-
-    protected:
-        std::unique_ptr<GoombaEngine::SDLWindow> m_Window;
-
+        RendererApplication();
+        
+        void Run() override;
+    
     private:
+        std::unique_ptr<GoombaEngine::SDLWindow> m_Window;
+        GoombaEngine::ApplicationLoop m_Loop;
+        GoombaEngine::GraphicsContext m_Context;
+        
+        void Tick(double delta);
+        void Render(double delta, double interpolation);
+        
         void OnEvent(SDL_Event& event);
     };
 }

@@ -8,7 +8,7 @@
 void GLDebugMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar * msg, const void * data);
 
 namespace GoombaEngine {
-    void GraphicsContext::CreateContext(GLADloadfunc func) {
+    void GraphicsContext::LoadContext(GLADloadfunc func) {
         GLogInfo("Loading OpenGL context...");
         if (!gladLoadGLContext(&m_GladContext, func))
         {
