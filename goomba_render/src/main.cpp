@@ -25,10 +25,10 @@ int main(int argc, char *argv[])
 // - [x] SDL input
 // - [x] Camera
 // - [x] Refactor application
-// - [ ] Delta, loop, and debug
+// - [x] Delta, loop, and debug
 // - [ ] Textures
-// - [ ] Advanced transform
-// - [ ] Allow OpenGL abstraction objects to be bound to context later
+// - [ ] Advanced transform (refactor from camera)
+// - [ ] OpenGL abstraction objects should not make API calls in constructor
 // - [ ] Hardcoded render pipeline
 // - [ ] Model loading
 // - [ ] Code based scene system
