@@ -2,8 +2,8 @@
 
 namespace GoombaRender
 {
-    Camera::Camera(glm::vec3 position, float pitch, float yaw, glm::vec3 worldUp)
-        : m_Position(position), m_Pitch(pitch), m_Yaw(yaw), m_WorldUp(worldUp), m_Sensitivity(1.0f), m_Speed(0.05f)
+    Camera::Camera(glm::vec3 position, float aspect, float pitch, float yaw, glm::vec3 worldUp)
+        : m_Position(position), m_Aspect(aspect), m_Pitch(pitch), m_Yaw(yaw), m_WorldUp(worldUp), m_Sensitivity(0.25f), m_Speed(0.05f)
     {
         CalculateCameraVectors();
     }
@@ -11,11 +11,6 @@ namespace GoombaRender
     glm::mat4 Camera::GetViewMatrix() const
     {
         return glm::lookAt(m_Position, m_Position + m_Front, m_Up);
-    }
-    
-    glm::mat4 Camera::GetProjectionMatrix() const
-    {
-        return glm::mat4(1);
     }
     
     void Camera::ProcessMovementInput(glm::vec3 amount)

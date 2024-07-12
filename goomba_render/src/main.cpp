@@ -23,9 +23,11 @@ int main(int argc, char *argv[])
 // - [x] Hardcoded ImGUI
 // - [x] OpenGL abstractions
 // - [x] SDL input
-// - [ ] Camera
+// - [x] Camera
 // - [ ] Refactor application to run on construction
+// - [ ] Delta, loop, and debug
 // - [ ] Textures
+// - [ ] Advanced transform
 // - [ ] Allow OpenGL abstraction objects to be bound to context later
 // - [ ] Hardcoded render pipeline
 // - [ ] Model loading

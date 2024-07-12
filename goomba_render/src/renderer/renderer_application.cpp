@@ -18,13 +18,13 @@ namespace GoombaRender
     std::shared_ptr<Shader> shader;
     glm::mat4 transform;
     
-    PerspectiveCamera camera;
+    PerspectiveCamera camera({0.0, 0.0, 1.0});
     
     RendererApplication::RendererApplication()
     {
     }
     
-    void RendererApplication::OnInit()
+    void RendererApplication::Run()
     {
         m_Window = std::make_unique<GoombaEngine::SDLWindow>(GoombaEngine::WindowProperties());
         m_Window->RegisterEventCallback(std::bind(&RendererApplication::OnEvent, this, std::placeholders::_1));
@@ -33,7 +33,11 @@ namespace GoombaRender
         // Load GLAD functions pointers for the context
         m_Context.LoadContext(m_Window->GetProcAddress());
         
-        camera.SetAspect((float)(m_Window->GetWidth()) / (float)(m_Window->GetHeight()));
+        // Setup Loop
+        m_Loop.RegisterRenderCallback(std::bind(&RendererApplication::Render, this, std::placeholders::_1, std::placeholders::_2));
+        m_Loop.RegisterTickCallback(std::bind(&RendererApplication::Tick, this, std::placeholders::_1));
+        
+        camera.SetAspect(static_cast<float>(m_Window->GetWidth()) / static_cast<float>(m_Window->GetHeight()));
         
         float vertices[3 * 7] = {
                 -0.5, -0.5, 0.0, 1.0, 0.0, 0.0, 1.0,
@@ -60,9 +64,15 @@ namespace GoombaRender
         transform = glm::translate(glm::mat4(1.0f),{0.0f, 0.0f, 0.0f});
         
         shader = std::make_shared<Shader>(m_Context, "resources/shaders/test.glsl");
+        
+        // LOOP
+        m_Loop.Run();
+        // LOOP
+        
+        GoombaEngine::ImGUIShutdown();
     }
 
-    void RendererApplication::OnUpdate()
+    void RendererApplication::Render(double delta, double interpolation)
     {
         m_Window->PollEvents();
         GoombaEngine::ImGUIStartFrame();
@@ -91,11 +101,6 @@ namespace GoombaRender
         m_Window->SwapBuffers();
     }
 
-    void RendererApplication::OnFinish()
-    {
-        GoombaEngine::ImGUIShutdown();
-    }
-
     void RendererApplication::OnEvent(SDL_Event &event)
     {
         GoombaEngine::ImGUIProcessEvent(&event);
@@ -105,12 +110,12 @@ namespace GoombaRender
         {
             case SDL_EVENT_QUIT: 
             {
-                Stop();
+                m_Loop.Stop();
                 break;
             }
             case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
             {
-                if (event.window.windowID == m_Window->GetSDLWindowID()) Stop();
+                if (event.window.windowID == m_Window->GetSDLWindowID()) m_Loop.Stop();
                 break;
             }
             case SDL_EVENT_KEY_DOWN:
@@ -119,12 +124,21 @@ namespace GoombaRender
                 {
                     case SDLK_ESCAPE:
                     {
-                        Stop();
+                        m_Loop.Stop();
                         break;
                     }
                 }
                 break;
             }
+            case SDL_EVENT_MOUSE_MOTION:
+            {
+                camera.ProcessRotationInput({event.motion.xrel, -event.motion.yrel});
+            }
         }
+    }
+    
+    void RendererApplication::Tick(double delta)
+    {
+    
     }
 }
