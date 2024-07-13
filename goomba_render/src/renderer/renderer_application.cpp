@@ -7,6 +7,7 @@
 #include "renderer/vertex_array.h"
 #include "renderer/shader.h"
 #include "renderer/perspective_camera.h"
+#include "renderer/texture.h"
 
 namespace GoombaRender
 {
@@ -17,6 +18,8 @@ namespace GoombaRender
     std::shared_ptr<IndexBuffer> indexBuffer;
     std::shared_ptr<Shader> shader;
     glm::mat4 transform;
+    
+    Texture2D texture;
     
     PerspectiveCamera camera({0.0, 0.0, 1.0});
     
@@ -39,23 +42,25 @@ namespace GoombaRender
         
         camera.SetAspect(static_cast<float>(m_Window->GetWidth()) / static_cast<float>(m_Window->GetHeight()));
         
-        float vertices[3 * 7] = {
-                -0.5, -0.5, 0.0, 1.0, 0.0, 0.0, 1.0,
-                0.5, -0.5, 0.0, 0.0, 1.0, 0.0, 1.0,
-                0.0, 0.5, 0.0, 0.0, 0.0, 1.0, 1.0
+        float vertices[4 * 5] = {
+                -1.0, -1.0, 0.0,  0.0f, 0.0f,
+                1.0, -1.0, 0.0,   1.0f, 0.0f,
+                1.0, 1.0, 0.0, 1.0f, 1.0f,
+                -1.0, 1.0, 0.0,0.0f, 1.0f,
         };
-        unsigned int indices[3] = {
-                0, 1, 2
+        unsigned int indices[6] = {
+                0, 1, 2,
+                2, 3, 0
         };
         
         BufferLayout layout = {
                 { ShaderDataType::Float3, "a_Position" },
-                { ShaderDataType::Float4, "a_Color" }
+                { ShaderDataType::Float2, "a_TexCoord" }
         };
         
         vertexBuffer = std::make_shared<VertexBuffer>(m_Context, vertices, sizeof(vertices));
         vertexBuffer->SetLayout(layout);
-        indexBuffer = std::make_shared<IndexBuffer>(m_Context, indices, 3);
+        indexBuffer = std::make_shared<IndexBuffer>(m_Context, indices, 6);
         
         vertexArray = std::make_shared<VertexArray>(m_Context);
         vertexArray->AddVertexBuffer(vertexBuffer);
@@ -64,6 +69,9 @@ namespace GoombaRender
         transform = glm::translate(glm::mat4(1.0f),{0.0f, 0.0f, 0.0f});
         
         shader = std::make_shared<Shader>(m_Context, "resources/shaders/test.glsl");
+        
+        texture.AssignContext(m_Context);
+        texture.Create("resources/images/goomba.png");
         
         // LOOP
         m_Loop.Run();

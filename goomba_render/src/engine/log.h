@@ -2,7 +2,7 @@
 #define GOOMBARENDER_LOG_H
 
 #include <spdlog/spdlog.h>
-#include <libassert/assert.hpp>
+#include <spdlog/fmt/fmt.h>
 
 namespace GoombaEngine
 {
@@ -11,6 +11,7 @@ namespace GoombaEngine
     void InitLogger();
 }
 
+// TODO - System for suppressing repeated error messages?
 #define GLogTrace(args...)     GoombaEngine::GetLogger()->trace(args)
 #define GLogInfo(args...)      GoombaEngine::GetLogger()->info(args)
 #define GLogWarn(args...)      GoombaEngine::GetLogger()->warn(args)

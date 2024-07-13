@@ -38,6 +38,7 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/renderer/index_buffer.cpp
 	${GOOMBARENDERDIR}/src/renderer/mesh.cpp
 	${GOOMBARENDERDIR}/src/renderer/camera.cpp
+	${GOOMBARENDERDIR}/src/renderer/texture.cpp
 	${GOOMBARENDERDIR}/src/renderer/perspective_camera.cpp
 )
 

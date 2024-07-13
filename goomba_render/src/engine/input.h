@@ -8,7 +8,7 @@ namespace GoombaEngine
     class Input
     {
     public:
-        void ProcessEvent(SDL_Event &event);
+        void ProcessEvent(SDL_Event &event); // TODO - Implement pressed and released (should still be using events though). Implement mouse click and move. Maybe implement custom event system.
         bool IsKeyPressed(SDL_Keycode keycode);
         bool IsKeyJustPressed(SDL_Keycode keycode);
         bool IsKeyJustReleased(SDL_Keycode keycode);

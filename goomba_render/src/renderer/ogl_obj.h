@@ -1,16 +1,24 @@
-//
-// Created by jack on 7/13/24.
-//
-
 #ifndef GOOMBARENDER_OGL_OBJ_H
 #define GOOMBARENDER_OGL_OBJ_H
 
-namespace GoombaRender {
+#include "engine/graphics_context.h"
 
-class OglObj {
-
-};
-
+namespace GoombaRender
+{
+    class OglObj
+    {
+    public:
+        void AssignContext(GoombaEngine::GraphicsContext& context) { m_Context = context; m_HasContext = true; } // TODO - should manage this reference better
+        
+    protected:
+        OglObj() = default;
+        
+        inline void RequireContext() const { DEBUG_ASSERT(m_HasContext == true, "Context must be assigned before using OGL object."); }
+        
+        GoombaEngine::GraphicsContext m_Context;
+        bool m_HasContext = false;
+    };
+    
 } // GoombaRender
 
 #endif //GOOMBARENDER_OGL_OBJ_H
