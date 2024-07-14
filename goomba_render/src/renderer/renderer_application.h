@@ -3,7 +3,7 @@
 
 
 #include "engine/application.h"
-#include "engine/window/sdl_window.h"
+#include "engine/window.h"
 #include "engine/graphics_context.h"
 #include "engine/application_loop.h"
 
@@ -17,7 +17,7 @@ namespace GoombaRender
         void Run() override;
     
     private:
-        std::unique_ptr<GoombaEngine::SDLWindow> m_Window;
+        std::unique_ptr<GoombaEngine::Window> m_Window;
         GoombaEngine::ApplicationLoop m_Loop;
         GoombaEngine::GraphicsContext m_Context;
         

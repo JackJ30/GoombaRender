@@ -29,7 +29,7 @@ namespace GoombaRender
     
     void RendererApplication::Run()
     {
-        m_Window = std::make_unique<GoombaEngine::SDLWindow>(GoombaEngine::WindowProperties());
+        m_Window = std::make_unique<GoombaEngine::Window>(GoombaEngine::WindowProperties());
         m_Window->RegisterEventCallback(std::bind(&RendererApplication::OnEvent, this, std::placeholders::_1));
         GoombaEngine::ImGUISetup(*m_Window);
         

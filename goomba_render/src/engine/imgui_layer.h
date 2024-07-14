@@ -1,11 +1,11 @@
 #ifndef GOOMBARENDER_IMGUI_LAYER_H
 #define GOOMBARENDER_IMGUI_LAYER_H
 
-#include "engine/window/sdl_window.h"
+#include "window.h"
 
 namespace GoombaEngine
 {
-    void ImGUISetup(SDLWindow& window);
+    void ImGUISetup(Window& window);
     void ImGUIStartFrame();
     void ImGUIProcessEvent(SDL_Event* event);
     void ImGUIRender();

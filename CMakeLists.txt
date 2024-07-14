@@ -25,7 +25,7 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/main.cpp
 	${GOOMBARENDERDIR}/src/engine/engine.cpp
 	${GOOMBARENDERDIR}/src/engine/application.cpp
-	${GOOMBARENDERDIR}/src/engine/window/sdl_window.cpp
+	${GOOMBARENDERDIR}/src/engine/window.cpp
 	${GOOMBARENDERDIR}/src/engine/imgui_layer.cpp
 	${GOOMBARENDERDIR}/src/engine/log.cpp
 	${GOOMBARENDERDIR}/src/engine/graphics_context.cpp

@@ -6,7 +6,7 @@
 
 namespace GoombaEngine
 {
-    void ImGUISetup(SDLWindow& window)
+    void ImGUISetup(Window& window)
     {
         GLogInfo("Initializing ImGUI...");
 

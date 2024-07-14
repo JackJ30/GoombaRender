@@ -1,10 +1,10 @@
-#include "sdl_window.h"
+#include "window.h"
 
 namespace GoombaEngine
 {
     static size_t s_Count = 0;
 
-    SDLWindow::SDLWindow(WindowProperties properties) : m_Properties{properties}
+    Window::Window(WindowProperties properties) : m_Properties{properties}
     {
         GLogInfo("Creating SDL3 window...");
 
@@ -47,7 +47,7 @@ namespace GoombaEngine
         GLogInfo("SDL3 window created");
     }
 
-    SDLWindow::~SDLWindow()
+    Window::~Window()
     {
         if (m_Handle)
         {
@@ -63,7 +63,7 @@ namespace GoombaEngine
             }
         }
     }
-    void SDLWindow::PollEvents()
+    void Window::PollEvents()
     {
         SDL_Event event;
         while (SDL_PollEvent(&event))
@@ -72,32 +72,21 @@ namespace GoombaEngine
         }
     }
 
-    void SDLWindow::SwapBuffers()
+    void Window::SwapBuffers()
     {
         int result = SDL_GL_SwapWindow(m_Handle);
         ASSERT(result == 0, "SDL failed to swap the window buffers: {}", SDL_GetError());
     }
 
-    SDL_WindowID SDLWindow::GetSDLWindowID()
-    {
-        return SDL_GetWindowID(m_Handle);
-    }
-
-    void SDLWindow::SetVSync(bool enabled)
+    void Window::SetVSync(bool enabled)
     {
         int result = SDL_GL_SetSwapInterval(enabled ? 1 : 0);
         ASSERT(result == 0, "SDL failed to set swap interval: {}", SDL_GetError());
         m_Properties.VSync = enabled;
     }
 
-    void SDLWindow::RegisterEventCallback(std::function<void(SDL_Event&)> eventCallback)
+    void Window::RegisterEventCallback(std::function<void(SDL_Event&)> eventCallback)
     {
         m_EventCallback = eventCallback;
-    }
-    
-    GLADloadfunc SDLWindow::GetProcAddress()
-    {
-        SDL_GL_MakeCurrent(m_Handle, m_Context);
-        return SDL_GL_GetProcAddress;
     }
 }
