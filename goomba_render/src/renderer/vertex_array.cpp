@@ -71,4 +71,13 @@ namespace GoombaRender
         
         m_IndexBuffer = indexBuffer;
     }
+    
+    unsigned int VertexArray::GetNumIndices() const
+    {
+        RequireContext();
+        DEBUG_ASSERT(m_Created, "Vertex array must be created before setting index buffer.");
+        DEBUG_ASSERT(m_IndexBuffer != nullptr, "Vertex array must have an index buffer.");
+        
+        return m_IndexBuffer->GetCount();
+    }
 } // GoombaRender
