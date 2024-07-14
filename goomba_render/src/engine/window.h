@@ -37,14 +37,16 @@ namespace GoombaEngine
         void SwapBuffers();
 		void SetVSync(bool enabled);
         void RegisterEventCallback(std::function<void(SDL_Event&)> eventCallback);
-
+        inline void SetMouseLockState(bool state) { SDL_SetRelativeMouseMode(state); };
+        
         inline SDL_Window* GetHandle() const { return m_Handle; }
         inline unsigned int GetWidth() const { return m_Properties.Width; }
 		inline unsigned int GetHeight() const { return m_Properties.Height; }
+		inline bool IsVSyncEnabled() const { return m_Properties.VSync; }
+        inline bool GetMouseLockState() { return SDL_GetRelativeMouseMode(); }
         inline SDL_GLContext& GetSDLContext() { return m_Context; };
         inline GLADloadfunc GetProcAddress() const { SDL_GL_MakeCurrent(m_Handle, m_Context); return SDL_GL_GetProcAddress; }
         inline SDL_WindowID GetSDLWindowID() const { return SDL_GetWindowID(m_Handle); }
-		virtual bool IsVSyncEnabled() const { return m_Properties.VSync; }
 
     private:
         WindowProperties m_Properties;

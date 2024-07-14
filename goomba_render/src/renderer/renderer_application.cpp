@@ -141,13 +141,23 @@ namespace GoombaRender
                 m_Context.GetGlad().Viewport(0,0,w, h);
                 camera.SetAspect(static_cast<float>(w) / static_cast<float>(h));
             }
+            case SDL_EVENT_MOUSE_BUTTON_DOWN:
+            {
+                if (event.button.button == SDL_BUTTON_LEFT)
+                {
+                    m_Window->SetMouseLockState(true);
+                }
+                break;
+            }
             case SDL_EVENT_KEY_DOWN:
             {
                 switch (event.key.keysym.sym)
                 {
                     case SDLK_ESCAPE:
                     {
-                        m_Loop.Stop();
+                        if (m_Window->GetMouseLockState()) m_Window->SetMouseLockState(false);
+                        else m_Loop.Stop();
+                        
                         break;
                     }
                 }
@@ -157,6 +167,7 @@ namespace GoombaRender
             {
                 // Rotation input is event based, so we don't want to worry about delta, just use a random value
                 camera.ProcessRotationInput({event.motion.xrel, -event.motion.yrel}, 0.01);
+                break;
             }
         }
     }

@@ -29,10 +29,11 @@ int main(int argc, char *argv[])
 // - [x] Textures
 // - [x] OpenGL abstraction objects should not make API calls in constructor (get rid of sdl)
 // - [ ] Window scaling and mouse
+// - [ ] Model system and loading
 // - [ ] Hardcoded render pipeline
-// - [ ] Model loading
 // - [ ] Code based scene system
 // - [ ] Time system and ms timing
+// - [ ] Frame buffers
 // - [ ] Generalized pipeline
 // - [ ] Material system
 // - [ ] Documentation for style, includes, etc
