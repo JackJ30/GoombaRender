@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 // - [x] Refactor application
 // - [x] Delta, loop, and debug
 // - [x] Textures
-// - [ ] OpenGL abstraction objects should not make API calls in constructor (get rid of sdl)
+// - [x] OpenGL abstraction objects should not make API calls in constructor (get rid of sdl)
 // - [ ] Window scaling and mouse
 // - [ ] Hardcoded render pipeline
 // - [ ] Model loading

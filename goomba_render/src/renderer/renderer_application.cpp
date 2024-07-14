@@ -9,6 +9,8 @@
 #include "renderer/perspective_camera.h"
 #include "renderer/texture.h"
 
+// TODO - Window resizing should affect framebuffers... somehow
+
 namespace GoombaRender
 {
     GoombaEngine::Input input;
@@ -131,6 +133,13 @@ namespace GoombaRender
             {
                 if (event.window.windowID == m_Window->GetSDLWindowID()) m_Loop.Stop();
                 break;
+            }
+            case SDL_EVENT_WINDOW_RESIZED:
+            {
+                int w = m_Window->GetWidth();
+                int h = m_Window->GetHeight();
+                m_Context.GetGlad().Viewport(0,0,w, h);
+                camera.SetAspect(static_cast<float>(w) / static_cast<float>(h));
             }
             case SDL_EVENT_KEY_DOWN:
             {

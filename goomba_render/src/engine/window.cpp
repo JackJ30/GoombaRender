@@ -68,6 +68,19 @@ namespace GoombaEngine
         SDL_Event event;
         while (SDL_PollEvent(&event))
         {
+            switch(event.type)
+            {
+                case SDL_EVENT_WINDOW_RESIZED:
+                {
+                    int w,h;
+                    SDL_GetWindowSizeInPixels(m_Handle, &w, &h);
+                    m_Properties.Width = w;
+                    m_Properties.Height = h;
+                    
+                    break;
+                }
+            }
+            
             if (m_EventCallback) m_EventCallback(event);
         }
     }
