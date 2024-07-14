@@ -57,13 +57,23 @@ namespace GoombaRender
         }
     }
     
-    void Texture2D::Bind(unsigned int unit) const
+    void Texture2D::Bind(unsigned int unit)
     {
         RequireContext();
         DEBUG_ASSERT(m_Created, "Texture must be created before binding.");
         
-        m_Context.GetGlad().ActiveTexture(GL_TEXTURE0 + unit);
+        m_BoundUnit = unit;
+        m_Context.GetGlad().ActiveTexture(GL_TEXTURE0 + m_BoundUnit);
         m_Context.GetGlad().BindTexture(GL_TEXTURE_2D, m_RendererID);
+    }
+    
+    void Texture2D::Unbind()
+    {
+        RequireContext();
+        DEBUG_ASSERT(m_Created, "Texture must be created before unbinding.");
+        
+        m_Context.GetGlad().ActiveTexture(GL_TEXTURE0 + m_BoundUnit);
+        m_Context.GetGlad().BindTexture(GL_TEXTURE_2D, 0);
     }
     
     Texture2D::~Texture2D()

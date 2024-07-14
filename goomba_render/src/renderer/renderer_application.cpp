@@ -16,9 +16,9 @@ namespace GoombaRender
     std::shared_ptr<VertexArray> vertexArray;
     std::shared_ptr<VertexBuffer> vertexBuffer;
     std::shared_ptr<IndexBuffer> indexBuffer;
-    std::shared_ptr<Shader> shader;
     glm::mat4 transform;
     
+    Shader shader;
     Texture2D texture;
     
     PerspectiveCamera camera({0.0, 0.0, 1.0});
@@ -58,17 +58,25 @@ namespace GoombaRender
                 { ShaderDataType::Float2, "a_TexCoord" }
         };
         
-        vertexBuffer = std::make_shared<VertexBuffer>(m_Context, vertices, sizeof(vertices));
+        vertexBuffer = std::make_shared<VertexBuffer>();
+        vertexBuffer->AssignContext(m_Context);
+        vertexBuffer->Create(vertices, sizeof(vertices));
         vertexBuffer->SetLayout(layout);
-        indexBuffer = std::make_shared<IndexBuffer>(m_Context, indices, 6);
         
-        vertexArray = std::make_shared<VertexArray>(m_Context);
+        indexBuffer = std::make_shared<IndexBuffer>();
+        indexBuffer->AssignContext(m_Context);
+        indexBuffer->Create(indices, 6);
+        
+        vertexArray = std::make_shared<VertexArray>();
+        vertexArray->AssignContext(m_Context);
+        vertexArray->Create();
         vertexArray->AddVertexBuffer(vertexBuffer);
         vertexArray->SetIndexBuffer(indexBuffer);
         
         transform = glm::translate(glm::mat4(1.0f),{0.0f, 0.0f, 0.0f});
         
-        shader = std::make_shared<Shader>(m_Context, "resources/shaders/test.glsl");
+        shader.AssignContext(m_Context);
+        shader.Create("resources/shaders/test.glsl");
         
         texture.AssignContext(m_Context);
         texture.Create("resources/images/goomba.png");
@@ -89,10 +97,10 @@ namespace GoombaRender
             m_Context.GetGlad().ClearColor(.1f, .2f, .3f, 1.0f);
             m_Context.GetGlad().Clear(GL_COLOR_BUFFER_BIT);
             
-            shader->Bind();
-            shader->SetUniformMat4("u_Transform", transform);
-            shader->SetUniformMat4("u_View", camera.GetViewMatrix());
-            shader->SetUniformMat4("u_Projection", camera.GetProjectionMatrix());
+            shader.Bind();
+            shader.SetUniformMat4("u_Transform", transform);
+            shader.SetUniformMat4("u_View", camera.GetViewMatrix());
+            shader.SetUniformMat4("u_Projection", camera.GetProjectionMatrix());
             vertexArray->Bind();
             
             m_Context.GetGlad().DrawElements(GL_TRIANGLES, indexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);

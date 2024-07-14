@@ -1,16 +1,17 @@
 #ifndef GOOMBARENDER_VERTEX_BUFFER_H
 #define GOOMBARENDER_VERTEX_BUFFER_H
 
-#include "engine/graphics_context.h"
+#include "renderer/ogl_obj.h"
+
 #include "renderer/buffer_layout.h"
 
 namespace GoombaRender
 {
-    class VertexBuffer
+    class VertexBuffer : public OglObj
     {
     public:
-        VertexBuffer(GoombaEngine::GraphicsContext context, size_t size);
-        VertexBuffer(GoombaEngine::GraphicsContext context, float* vertices, size_t size);
+        void Create(size_t size);
+        void Create(float* vertices, size_t size);
         ~VertexBuffer();
         
         void Bind() const;
@@ -22,7 +23,6 @@ namespace GoombaRender
         inline void SetLayout(const BufferLayout layout)  { m_Layout = layout; }
     private:
         unsigned int m_RendererID;
-        GoombaEngine::GraphicsContext m_Context;
         BufferLayout m_Layout;
     };
 

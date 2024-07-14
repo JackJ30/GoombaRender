@@ -1,16 +1,18 @@
 #ifndef GOOMBARENDER_INDEX_BUFFER_H
 #define GOOMBARENDER_INDEX_BUFFER_H
 
-#include "engine/graphics_context.h"
+#include "renderer/ogl_obj.h"
 
 namespace GoombaRender
 {
-    class IndexBuffer
+    class IndexBuffer : public OglObj
     {
     public:
-        IndexBuffer(GoombaEngine::GraphicsContext context, size_t count);
-        IndexBuffer(GoombaEngine::GraphicsContext context, unsigned int* indices, size_t count);
-        virtual ~IndexBuffer();
+        IndexBuffer() = default;
+        ~IndexBuffer();
+        
+        void Create(size_t count);
+        void Create(unsigned int* indices, size_t count);
         
         void Bind() const;
         void Unbind() const;
@@ -20,7 +22,6 @@ namespace GoombaRender
         inline size_t GetCount() const { return m_Count; }
     private:
         unsigned int m_RendererID;
-        GoombaEngine::GraphicsContext m_Context;
         size_t m_Count;
     };
 

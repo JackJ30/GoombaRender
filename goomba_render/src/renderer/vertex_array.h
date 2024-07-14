@@ -11,10 +11,13 @@
 namespace GoombaRender
 {
     
-    class VertexArray
+    class VertexArray : public OglObj
     {
     public:
-        VertexArray(GoombaEngine::GraphicsContext context);
+        VertexArray() = default;
+        ~VertexArray();
+        
+        void Create();
         
         void Bind() const;
         void Unbind() const;
@@ -23,7 +26,6 @@ namespace GoombaRender
         void SetIndexBuffer(const std::shared_ptr<IndexBuffer> indexBuffer);
     private:
         unsigned int m_RendererID;
-        GoombaEngine::GraphicsContext m_Context;
         std::vector<std::shared_ptr<VertexBuffer>> m_VertexBuffers;
         std::shared_ptr<IndexBuffer> m_IndexBuffer;
     };

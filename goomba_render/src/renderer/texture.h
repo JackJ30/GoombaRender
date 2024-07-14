@@ -23,7 +23,8 @@ namespace GoombaRender
         
         virtual void SetFiltering(TextureFilterType minFilter, TextureFilterType magFilter) = 0;
         
-        virtual void Bind(unsigned int unit = 0) const = 0;
+        virtual void Bind(unsigned int unit = 0) = 0;
+        virtual void Unbind() = 0;
     };
     
     class Texture2D : public Texture
@@ -39,10 +40,12 @@ namespace GoombaRender
         
         void SetFiltering(TextureFilterType minFilter, TextureFilterType magFilter) override;
         
-        void Bind(unsigned int unit = 0) const override;
+        void Bind(unsigned int unit = 0) override;
+        void Unbind() override;
     private:
         unsigned int m_RendererID;
-        bool m_Created;
+        unsigned int m_BoundUnit = 0;
+        
         unsigned int m_Width, m_Height;
         TextureFilterType m_MinFilter, m_MagFilter;
     };
