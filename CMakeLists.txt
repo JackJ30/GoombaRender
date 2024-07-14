@@ -34,8 +34,6 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/renderer/renderer_application.cpp
 	${GOOMBARENDERDIR}/src/renderer/shader.cpp
 	${GOOMBARENDERDIR}/src/renderer/vertex_array.cpp
-	${GOOMBARENDERDIR}/src/renderer/vertex_buffer.cpp
-	${GOOMBARENDERDIR}/src/renderer/index_buffer.cpp
 	${GOOMBARENDERDIR}/src/renderer/mesh.cpp
 	${GOOMBARENDERDIR}/src/renderer/camera.cpp
 	${GOOMBARENDERDIR}/src/renderer/texture.cpp

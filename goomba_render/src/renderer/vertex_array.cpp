@@ -19,6 +19,9 @@ namespace GoombaRender
         if (m_HasContext && m_Created)
         {
             m_Context.GetGlad().DeleteVertexArrays(1, &m_RendererID);
+            
+            m_Context.GetGlad().DeleteBuffers(m_VertexBuffers.size(), m_VertexBuffers.data());
+            m_Context.GetGlad().DeleteBuffers(1, &m_IndexBuffer);
         }
     }
     
@@ -38,18 +41,19 @@ namespace GoombaRender
         m_Context.GetGlad().BindVertexArray(0);
     }
     
-    void VertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer> vertexBuffer)
+    void VertexArray::AddVertexBuffer(float* vertices, size_t size, const BufferLayout& layout)
     {
         RequireContext();
         DEBUG_ASSERT(m_Created, "Vertex array must be created before adding vertex buffer.");
-        DEBUG_ASSERT(vertexBuffer->IsCreated(), "Vertex buffer must be created before adding to vertex array.");
-        ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex buffer has no layout");
         
         m_Context.GetGlad().BindVertexArray(m_RendererID);
-        vertexBuffer->Bind();
+        
+        unsigned int vbo;
+        m_Context.GetGlad().GenBuffers(1, &vbo);
+        m_Context.GetGlad().BindBuffer(GL_ARRAY_BUFFER, vbo);
+        m_Context.GetGlad().BufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
         
         size_t index = 0;
-        const BufferLayout& layout = vertexBuffer->GetLayout();
         for (const BufferElement& element : layout)
         {
             m_Context.GetGlad().EnableVertexAttribArray(index);
@@ -57,27 +61,22 @@ namespace GoombaRender
             index++;
         }
         
-        m_VertexBuffers.push_back(vertexBuffer);
+        m_VertexBuffers.push_back(vbo);
     }
     
-    void VertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer> indexBuffer)
+    void VertexArray::SetIndexBuffer(unsigned int *indices, size_t numIndices)
     {
         RequireContext();
         DEBUG_ASSERT(m_Created, "Vertex array must be created before setting index buffer.");
-        DEBUG_ASSERT(indexBuffer->IsCreated(), "Index buffer must be created before adding to vertex array.");
         
         m_Context.GetGlad().BindVertexArray(m_RendererID);
-        indexBuffer->Bind();
         
-        m_IndexBuffer = indexBuffer;
-    }
-    
-    unsigned int VertexArray::GetNumIndices() const
-    {
-        RequireContext();
-        DEBUG_ASSERT(m_Created, "Vertex array must be created before setting index buffer.");
-        DEBUG_ASSERT(m_IndexBuffer != nullptr, "Vertex array must have an index buffer.");
+        unsigned int ibo;
+        m_Context.GetGlad().GenBuffers(1, &ibo);
+        m_Context.GetGlad().BindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+        m_Context.GetGlad().BufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(unsigned int), indices, GL_STATIC_DRAW);
         
-        return m_IndexBuffer->GetCount();
+        m_NumIndices = numIndices;
+        m_IndexBuffer = ibo;
     }
 } // GoombaRender

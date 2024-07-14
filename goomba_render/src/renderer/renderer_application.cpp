@@ -58,20 +58,11 @@ namespace GoombaRender
                 { ShaderDataType::Float2, "a_TexCoord" }
         };
         
-        std::shared_ptr<VertexBuffer> vertexBuffer = std::make_shared<VertexBuffer>();
-        vertexBuffer->AssignContext(m_Context);
-        vertexBuffer->Create(vertices, sizeof(vertices));
-        vertexBuffer->SetLayout(layout);
-        
-        std::shared_ptr<IndexBuffer> indexBuffer = std::make_shared<IndexBuffer>();
-        indexBuffer->AssignContext(m_Context);
-        indexBuffer->Create(indices, 6);
-        
         vertexArray = std::make_shared<VertexArray>();
         vertexArray->AssignContext(m_Context);
         vertexArray->Create();
-        vertexArray->AddVertexBuffer(vertexBuffer);
-        vertexArray->SetIndexBuffer(indexBuffer);
+        vertexArray->AddVertexBuffer(vertices, sizeof(vertices), layout);
+        vertexArray->SetIndexBuffer(indices, 6);
         
         transform = glm::translate(glm::mat4(1.0f),{0.0f, 0.0f, 0.0f});
         

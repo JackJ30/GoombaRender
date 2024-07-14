@@ -5,8 +5,8 @@
 #ifndef GOOMBARENDER_VERTEX_ARRAY_H
 #define GOOMBARENDER_VERTEX_ARRAY_H
 
-#include "renderer/vertex_buffer.h"
-#include "renderer/index_buffer.h"
+#include "renderer/ogl_obj.h"
+#include "renderer/buffer_layout.h"
 
 namespace GoombaRender
 {
@@ -22,14 +22,15 @@ namespace GoombaRender
         void Bind() const;
         void Unbind() const;
         
-        void AddVertexBuffer(const std::shared_ptr<VertexBuffer> vertexBuffer);
-        void SetIndexBuffer(const std::shared_ptr<IndexBuffer> indexBuffer);
+        void AddVertexBuffer(float* vertices, size_t size, const BufferLayout& layout);
+        void SetIndexBuffer(unsigned int *indices, size_t numIndices);
         
-        unsigned int GetNumIndices() const;
+        inline unsigned int GetNumIndices() const { return m_NumIndices; }
     private:
         unsigned int m_RendererID;
-        std::vector<std::shared_ptr<VertexBuffer>> m_VertexBuffers;
-        std::shared_ptr<IndexBuffer> m_IndexBuffer;
+        std::vector<unsigned int> m_VertexBuffers;
+        unsigned int m_IndexBuffer;
+        size_t m_NumIndices = 0;
     };
     
 } // GoombaRender
