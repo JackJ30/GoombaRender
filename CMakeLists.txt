@@ -28,10 +28,11 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/engine/graphics_context.cpp
 	${GOOMBARENDERDIR}/src/engine/input.cpp
 	${GOOMBARENDERDIR}/src/engine/application_loop.cpp
+	${GOOMBARENDERDIR}/src/renderer/renderer.cpp
 	${GOOMBARENDERDIR}/src/renderer/renderer_application.cpp
 	${GOOMBARENDERDIR}/src/renderer/shader.cpp
 	${GOOMBARENDERDIR}/src/renderer/vertex_array.cpp
-	${GOOMBARENDERDIR}/src/renderer/mesh.cpp
+	${GOOMBARENDERDIR}/src/renderer/model.cpp
 	${GOOMBARENDERDIR}/src/renderer/camera.cpp
 	${GOOMBARENDERDIR}/src/renderer/texture.cpp
 	${GOOMBARENDERDIR}/src/renderer/perspective_camera.cpp

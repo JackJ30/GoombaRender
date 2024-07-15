@@ -29,7 +29,12 @@ int main(int argc, char *argv[])
 // - [x] Textures
 // - [x] OpenGL abstraction objects should not make API calls in constructor (get rid of sdl)
 // - [x] Window scaling and mouse
-// - [ ] Model system and loading
+// - [ ] Renderer overhaul:
+//      - [ ] Renderer class (load phase, draw phase)
+//      - [ ] abstractions should not load themselves (specific methods for loading themselves, asset handles)
+//      - [ ] Model class (contains meshes, which have materials)
+//      - [ ] GLTF model loading (go through and load everything)
+//      - [ ] Scene system
 // - [ ] Hardcoded render pipeline
 // - [ ] Code based scene system
 // - [ ] Time system and ms timing

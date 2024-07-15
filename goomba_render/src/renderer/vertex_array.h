@@ -8,6 +8,8 @@
 #include "renderer/ogl_obj.h"
 #include "renderer/buffer_layout.h"
 
+// TODO - support dynamic and stream draw
+
 namespace GoombaRender
 {
     
