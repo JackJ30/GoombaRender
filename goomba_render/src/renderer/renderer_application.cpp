@@ -105,6 +105,12 @@ namespace GoombaRender
         GoombaEngine::ImGUIRender();
         m_Window->SwapBuffers();
     }
+    
+    void RendererApplication::Tick(double delta)
+    {
+        glm::vec3 move_direction(input.IsKeyPressed(SDLK_d) - input.IsKeyPressed(SDLK_a), input.IsKeyPressed(SDLK_e) - input.IsKeyPressed(SDLK_q), input.IsKeyPressed(SDLK_w) - input.IsKeyPressed(SDLK_s));
+        camera.ProcessMovementInput(move_direction, delta);
+    }
 
     void RendererApplication::OnEvent(SDL_Event &event)
     {
@@ -113,7 +119,7 @@ namespace GoombaRender
 
         switch(event.type)
         {
-            case SDL_EVENT_QUIT: 
+            case SDL_EVENT_QUIT:
             {
                 m_Loop.Stop();
                 break;
@@ -161,9 +167,4 @@ namespace GoombaRender
         }
     }
     
-    void RendererApplication::Tick(double delta)
-    {
-        glm::vec3 move_direction(input.IsKeyPressed(SDLK_d) - input.IsKeyPressed(SDLK_a), input.IsKeyPressed(SDLK_e) - input.IsKeyPressed(SDLK_q), input.IsKeyPressed(SDLK_w) - input.IsKeyPressed(SDLK_s));
-        camera.ProcessMovementInput(move_direction, delta);
-    }
 }
