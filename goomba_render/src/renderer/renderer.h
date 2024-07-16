@@ -7,13 +7,10 @@
 #include "renderer/texture.h"
 #include "renderer/shader.h"
 #include "renderer/model.h"
+#include "renderer/asset.h"
 
 namespace GoombaRender
 {
-    struct Texture2DAsset { unsigned int id; };
-    struct ShaderAsset    { unsigned int id; };
-    struct ModelAsset     { unsigned int id; };
-    
     struct RenderInstruction
     {
         VertexArray vao;

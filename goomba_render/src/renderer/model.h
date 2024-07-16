@@ -2,20 +2,25 @@
 #define GOOMBARENDER_MODEL_H
 
 #include "renderer/vertex_array.h"
+#include "renderer/asset.h"
+
+#include <tiny_gltf.h>
 
 namespace GoombaRender
 {
     struct Mesh
     {
-        unsigned int vao;
-        std::vector<unsigned int> textures;
+        VertexArray vao;
+        std::vector<Texture2DAsset> textures;
     };
     
-    class Model : OglObj
+    class Model : public OglObj
     {
     public:
         void Create();
         void Delete();
+        
+        void AddMesh(VertexArray vao, std::vector<Texture2DAsset> textures);
         
     private:
         std::vector<Mesh> m_Meshes;

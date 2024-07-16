@@ -1,8 +1,8 @@
 #ifndef GOOMBARENDER_SCENE_H
 #define GOOMBARENDER_SCENE_H
 
+#include "renderer/asset.h"
 #include "renderer/camera.h"
-#include "renderer/renderer.h"
 
 namespace GoombaRender
 {

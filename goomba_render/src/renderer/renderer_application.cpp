@@ -12,12 +12,6 @@
 
 namespace GoombaRender
 {
-    std::shared_ptr<VertexArray> vertexArray;
-    glm::mat4 transform;
-    
-    Shader shader;
-    Texture2D texture;
-    
     PerspectiveCamera camera({0.0, 0.0, 1.0});
     
     RendererApplication::RendererApplication()
@@ -53,25 +47,6 @@ namespace GoombaRender
                 2, 3, 0
         };
         
-        BufferLayout layout = {
-                { ShaderDataType::Float3, "a_Position" },
-                { ShaderDataType::Float2, "a_TexCoord" }
-        };
-        
-        vertexArray = std::make_shared<VertexArray>();
-        vertexArray->AssignContext(m_Context);
-        vertexArray->Create();
-        vertexArray->AddVertexBuffer(vertices, sizeof(vertices), layout);
-        vertexArray->SetIndexBuffer(indices, 6);
-        
-        transform = glm::translate(glm::mat4(1.0f),{0.0f, 0.0f, 0.0f});
-        
-        shader.AssignContext(m_Context);
-        shader.Create(<#initializer#>, "resources/shaders/test.glsl");
-        
-        texture.AssignContext(m_Context);
-        texture.Create("resources/images/goomba.png");
-        
         // LOOP
         m_Loop.Run();
         // LOOP
@@ -87,14 +62,6 @@ namespace GoombaRender
         {
             m_Context.GetGlad().ClearColor(.1f, .2f, .3f, 1.0f);
             m_Context.GetGlad().Clear(GL_COLOR_BUFFER_BIT);
-            
-            shader.Bind();
-            shader.SetUniformMat4("u_Transform", transform);
-            shader.SetUniformMat4("u_View", camera.GetViewMatrix());
-            shader.SetUniformMat4("u_Projection", camera.GetProjectionMatrix());
-            vertexArray->Bind();
-            
-            m_Context.GetGlad().DrawElements(GL_TRIANGLES, vertexArray->GetNumIndices(), GL_UNSIGNED_INT, nullptr);
         }
 
         ImGui::Begin("Loop Debug");

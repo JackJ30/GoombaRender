@@ -121,7 +121,36 @@ namespace GoombaRender
     
     ModelAsset Renderer::LoadModel(const std::string& path)
     {
-        return {0};
+        /*tinygltf::TinyGLTF loader;
+        std::string error;
+        std::string warn;
+        
+        tinygltf::Model loadedGLTF;
+        bool ret = loader.LoadASCIIFromFile(&loadedGLTF, &error, &warn, path);
+        
+        if (!warn.empty()) {
+            GLogError("GLTF loading warning for file '{path}' :\n{}", warn);
+        }
+        if (!error.empty()) {
+            GLogError("GLTF loading error for file '{path}' :\n{}", error);
+        }
+        
+        if (!ret) GLogCritical("Could not load GLTF file");
+        */
+        Model model;
+        model.AssignContext(m_Context);
+        model.Create();
+        
+        unsigned int id = m_LoadedModels.size();
+        m_LoadedModels.insert(std::make_pair(id, model));
+        
+        // the plan
+        // - one mesh per primitive
+        // - go through materials, load textures
+        // - go through meshes and primitives, create their vao's and buffers
+        // - go through
+        
+        return { id };
     }
     
 } // GoombaRender
