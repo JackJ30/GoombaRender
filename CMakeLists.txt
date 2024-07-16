@@ -29,6 +29,7 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/engine/input.cpp
 	${GOOMBARENDERDIR}/src/engine/application_loop.cpp
 	${GOOMBARENDERDIR}/src/renderer/renderer.cpp
+	${GOOMBARENDERDIR}/src/renderer/scene.cpp
 	${GOOMBARENDERDIR}/src/renderer/renderer_application.cpp
 	${GOOMBARENDERDIR}/src/renderer/shader.cpp
 	${GOOMBARENDERDIR}/src/renderer/vertex_array.cpp

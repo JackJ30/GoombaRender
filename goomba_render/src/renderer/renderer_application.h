@@ -6,6 +6,8 @@
 #include "engine/window.h"
 #include "engine/graphics_context.h"
 #include "engine/application_loop.h"
+#include "engine/input.h"
+#include "renderer/renderer.h"
 
 namespace GoombaRender
 {
@@ -17,9 +19,11 @@ namespace GoombaRender
         void Run() override;
     
     private:
+        std::unique_ptr<Renderer> m_Renderer = nullptr;
         std::unique_ptr<GoombaEngine::Window> m_Window;
         GoombaEngine::ApplicationLoop m_Loop;
         GoombaEngine::GraphicsContext m_Context;
+        GoombaEngine::Input m_Input;
         
         void Tick(double delta);
         void Render(double delta, double interpolation);

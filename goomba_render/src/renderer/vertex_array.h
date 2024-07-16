@@ -17,9 +17,10 @@ namespace GoombaRender
     {
     public:
         VertexArray() = default;
-        ~VertexArray();
+        ~VertexArray() = default;
         
         void Create();
+        void Delete();
         
         void Bind() const;
         void Unbind() const;

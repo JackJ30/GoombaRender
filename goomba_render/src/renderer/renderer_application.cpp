@@ -3,7 +3,6 @@
 
 #include <imgui.h>
 
-#include "engine/input.h"
 #include "renderer/vertex_array.h"
 #include "renderer/shader.h"
 #include "renderer/perspective_camera.h"
@@ -13,8 +12,6 @@
 
 namespace GoombaRender
 {
-    GoombaEngine::Input input;
-    
     std::shared_ptr<VertexArray> vertexArray;
     glm::mat4 transform;
     
@@ -35,6 +32,9 @@ namespace GoombaRender
         
         // Load GLAD functions pointers for the context
         m_Context.LoadContext(m_Window->GetProcAddress());
+        
+        // Setup Renderer
+        m_Renderer = std::make_unique<Renderer>(m_Context);
         
         // Setup Loop
         m_Loop.RegisterRenderCallback(std::bind(&RendererApplication::Render, this, std::placeholders::_1, std::placeholders::_2));
@@ -67,7 +67,7 @@ namespace GoombaRender
         transform = glm::translate(glm::mat4(1.0f),{0.0f, 0.0f, 0.0f});
         
         shader.AssignContext(m_Context);
-        shader.Create("resources/shaders/test.glsl");
+        shader.Create(<#initializer#>, "resources/shaders/test.glsl");
         
         texture.AssignContext(m_Context);
         texture.Create("resources/images/goomba.png");
@@ -108,14 +108,14 @@ namespace GoombaRender
     
     void RendererApplication::Tick(double delta)
     {
-        glm::vec3 move_direction(input.IsKeyPressed(SDLK_d) - input.IsKeyPressed(SDLK_a), input.IsKeyPressed(SDLK_e) - input.IsKeyPressed(SDLK_q), input.IsKeyPressed(SDLK_w) - input.IsKeyPressed(SDLK_s));
+        glm::vec3 move_direction(m_Input.IsKeyPressed(SDLK_d) - m_Input.IsKeyPressed(SDLK_a), m_Input.IsKeyPressed(SDLK_e) - m_Input.IsKeyPressed(SDLK_q), m_Input.IsKeyPressed(SDLK_w) - m_Input.IsKeyPressed(SDLK_s));
         camera.ProcessMovementInput(move_direction, delta);
     }
 
     void RendererApplication::OnEvent(SDL_Event &event)
     {
         GoombaEngine::ImGUIProcessEvent(&event);
-        input.ProcessEvent(event);
+        m_Input.ProcessEvent(event);
 
         switch(event.type)
         {

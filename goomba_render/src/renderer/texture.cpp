@@ -1,7 +1,6 @@
 #include "texture.h"
 
 #include <glad/gl.h>
-#include <stb/stb_image.h>
 
 namespace GoombaRender
 {
@@ -16,15 +15,9 @@ namespace GoombaRender
     
     }
     
-    void Texture2D::Create(const std::string &path)
+    void Texture2D::Create(const unsigned char* data, int width, int height, int channels)
     {
         RequireContext();
-        
-        int width, height, channels;
-        stbi_set_flip_vertically_on_load(1);
-        stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
-        DEBUG_ASSERT(data != nullptr, fmt::format("Could not load image at path: '{}'", path));
-        DEBUG_ASSERT(channels == 3 || channels == 4, "Loaded images must have 3 or 4 channels.");
         
         m_Width = width;
         m_Height = height;
@@ -38,8 +31,6 @@ namespace GoombaRender
         
         GLenum format = (channels == 3) ? GL_RGB : GL_RGBA;
         m_Context.GetGlad().TexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_Width, m_Height, format, GL_UNSIGNED_BYTE, data);
-        
-        stbi_image_free(data);
         
         m_Created = true;
     }
@@ -76,11 +67,11 @@ namespace GoombaRender
         m_Context.GetGlad().BindTexture(GL_TEXTURE_2D, 0);
     }
     
-    Texture2D::~Texture2D()
+    void Texture2D::Delete()
     {
-        if (m_HasContext && m_Created)
-        {
-            m_Context.GetGlad().DeleteTextures(1, &m_RendererID);
-        }
+        RequireContext();
+        DEBUG_ASSERT(m_Created, "Texture must be created before deleting.");
+        
+        m_Context.GetGlad().DeleteTextures(1, &m_RendererID);
     }
 } // GoombaRender

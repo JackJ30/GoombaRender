@@ -14,15 +14,15 @@ namespace GoombaRender
         m_Created = true;
     }
     
-    VertexArray::~VertexArray()
+    void VertexArray::Delete()
     {
-        if (m_HasContext && m_Created)
-        {
-            m_Context.GetGlad().DeleteVertexArrays(1, &m_RendererID);
-            
-            m_Context.GetGlad().DeleteBuffers(m_VertexBuffers.size(), m_VertexBuffers.data());
-            m_Context.GetGlad().DeleteBuffers(1, &m_IndexBuffer);
-        }
+        RequireContext();
+        DEBUG_ASSERT(m_Created, "Vertex array must be created before deleting.");
+        
+        m_Context.GetGlad().DeleteVertexArrays(1, &m_RendererID);
+        
+        m_Context.GetGlad().DeleteBuffers(m_VertexBuffers.size(), m_VertexBuffers.data());
+        m_Context.GetGlad().DeleteBuffers(1, &m_IndexBuffer);
     }
     
     void VertexArray::Bind() const

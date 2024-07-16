@@ -11,8 +11,13 @@ namespace GoombaRender
         std::vector<unsigned int> textures;
     };
     
-    class Model
+    class Model : OglObj
     {
+    public:
+        void Create();
+        void Delete();
+        
+    private:
         std::vector<Mesh> m_Meshes;
     };
     

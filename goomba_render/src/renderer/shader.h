@@ -9,19 +9,13 @@
 
 namespace GoombaRender
 {
-    struct ShaderProgramSource
-    {
-        std::string VertexSource;
-        std::string FragmentSource;
-    };
-    
     class Shader : public OglObj
     {
     public:
         Shader() = default;
-        ~Shader();
     
-        void Create(const std::string& filepath);
+        void Create(const std::string &vertexSource, const std::string &fragmentSource);
+        void Delete();
         
         void Bind() const;
         void Unbind() const;
@@ -41,13 +35,10 @@ namespace GoombaRender
         void SetUniformMat4(const std::string &name, const glm::mat4 &mat);
     private:
         unsigned int m_RendererID;
-        std::string m_Filepath;
         
         std::unordered_map<std::string, int> m_UniformLocationCache;
         GLchar m_ErrorMessage[1024];
         
-        ShaderProgramSource ParseShader();
-        void CompileShader(const ShaderProgramSource& source);
         int GetUniformLocation(const std::string& name);
     };
 }

@@ -2,6 +2,7 @@
 #define GOOMBARENDER_RENDERER_H
 
 #include "renderer/camera.h"
+#include "renderer/scene.h"
 #include "renderer/vertex_array.h"
 #include "renderer/texture.h"
 #include "renderer/shader.h"
@@ -9,11 +10,15 @@
 
 namespace GoombaRender
 {
+    struct Texture2DAsset { unsigned int id; };
+    struct ShaderAsset    { unsigned int id; };
+    struct ModelAsset     { unsigned int id; };
+    
     struct RenderInstruction
     {
-        unsigned int vao;
-        unsigned int shader;
-        std::vector<unsigned int> textures;
+        VertexArray vao;
+        ShaderAsset shader;
+        std::vector<Texture2DAsset> textures;
     };
     
     struct RenderPass
@@ -25,22 +30,29 @@ namespace GoombaRender
     class Renderer
     {
     public:
-        void Load();
-        void AddScenePass(Camera camera, std::vector<unsigned int> sceneModels); // TODO - include framebuffer
+        explicit Renderer(GoombaEngine::GraphicsContext& context);
+        ~Renderer();
+        
+        void LoadScene(Scene& scene);
+        void AddScenePass(const Camera& camera, Scene& scene); // TODO - include framebuffer
         void Render();
+        
+        Texture2DAsset LoadTexture2D(const std::string& path);
+        ShaderAsset LoadShader(const std::string& path);
+        ModelAsset LoadModel(const std::string& path);
+        
+        inline Texture2D& GetTexture2D(Texture2DAsset handle) { return m_LoadedTexture2Ds[handle.id]; }
+        inline Shader& GetShader(ShaderAsset handle) { return m_LoadedShaders[handle.id]; }
+        inline Model& GetModel(ModelAsset handle) { return m_LoadedModels[handle.id]; }
     
     private:
-        std::unordered_map<unsigned int, Texture> m_LoadedTextures;
+        GoombaEngine::GraphicsContext m_Context;
+        
+        std::unordered_map<unsigned int, Texture2D> m_LoadedTexture2Ds;
         std::unordered_map<unsigned int, Shader> m_LoadedShaders;
-        std::unordered_map<unsigned int, Shader> m_LoadedModels;
-        std::unordered_map<unsigned int, Shader> m_LoadedVAOs;
+        std::unordered_map<unsigned int, Model> m_LoadedModels;
         
         std::queue<RenderPass> m_RenderQueue;
-        
-        unsigned int LoadTexture(std::string path);
-        unsigned int LoadShader(std::string path);
-        unsigned int LoadModel(std::string path);
-        // VAOs are added by LoadModel or other code
     };
     
 } // GoombaRender
