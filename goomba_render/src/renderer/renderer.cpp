@@ -121,7 +121,7 @@ namespace GoombaRender
     
     ModelAsset Renderer::LoadModel(const std::string& path)
     {
-        /*tinygltf::TinyGLTF loader;
+        tinygltf::TinyGLTF loader;
         std::string error;
         std::string warn;
         
@@ -136,7 +136,7 @@ namespace GoombaRender
         }
         
         if (!ret) GLogCritical("Could not load GLTF file");
-        */
+        
         Model model;
         model.AssignContext(m_Context);
         model.Create();

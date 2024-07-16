@@ -12,9 +12,6 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/external/glm/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/spdlog/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/libassert/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/sdl/)
-set(TINYGLTF_HEADER_ONLY ON CACHE INTERNAL "" FORCE)
-set(TINYGLTF_INSTALL OFF CACHE INTERNAL "" FORCE)
-add_subdirectory(${CMAKE_SOURCE_DIR}/external/tinygltf/)
 
 set(GOOMBARENDERDIR ${CMAKE_SOURCE_DIR}/goomba_render)
 
@@ -50,7 +47,7 @@ set(IMGUI_SOURCES
 )
 
 set(SINGLE_HEADER_IMPLEMENTATION
-	${CMAKE_SOURCE_DIR}/external/stb/stb_image_implementation.cpp
+	${GOOMBARENDERDIR}/src/single_header.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${SINGLE_HEADER_IMPLEMENTATION} ${IMGUI_SOURCES})
