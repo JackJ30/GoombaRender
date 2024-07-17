@@ -15,6 +15,7 @@ namespace GoombaRender
     
     void Model::AddMesh(VertexArray vao, std::vector<Texture2DAsset> textures)
     {
+        GLogInfo
         m_Meshes.push_back({vao, textures}); // TODO - make these moved
     }
 } // GoombaRender

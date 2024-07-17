@@ -38,7 +38,7 @@ namespace GoombaRender
     
     void Renderer::AddScenePass(const Camera& camera, Scene& scene)
     {
-    
+        
     }
     
     void Renderer::Render()
@@ -129,13 +129,13 @@ namespace GoombaRender
         bool ret = loader.LoadASCIIFromFile(&loadedGLTF, &error, &warn, path);
         
         if (!warn.empty()) {
-            GLogError("GLTF loading warning for file '{path}' :\n{}", warn);
+            GLogError("GLTF loading warning for file '{}' :\n{}", path, warn);
         }
         if (!error.empty()) {
-            GLogError("GLTF loading error for file '{path}' :\n{}", error);
+            GLogError("GLTF loading error for file '{}' :\n{}", path, error);
         }
         
-        if (!ret) GLogCritical("Could not load GLTF file");
+        if (!ret) { GLogCritical("Could not load GLTF file with path '{}'", path); }
         
         Model model;
         model.AssignContext(m_Context);
@@ -144,11 +144,90 @@ namespace GoombaRender
         unsigned int id = m_LoadedModels.size();
         m_LoadedModels.insert(std::make_pair(id, model));
         
+        // --- Converting tinyGLTF to GoombaRender model ---
+        std::unordered_map<int, unsigned int> bufferCache;
+        
+        // Helper lambda functions
+        const std::function<void(const tinygltf::Node&)> traverseNode = [&](const tinygltf::Node& node)
+        {
+            // Deal with node
+            // TODO - transform
+            for (tinygltf::Primitive primitive : loadedGLTF.meshes[node.mesh].primitives)
+            {
+                // deal with mesh (primitive)
+                VertexArray vao;
+                vao.AssignContext(m_Context);
+                vao.Create();
+                
+                // go through attributes
+                std::string attributes[3] = {"POSITION", "NORMAL", "TEXCOORD_0"};
+                unsigned int attribute_indexes[3] = {0, 1, 2};
+                
+                for (int i = 0; i < 3; ++i)
+                {
+                    if (primitive.attributes.count(attributes[i]) > 0)
+                    {
+                        const auto accessorIdx = primitive.attributes[attributes[i]];
+                        const auto &accessor = loadedGLTF.accessors[accessorIdx];
+                        const auto &bufferView = loadedGLTF.bufferViews[accessor.bufferView];
+                        const auto bufferIdx = bufferView.buffer;
+                        
+                        // Get buffer
+                        unsigned int vbo;
+                        if (bufferCache.count(bufferIdx) > 0) { vbo = bufferCache[bufferIdx]; }
+                        else {
+                            m_Context.GetGlad().GenBuffers(1, &vbo);
+                            m_Context.GetGlad().BindBuffer(GL_ARRAY_BUFFER, vbo);
+                            m_Context.GetGlad().BufferData(GL_ARRAY_BUFFER, loadedGLTF.buffers[bufferIdx].data.size(), loadedGLTF.buffers[bufferIdx].data.data(), GL_STATIC_DRAW);
+                        }
+                        
+                        DEBUG_ASSERT(GL_ARRAY_BUFFER == bufferView.target, "It's gotta be an array buffer");
+                        vao.AddSingleAttribute(vbo, attribute_indexes[i], accessor.type, accessor.componentType, GL_FALSE, GLsizei(bufferView.byteStride), accessor.byteOffset + bufferView.byteOffset);
+                    }
+                }
+                
+                if (primitive.indices >= 0)
+                {
+                    const auto accessorIdx = primitive.indices;
+                    const auto &accessor = loadedGLTF.accessors[accessorIdx];
+                    const auto &bufferView = loadedGLTF.bufferViews[accessor.bufferView];
+                    const auto bufferIdx = bufferView.buffer;
+                    
+                    vao.SetIndexBuffer(reinterpret_cast<unsigned int *>(loadedGLTF.buffers[bufferIdx].data.data()), accessor.count);
+                    
+                    DEBUG_ASSERT(GL_ELEMENT_ARRAY_BUFFER == bufferView.target, "It's gotta be an index buffer");
+                }
+                
+                std::vector<Texture2DAsset> textures;
+                model.AddMesh(vao,textures);
+            }
+            
+            // Traverse children recursively
+            for (auto nodeIDX : node.children)
+            {
+                traverseNode(loadedGLTF.nodes[nodeIDX]);
+            }
+        };
+        
+        // Start going through all scenes and their nodes
+        for (auto scene : loadedGLTF.scenes)
+        {
+            for (auto nodeIDX : scene.nodes)
+            {
+                traverseNode(loadedGLTF.nodes[nodeIDX]);
+            }
+        }
+        
         // the plan
         // - one mesh per primitive
         // - go through materials, load textures
         // - go through meshes and primitives, create their vao's and buffers
         // - go through
+        
+        // todo
+        // - [x] load in meshes from all nodes and their buffers
+        // - [ ] transforms
+        // - [ ] materials
         
         return { id };
     }

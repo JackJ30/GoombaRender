@@ -9,6 +9,7 @@
 #include "renderer/buffer_layout.h"
 
 // TODO - support dynamic and stream draw
+// TODO - more support for non indexed draw
 
 namespace GoombaRender
 {
@@ -25,13 +26,15 @@ namespace GoombaRender
         void Bind() const;
         void Unbind() const;
         
-        void AddVertexBuffer(float* vertices, size_t size, const BufferLayout& layout);
+        void AddVertexBuffer(float *vertices, size_t size, const BufferLayout &layout, unsigned int startingAttributeIndex);
+        void AddSingleAttribute(unsigned int vbo, size_t attributeIndex, unsigned int componentCount, GLenum glType, bool normalized, size_t stride, size_t offset);
         void SetIndexBuffer(unsigned int *indices, size_t numIndices);
         
         inline unsigned int GetNumIndices() const { return m_NumIndices; }
     private:
         unsigned int m_RendererID;
         std::vector<unsigned int> m_VertexBuffers;
+        std::vector<size_t> m_UsedAttributes;
         unsigned int m_IndexBuffer;
         size_t m_NumIndices = 0;
     };

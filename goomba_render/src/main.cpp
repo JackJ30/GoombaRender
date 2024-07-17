@@ -37,10 +37,11 @@ int main(int argc, char *argv[])
 //      - [ ] Model class (contains meshes, which have materials)
 //      - [ ] GLTF model loading (go through and load everything)
 //      - [ ] Scene to render instruction
-// - [ ] JSON based scene system (materialz override)
+// - [ ] JSON based scene system (material override)
 // - [ ] Time system and ms timing
 // - [ ] Frame buffers
 // - [ ] Material system
+// - [ ] Hierarchy system
 // - [ ] Documentation for style, includes, etc
 // - [ ] Forward rendering lighting
 //

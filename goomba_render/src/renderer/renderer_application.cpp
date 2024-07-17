@@ -47,6 +47,13 @@ namespace GoombaRender
                 2, 3, 0
         };
         
+        Scene testScene;
+        testScene.m_ModelsToLoad.emplace_back("resources/models/testcube.gltf");
+        
+        m_Renderer->LoadScene(testScene);
+        
+        GLogInfo(m_Renderer->GetModel(testScene.m_Objects[0]).GetMeshCount());
+        
         // LOOP
         m_Loop.Run();
         // LOOP

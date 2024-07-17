@@ -22,6 +22,8 @@ namespace GoombaRender
         
         void AddMesh(VertexArray vao, std::vector<Texture2DAsset> textures);
         
+        inline size_t GetMeshCount() const { return m_Meshes.size(); }
+        
     private:
         std::vector<Mesh> m_Meshes;
     };

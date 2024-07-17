@@ -41,7 +41,8 @@ namespace GoombaRender
         m_Context.GetGlad().BindVertexArray(0);
     }
     
-    void VertexArray::AddVertexBuffer(float* vertices, size_t size, const BufferLayout& layout)
+    void
+    VertexArray::AddVertexBuffer(float *vertices, size_t size, const BufferLayout &layout, unsigned int startingAttributeIndex)
     {
         RequireContext();
         DEBUG_ASSERT(m_Created, "Vertex array must be created before adding vertex buffer.");
@@ -53,15 +54,35 @@ namespace GoombaRender
         m_Context.GetGlad().BindBuffer(GL_ARRAY_BUFFER, vbo);
         m_Context.GetGlad().BufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
         
-        size_t index = 0;
+        size_t index = startingAttributeIndex;
         for (const BufferElement& element : layout)
         {
+            if (std::find(m_UsedAttributes.begin(), m_UsedAttributes.end(),index) != m_UsedAttributes.end()) { GLogError("Vertex attribute '{}' has already been set for VAO.", index); }
+            m_UsedAttributes.push_back(index);
+            
             m_Context.GetGlad().EnableVertexAttribArray(index);
             m_Context.GetGlad().VertexAttribPointer(index, element.GetComponentCount(), element.GetGLType(), element.Normalized, layout.GetStride(), (const void*)element.Offset);
             index++;
         }
         
         m_VertexBuffers.push_back(vbo);
+    }
+    
+    void VertexArray::AddSingleAttribute(unsigned int vbo, size_t attributeIndex, unsigned int componentCount,
+                                         GLenum glType, bool normalized, size_t stride, size_t offset)
+    {
+        RequireContext();
+        DEBUG_ASSERT(m_Created, "Vertex array must be created before adding single attribute.");
+        
+        if (std::find(m_UsedAttributes.begin(), m_UsedAttributes.end(),attributeIndex) != m_UsedAttributes.end()) { GLogError("Vertex attribute '{}' has already been set for VAO.", attributeIndex); }
+        m_UsedAttributes.push_back(attributeIndex);
+        m_VertexBuffers.push_back(vbo);
+        
+        m_Context.GetGlad().BindVertexArray(m_RendererID);
+        m_Context.GetGlad().BindBuffer(GL_ARRAY_BUFFER, vbo);
+        
+        m_Context.GetGlad().EnableVertexAttribArray(attributeIndex);
+        m_Context.GetGlad().VertexAttribPointer(attributeIndex, componentCount, glType, normalized, stride, (const void*)offset);
     }
     
     void VertexArray::SetIndexBuffer(unsigned int *indices, size_t numIndices)
