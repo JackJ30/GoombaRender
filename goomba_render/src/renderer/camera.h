@@ -7,7 +7,7 @@
 
 namespace GoombaRender
 {
-    class Camera
+    class Camera // TODO - Camera view and projection matrices should be a part of a scene ubo
     {
     public:
         Camera(glm::vec3 position = {0.0f, 0.0f, 0.0f}, float aspect = 16/9, float pitch = 0.0f, float yaw = -90.0f, glm::vec3 worldUp = {0.0f, 1.0f, 0.0f});

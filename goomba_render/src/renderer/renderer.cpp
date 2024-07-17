@@ -48,21 +48,20 @@ namespace GoombaRender
         {
             for (const Mesh& mesh : GetModel(model).GetMeshes())
             {
-                pass.queue.push({mesh.vao, mainShader, mesh.textures});
+                // temp uniforms
+                UniformSetting setting;
+                setting.mat4s.emplace_back("u_Transform", glm::mat4(1.0));
+                setting.mat4s.emplace_back("u_View", glm::mat4(camera.GetViewMatrix()));
+                setting.mat4s.emplace_back("u_Projection", camera.GetProjectionMatrix());
+                
+                pass.queue.push({mesh.vao, mainShader, mesh.textures, setting});
             }
         }
-        
-        // temp
-        Shader& realMainShader = GetShader(mainShader);
-        realMainShader.Bind();
-        realMainShader.SetUniformMat4("u_Transform", glm::mat4(1.0));
-        realMainShader.SetUniformMat4("u_View", camera.GetViewMatrix());
-        realMainShader.SetUniformMat4("u_Projection", camera.GetProjectionMatrix());
         
         m_RenderQueue.push(pass);
     }
     
-    void Renderer::Render()
+    void Renderer::Render() // TODO - this function should be very optimized, and inputs should be sorted or something
     {
         for (; !m_RenderQueue.empty(); m_RenderQueue.pop()) // go through passes
         {
@@ -73,15 +72,27 @@ namespace GoombaRender
                 const RenderInstruction& instruction = pass.queue.front();
                 
                 instruction.vao.Bind();
-                GetShader(instruction.shader).Bind();
+                
+                Shader& shader = GetShader(instruction.shader);
+                shader.Bind();
+                shader.SetUniforms(instruction.uniformSetting);
+                
                 for (int i = 0; i < instruction.textures.size(); ++i)
                 {
                     GetTexture2D(instruction.textures[i]).Bind(i);
                 }
                 
-                for (auto& selection : instruction.vao.GetIndicesSections())
+                // Draw based on type
+                if (instruction.vao.GetDrawType() == DrawType::Arrays)
                 {
-                    m_Context.GetGlad().DrawElements(GL_TRIANGLES, selection.count, selection.type, (const void*)selection.offset);
+                    m_Context.GetGlad().DrawArrays(GL_TRIANGLES, 0, instruction.vao.GetNumVertices());
+                }
+                else if (instruction.vao.GetDrawType() == DrawType::Indices)
+                {
+                    for (auto& selection : instruction.vao.GetIndicesSections())
+                    {
+                        m_Context.GetGlad().DrawElements(GL_TRIANGLES, selection.count, selection.type, (const void*)selection.offset);
+                    }
                 }
             }
         }
@@ -251,10 +262,10 @@ namespace GoombaRender
         // - go through
         
         // todo
+        // - consider -> drawing things besides triangles,
         // - [x] load in meshes from all nodes and their buffers
-        // - [ ] proper uniforms
-        // - [ ] transforms
-        // - [ ] materials
+        // - [x] proper uniforms
+        // - [ ] mesh transforms
         
         unsigned int id = m_LoadedModels.size();
         m_LoadedModels.insert(std::make_pair(id, std::move(model)));

@@ -29,18 +29,19 @@ int main(int argc, char *argv[])
 // - [x] Textures
 // - [x] OpenGL abstraction objects should not make API calls in constructor (get rid of sdl)
 // - [x] Window scaling and mouse
-// - [ ] Renderer overhaul:
+// - [x] Renderer overhaul:
 //      - [x] Renderer class (load phase, draw phase)
 //      - [x] abstractions should not load themselves (specific methods for loading themselves, asset handles)
 //      - [x] explicitly delete oglobj
 //      - [x] asset handle system
-//      - [ ] Model class (contains meshes, which have materials)
-//      - [ ] GLTF model loading (go through and load everything)
-//      - [ ] Scene to render instruction
+//      - [x] Model class (contains meshes, which have materials)
+//      - [x] GLTF model loading (go through and load everything)
+//      - [x] Scene to render instruction
+// - [ ] Materials + Scene default material + scene objects (with transform)
+// - [ ] Scene system (lights + camera ubo)
 // - [ ] JSON based scene system (material override)
 // - [ ] Time system and ms timing
 // - [ ] Frame buffers
-// - [ ] Material system
 // - [ ] Hierarchy system
 // - [ ] Documentation for style, includes, etc
 // - [ ] Forward rendering lighting

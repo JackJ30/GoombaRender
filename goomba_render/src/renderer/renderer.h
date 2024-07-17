@@ -16,6 +16,7 @@ namespace GoombaRender
         VertexArray vao;
         ShaderAsset shader;
         std::vector<Texture2DAsset> textures;
+        UniformSetting uniformSetting;
     };
     
     struct RenderPass
