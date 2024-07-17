@@ -3,18 +3,12 @@ project (GoombaRender)
 cmake_policy(SET CMP0072 NEW)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED YES) # Enforce the C++17 standard
+set(CMAKE_CXX_STANDARD_REQUIRED YES) # Enforce the C++17 standard.
 
 find_package(OpenGL REQUIRED)
 
-
-set(BUILD_ASSIMP_TOOLS  ON)
-set(ASSIMP_BUILD_STATIC_LIB ON)
-set(ASSIMP_WARNINGS_AS_ERRORS OFF)
-
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/glad/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/glm/)
-add_subdirectory(${CMAKE_SOURCE_DIR}/external/assimp/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/spdlog/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/libassert/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/sdl/)
@@ -31,12 +25,12 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/engine/graphics_context.cpp
 	${GOOMBARENDERDIR}/src/engine/input.cpp
 	${GOOMBARENDERDIR}/src/engine/application_loop.cpp
+	${GOOMBARENDERDIR}/src/renderer/renderer.cpp
+	${GOOMBARENDERDIR}/src/renderer/scene.cpp
 	${GOOMBARENDERDIR}/src/renderer/renderer_application.cpp
 	${GOOMBARENDERDIR}/src/renderer/shader.cpp
 	${GOOMBARENDERDIR}/src/renderer/vertex_array.cpp
-	${GOOMBARENDERDIR}/src/renderer/vertex_buffer.cpp
-	${GOOMBARENDERDIR}/src/renderer/index_buffer.cpp
-	${GOOMBARENDERDIR}/src/renderer/mesh.cpp
+	${GOOMBARENDERDIR}/src/renderer/model.cpp
 	${GOOMBARENDERDIR}/src/renderer/camera.cpp
 	${GOOMBARENDERDIR}/src/renderer/texture.cpp
 	${GOOMBARENDERDIR}/src/renderer/perspective_camera.cpp
@@ -53,7 +47,7 @@ set(IMGUI_SOURCES
 )
 
 set(SINGLE_HEADER_IMPLEMENTATION
-	${CMAKE_SOURCE_DIR}/external/stb/stb_image_implementation.cpp
+	${GOOMBARENDERDIR}/src/single_header.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${SINGLE_HEADER_IMPLEMENTATION} ${IMGUI_SOURCES})
@@ -62,7 +56,7 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${SINGLE_HEADER_IMPLEMENTATION} $
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)
 
 # link and inculde
-target_link_libraries(${PROJECT_NAME} PUBLIC glad assimp glm spdlog libassert::assert SDL3::SDL3 OpenGL::GL)
+target_link_libraries(${PROJECT_NAME} PUBLIC glad glm spdlog libassert::assert SDL3::SDL3 OpenGL::GL)
 
 # copy DLLS
 if(${WIN32})
@@ -72,7 +66,7 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 )
 endif()
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${GOOMBARENDERDIR}/src ${CMAKE_SOURCE_DIR}/external/imgui ${CMAKE_SOURCE_DIR}/external/stb/include)
+target_include_directories(${PROJECT_NAME} PUBLIC ${GOOMBARENDERDIR}/src ${CMAKE_SOURCE_DIR}/external/imgui ${CMAKE_SOURCE_DIR}/external/stb/include ${CMAKE_SOURCE_DIR}/external/tinygltf)
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${GOOMBARENDERDIR}/src/goombapch.h)
 
 # add debug definition

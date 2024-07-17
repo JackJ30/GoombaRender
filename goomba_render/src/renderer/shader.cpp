@@ -1,59 +1,19 @@
 #include "shader.h"
 #include <glad/gl.h>
-#include <sstream>
-#include <fstream>
-#include <iostream>
 
 namespace GoombaRender
 {
-    void Shader::Create(const std::string &filepath)
+    void Shader::Create(const std::string &vertexSource, const std::string &fragmentSource)
     {
         RequireContext();
         
-        m_Filepath = filepath;
-        CompileShader(ParseShader());
-        m_Created = true;
-    }
-    
-    ShaderProgramSource Shader::ParseShader()
-    {
-        std::ifstream stream(m_Filepath);
-        
-        enum class ShaderType
-        {
-            NONE = 1, VERTEX = 0, FRAGMENT = 1
-        };
-        
-        std::string line;
-        std::stringstream ss[2];
-        ShaderType type = ShaderType::NONE;
-        while (getline(stream, line))
-        {
-            if (line.find("#shader") != std::string::npos)
-            {
-                if (line.find("vertex") != std::string::npos)
-                    type = ShaderType::VERTEX;
-                else if (line.find("fragment") != std::string::npos)
-                    type = ShaderType::FRAGMENT;
-            }
-            else
-            {
-                ss[(int)type] << line << "\n";
-            }
-        }
-        
-        return { ss[0].str(), ss[1].str() };
-    }
-    
-    void Shader::CompileShader(const ShaderProgramSource& source) // removed error checking... for now
-    {
-        const char* vertexSource = source.VertexSource.c_str();
-        const char* fragmentSource = source.FragmentSource.c_str();
+        const char* vertexSrc = vertexSource.c_str();
+        const char* fragmentSrc = fragmentSource.c_str();
         GLint success;
         
         // Vertex shader
         GLuint vertexShader = m_Context.GetGlad().CreateShader(GL_VERTEX_SHADER);
-        m_Context.GetGlad().ShaderSource(vertexShader, 1, &vertexSource, NULL);
+        m_Context.GetGlad().ShaderSource(vertexShader, 1, &vertexSrc, NULL);
         m_Context.GetGlad().CompileShader(vertexShader);
 
 #ifdef DEBUG
@@ -61,13 +21,13 @@ namespace GoombaRender
         if(!success)
         {
             m_Context.GetGlad().GetShaderInfoLog(vertexShader, 1024, nullptr, m_ErrorMessage);
-            GLogError("Vertex shader from '{}' compilation failed:\n{}", m_Filepath, m_ErrorMessage);
+            GLogError("Vertex shader compilation failed:\n{}", m_ErrorMessage);
         }
 #endif
         
         // Fragment shader
         GLuint fragmentShader = m_Context.GetGlad().CreateShader(GL_FRAGMENT_SHADER);
-        m_Context.GetGlad().ShaderSource(fragmentShader, 1, &fragmentSource, NULL);
+        m_Context.GetGlad().ShaderSource(fragmentShader, 1, &fragmentSrc, NULL);
         m_Context.GetGlad().CompileShader(fragmentShader);
 
 #ifdef DEBUG
@@ -75,7 +35,7 @@ namespace GoombaRender
         if(!success)
         {
             m_Context.GetGlad().GetShaderInfoLog(fragmentShader, 1024, nullptr, m_ErrorMessage);
-            GLogError("Fragment shader from '{}' compilation failed:\n{}", m_Filepath, m_ErrorMessage);
+            GLogError("Fragment shader compilation failed:\n{}", m_ErrorMessage);
         }
 #endif
         
@@ -90,7 +50,7 @@ namespace GoombaRender
         if(!success)
         {
             m_Context.GetGlad().GetProgramInfoLog(m_RendererID, 1024, nullptr, m_ErrorMessage);
-            GLogError("Shader from '{}' failed to link:\n{}", m_Filepath, m_ErrorMessage);
+            GLogError("Shader from failed to link:\n{}", m_ErrorMessage);
         }
 #endif
         
@@ -102,12 +62,14 @@ namespace GoombaRender
         if(!success)
         {
             m_Context.GetGlad().GetProgramInfoLog(m_RendererID, 1024, nullptr, m_ErrorMessage);
-            GLogError("Shader from '{}' failed to validate:\n{}", m_Filepath, m_ErrorMessage);
+            GLogError("Shader from '{}' failed to validate:\n{}", m_ErrorMessage);
         }
 #endif
         
         m_Context.GetGlad().DeleteShader(vertexShader);
         m_Context.GetGlad().DeleteShader(fragmentShader);
+        
+        m_Created = true;
     }
     
     void Shader::Bind() const
@@ -126,12 +88,12 @@ namespace GoombaRender
         m_Context.GetGlad().UseProgram(0);
     }
     
-    Shader::~Shader()
+    void Shader::Delete()
     {
-        if (m_HasContext && m_Created)
-        {
-            m_Context.GetGlad().DeleteProgram(m_RendererID);
-        }
+        RequireContext();
+        DEBUG_ASSERT(m_Created, "Shader must be created before using uniforms.");
+        
+        m_Context.GetGlad().DeleteProgram(m_RendererID);
     }
     
     int Shader::GetUniformLocation(const std::string& name)

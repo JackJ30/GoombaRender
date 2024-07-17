@@ -31,9 +31,9 @@ namespace GoombaRender
     {
     public:
         Texture2D();
-        ~Texture2D() override;
         
-        void Create(const std::string& path);
+        void Create(const unsigned char* data, int width, int height, int channels);
+        void Delete();
         
         inline virtual unsigned int GetWidth() const override { return m_Width; };
         inline virtual unsigned int GetHeight() const override { return m_Height; }
