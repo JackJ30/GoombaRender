@@ -48,7 +48,7 @@ namespace GoombaRender
                 2, 3, 0
         };
         
-        testScene.m_ModelsToLoad.emplace_back("resources/models/testthing.gltf");
+        testScene.m_ModelsToLoad.emplace_back("resources/models/cubes.gltf");
         
         m_Renderer->LoadScene(testScene, "resources/shaders/test.glsl");
         

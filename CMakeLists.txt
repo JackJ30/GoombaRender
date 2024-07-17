@@ -33,6 +33,7 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/renderer/model.cpp
 	${GOOMBARENDERDIR}/src/renderer/camera.cpp
 	${GOOMBARENDERDIR}/src/renderer/texture.cpp
+	${GOOMBARENDERDIR}/src/renderer/material.cpp
 	${GOOMBARENDERDIR}/src/renderer/perspective_camera.cpp
 )
 

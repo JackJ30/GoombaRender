@@ -3,6 +3,7 @@
 #include <stb/stb_image.h>
 #include <sstream>
 #include <fstream>
+#include <glm/gtc/quaternion.hpp>
 
 namespace GoombaRender
 {
@@ -50,11 +51,11 @@ namespace GoombaRender
             {
                 // temp uniforms
                 UniformSetting setting;
-                setting.mat4s.emplace_back("u_Transform", glm::mat4(1.0));
+                setting.mat4s.emplace_back("u_Transform", mesh.localTransform);
                 setting.mat4s.emplace_back("u_View", glm::mat4(camera.GetViewMatrix()));
                 setting.mat4s.emplace_back("u_Projection", camera.GetProjectionMatrix());
                 
-                pass.queue.push({mesh.vao, mainShader, mesh.textures, setting});
+                pass.queue.push({mesh.vao, mainShader, std::vector<std::pair<Texture2DAsset, unsigned int>>(), setting});
             }
         }
         
@@ -77,9 +78,9 @@ namespace GoombaRender
                 shader.Bind();
                 shader.SetUniforms(instruction.uniformSetting);
                 
-                for (int i = 0; i < instruction.textures.size(); ++i)
+                for (auto& texture : instruction.textures)
                 {
-                    GetTexture2D(instruction.textures[i]).Bind(i);
+                    GetTexture2D(texture.first).Bind(texture.second);
                 }
                 
                 // Draw based on type
@@ -188,16 +189,35 @@ namespace GoombaRender
         }
         
         // Helper lambda functions
-        const std::function<void(const tinygltf::Node&)> traverseNode = [&](const tinygltf::Node& node)
+        const std::function<void(const tinygltf::Node&, glm::mat4)> traverseNode = [&](const tinygltf::Node& node, glm::mat4 parentTransform)
         {
             // Deal with node
-            // TODO - transform
+            
+            // if transform
+            glm::mat4 localTransform = parentTransform;
+            if (!node.matrix.empty())
+            {
+                localTransform *= glm::mat4(node.matrix[0], node.matrix[1],
+                                                node.matrix[2], node.matrix[3], node.matrix[4],
+                                                node.matrix[5], node.matrix[6], node.matrix[7],
+                                                node.matrix[8], node.matrix[9], node.matrix[10],
+                                                node.matrix[11], node.matrix[12], node.matrix[13],
+                                                node.matrix[14], node.matrix[15]);
+            }
+            else
+            {
+                if (!node.scale.empty()) { localTransform = glm::scale(localTransform, {node.scale[0], node.scale[1], node.scale[2]} ); }
+                if (!node.rotation.empty()) { localTransform *= glm::mat4_cast(glm::quat(float(node.rotation[0]), float(node.rotation[1]), float(node.rotation[2]), float(node.rotation[3]))); }
+                if (!node.translation.empty()) { localTransform = glm::translate(localTransform, {node.translation[0], node.translation[1], node.translation[2]} ); }
+            }
+            
             for (tinygltf::Primitive primitive : loadedGLTF.meshes[node.mesh].primitives)
             {
                 // deal with mesh (primitive)
                 Mesh mesh;
                 mesh.vao.AssignContext(m_Context);
                 mesh.vao.Create(primitive.indices >= 0 ? DrawType::Indices : DrawType::Arrays);
+                mesh.localTransform = localTransform;
                 
                 // go through attributes
                 std::string attributes[3] = {"POSITION", "NORMAL", "TEXCOORD_0"};
@@ -242,7 +262,7 @@ namespace GoombaRender
             // Traverse children recursively
             for (auto nodeIDX : node.children)
             {
-                traverseNode(loadedGLTF.nodes[nodeIDX]);
+                traverseNode(loadedGLTF.nodes[nodeIDX], localTransform);
             }
         };
         
@@ -251,7 +271,7 @@ namespace GoombaRender
         {
             for (auto nodeIDX : scene.nodes)
             {
-                traverseNode(loadedGLTF.nodes[nodeIDX]);
+                traverseNode(loadedGLTF.nodes[nodeIDX], glm::mat4(1.0));
             }
         }
         
@@ -266,6 +286,7 @@ namespace GoombaRender
         // - [x] load in meshes from all nodes and their buffers
         // - [x] proper uniforms
         // - [ ] mesh transforms
+        // - [ ] redo asset handles
         
         unsigned int id = m_LoadedModels.size();
         m_LoadedModels.insert(std::make_pair(id, std::move(model)));

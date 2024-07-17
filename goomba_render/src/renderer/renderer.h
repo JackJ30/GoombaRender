@@ -11,11 +11,11 @@
 
 namespace GoombaRender
 {
-    struct RenderInstruction
+    struct RenderInstruction // TODO - these should be references
     {
         VertexArray vao;
         ShaderAsset shader;
-        std::vector<Texture2DAsset> textures;
+        std::vector<std::pair<Texture2DAsset, unsigned int>> textures;
         UniformSetting uniformSetting;
     };
     
