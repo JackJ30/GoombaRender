@@ -20,11 +20,13 @@ namespace GoombaRender
         void Create();
         void Delete();
         
-        void AddMesh(VertexArray vao, std::vector<Texture2DAsset> textures);
+        void AddMesh(const Mesh& mesh);
+        inline std::vector<unsigned int>& GetBuffers() { return m_Buffers; }
         
         inline size_t GetMeshCount() const { return m_Meshes.size(); }
         
     private:
+        std::vector<unsigned int> m_Buffers;
         std::vector<Mesh> m_Meshes;
     };
     

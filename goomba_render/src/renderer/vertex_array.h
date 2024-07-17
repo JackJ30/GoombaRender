@@ -9,10 +9,20 @@
 #include "renderer/buffer_layout.h"
 
 // TODO - support dynamic and stream draw
-// TODO - more support for non indexed draw
 
 namespace GoombaRender
 {
+    enum DrawType
+    {
+        Arrays,
+        Indices
+    };
+    
+    struct IndicesSection
+    {
+        size_t offset;
+        unsigned int count;
+    };
     
     class VertexArray : public OglObj
     {
@@ -20,23 +30,36 @@ namespace GoombaRender
         VertexArray() = default;
         ~VertexArray() = default;
         
-        void Create();
+        void Create(DrawType drawType);
         void Delete();
         
         void Bind() const;
         void Unbind() const;
         
-        void AddVertexBuffer(float *vertices, size_t size, const BufferLayout &layout, unsigned int startingAttributeIndex);
-        void AddSingleAttribute(unsigned int vbo, size_t attributeIndex, unsigned int componentCount, GLenum glType, bool normalized, size_t stride, size_t offset);
-        void SetIndexBuffer(unsigned int *indices, size_t numIndices);
+        // Creation Approach
+        void CreateVertexBuffer(float* vertices, size_t numVertices, const BufferLayout &layout);
+        void CreateIndexBuffer(unsigned int *indices, unsigned int numIndices);
         
-        inline unsigned int GetNumIndices() const { return m_NumIndices; }
+        // Manual Approach ()
+        void BindAttribute(unsigned int buffer, size_t attributeIndex, unsigned int componentCount, GLenum glType, bool normalized, size_t stride, size_t offset);
+        void SetIndexBuffer(unsigned int buffer, std::vector<IndicesSection> indicesInfo);
+        
+        inline DrawType GetDrawType() const { return m_DrawType; };
+        
+        inline const std::vector<IndicesSection>& GetIndicesSections() const { return m_IndicesInfo; }
+        
+        // If manual approach is used without setting index buffer, num vertices must be set.
+        inline void SetNumVertices(unsigned int numVertices) { m_NumVertices = numVertices; }
+        inline unsigned int GetNumVertices() const { return m_NumVertices; }
     private:
         unsigned int m_RendererID;
-        std::vector<unsigned int> m_VertexBuffers;
+        DrawType m_DrawType;
+        
+        unsigned int m_NumVertices = 0; // Arrays
+        std::vector<IndicesSection> m_IndicesInfo; // Indices
+        
         std::vector<size_t> m_UsedAttributes;
-        unsigned int m_IndexBuffer;
-        size_t m_NumIndices = 0;
+        std::unordered_set<unsigned int> m_OwnedBuffers;
     };
     
 } // GoombaRender

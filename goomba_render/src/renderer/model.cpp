@@ -1,5 +1,7 @@
 #include "model.h"
 
+#include <utility>
+
 namespace GoombaRender
 {
     void Model::Create()
@@ -10,12 +12,18 @@ namespace GoombaRender
     
     void Model::Delete()
     {
-    
+        RequireContext();
+        DEBUG_ASSERT(m_Created, "Model must be created before deleting.");
+        
+        for (auto& mesh : m_Meshes)
+        {
+            mesh.vao.Delete();
+        }
+        m_Context.GetGlad().DeleteBuffers(m_Buffers.size(), m_Buffers.data());
     }
     
-    void Model::AddMesh(VertexArray vao, std::vector<Texture2DAsset> textures)
+    void Model::AddMesh(const Mesh& mesh)
     {
-        GLogInfo
-        m_Meshes.push_back({vao, textures}); // TODO - make these moved
+        m_Meshes.push_back(mesh); // TODO - move this
     }
 } // GoombaRender

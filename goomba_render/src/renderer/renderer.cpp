@@ -38,7 +38,7 @@ namespace GoombaRender
     
     void Renderer::AddScenePass(const Camera& camera, Scene& scene)
     {
-        
+    
     }
     
     void Renderer::Render()
@@ -58,7 +58,7 @@ namespace GoombaRender
                 }
                 instruction.vao.Bind();
                 
-                m_Context.GetGlad().DrawElements(GL_TRIANGLES, instruction.vao.GetNumIndices(), GL_UNSIGNED_INT, nullptr);
+                m_Context.GetGlad().DrawElements(GL_TRIANGLES, instruction.vao.GetNumVertices(), GL_UNSIGNED_INT, nullptr);
             }
         }
     }
@@ -141,11 +141,16 @@ namespace GoombaRender
         model.AssignContext(m_Context);
         model.Create();
         
-        unsigned int id = m_LoadedModels.size();
-        m_LoadedModels.insert(std::make_pair(id, model));
-        
         // --- Converting tinyGLTF to GoombaRender model ---
-        std::unordered_map<int, unsigned int> bufferCache;
+        
+        // Create buffers
+        model.GetBuffers().reserve(loadedGLTF.buffers.size());
+        m_Context.GetGlad().GenBuffers(loadedGLTF.buffers.size(), model.GetBuffers().data());
+        for (size_t i = 0; i < loadedGLTF.buffers.size(); ++i)
+        {
+            m_Context.GetGlad().BindBuffer(GL_ARRAY_BUFFER, model.GetBuffers()[i]);
+            m_Context.GetGlad().BufferData(GL_ARRAY_BUFFER, loadedGLTF.buffers[i].data.size(), loadedGLTF.buffers[i].data.data(), GL_STATIC_DRAW);
+        }
         
         // Helper lambda functions
         const std::function<void(const tinygltf::Node&)> traverseNode = [&](const tinygltf::Node& node)
@@ -155,9 +160,9 @@ namespace GoombaRender
             for (tinygltf::Primitive primitive : loadedGLTF.meshes[node.mesh].primitives)
             {
                 // deal with mesh (primitive)
-                VertexArray vao;
-                vao.AssignContext(m_Context);
-                vao.Create();
+                Mesh mesh;
+                mesh.vao.AssignContext(m_Context);
+                mesh.vao.Create(primitive.indices >= 0 ? DrawType::Indices : DrawType::Arrays);
                 
                 // go through attributes
                 std::string attributes[3] = {"POSITION", "NORMAL", "TEXCOORD_0"};
@@ -172,17 +177,10 @@ namespace GoombaRender
                         const auto &bufferView = loadedGLTF.bufferViews[accessor.bufferView];
                         const auto bufferIdx = bufferView.buffer;
                         
-                        // Get buffer
-                        unsigned int vbo;
-                        if (bufferCache.count(bufferIdx) > 0) { vbo = bufferCache[bufferIdx]; }
-                        else {
-                            m_Context.GetGlad().GenBuffers(1, &vbo);
-                            m_Context.GetGlad().BindBuffer(GL_ARRAY_BUFFER, vbo);
-                            m_Context.GetGlad().BufferData(GL_ARRAY_BUFFER, loadedGLTF.buffers[bufferIdx].data.size(), loadedGLTF.buffers[bufferIdx].data.data(), GL_STATIC_DRAW);
-                        }
-                        
                         DEBUG_ASSERT(GL_ARRAY_BUFFER == bufferView.target, "It's gotta be an array buffer");
-                        vao.AddSingleAttribute(vbo, attribute_indexes[i], accessor.type, accessor.componentType, GL_FALSE, GLsizei(bufferView.byteStride), accessor.byteOffset + bufferView.byteOffset);
+                        mesh.vao.BindAttribute(model.GetBuffers()[bufferIdx], attribute_indexes[i], accessor.type, accessor.componentType,
+                                          GL_FALSE, GLsizei(bufferView.byteStride),
+                                          accessor.byteOffset + bufferView.byteOffset);
                     }
                 }
                 
@@ -193,13 +191,15 @@ namespace GoombaRender
                     const auto &bufferView = loadedGLTF.bufferViews[accessor.bufferView];
                     const auto bufferIdx = bufferView.buffer;
                     
-                    vao.SetIndexBuffer(reinterpret_cast<unsigned int *>(loadedGLTF.buffers[bufferIdx].data.data()), accessor.count);
+                    unsigned int count = accessor.count;
+                    
+                    IndicesSection section = {accessor.byteOffset + bufferView.byteOffset, count};
+                    mesh.vao.SetIndexBuffer(model.GetBuffers()[bufferIdx], { section });
                     
                     DEBUG_ASSERT(GL_ELEMENT_ARRAY_BUFFER == bufferView.target, "It's gotta be an index buffer");
                 }
                 
-                std::vector<Texture2DAsset> textures;
-                model.AddMesh(vao,textures);
+                model.AddMesh(mesh);
             }
             
             // Traverse children recursively
@@ -228,6 +228,9 @@ namespace GoombaRender
         // - [x] load in meshes from all nodes and their buffers
         // - [ ] transforms
         // - [ ] materials
+        
+        unsigned int id = m_LoadedModels.size();
+        m_LoadedModels.insert(std::make_pair(id, model));
         
         return { id };
     }
