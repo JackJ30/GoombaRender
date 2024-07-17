@@ -30,8 +30,8 @@ namespace GoombaRender
         explicit Renderer(GoombaEngine::GraphicsContext& context);
         ~Renderer();
         
-        void LoadScene(Scene& scene);
-        void AddScenePass(const Camera& camera, Scene& scene); // TODO - include framebuffer
+        void LoadScene(Scene& scene, const std::string& mainShaderPath);
+        void AddScenePass(const Camera& camera, const Scene& scene); // TODO - include framebuffer
         void Render();
         
         Texture2DAsset LoadTexture2D(const std::string& path);

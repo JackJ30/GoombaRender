@@ -22,6 +22,7 @@ namespace GoombaRender
     {
         size_t offset;
         unsigned int count;
+        GLenum type;
     };
     
     class VertexArray : public OglObj

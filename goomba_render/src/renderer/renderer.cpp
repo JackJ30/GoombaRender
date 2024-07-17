@@ -6,6 +6,8 @@
 
 namespace GoombaRender
 {
+    ShaderAsset mainShader;
+    
     Renderer::Renderer(GoombaEngine::GraphicsContext &context)
         : m_Context(context)
     {
@@ -28,17 +30,36 @@ namespace GoombaRender
         }
     }
     
-    void Renderer::LoadScene(Scene& scene)
+    void Renderer::LoadScene(Scene& scene, const std::string& mainShaderPath)
     {
         for (const std::string& model : scene.m_ModelsToLoad)
         {
             scene.m_Objects.push_back(LoadModel(model));
         }
+        
+        mainShader = LoadShader(mainShaderPath);
     }
     
-    void Renderer::AddScenePass(const Camera& camera, Scene& scene)
+    void Renderer::AddScenePass(const Camera& camera, const Scene& scene)
     {
-    
+        RenderPass pass;
+        
+        for (const ModelAsset& model : scene.m_Objects)
+        {
+            for (const Mesh& mesh : GetModel(model).GetMeshes())
+            {
+                pass.queue.push({mesh.vao, mainShader, mesh.textures});
+            }
+        }
+        
+        // temp
+        Shader& realMainShader = GetShader(mainShader);
+        realMainShader.Bind();
+        realMainShader.SetUniformMat4("u_Transform", glm::mat4(1.0));
+        realMainShader.SetUniformMat4("u_View", camera.GetViewMatrix());
+        realMainShader.SetUniformMat4("u_Projection", camera.GetProjectionMatrix());
+        
+        m_RenderQueue.push(pass);
     }
     
     void Renderer::Render()
@@ -51,14 +72,17 @@ namespace GoombaRender
             {
                 const RenderInstruction& instruction = pass.queue.front();
                 
+                instruction.vao.Bind();
                 GetShader(instruction.shader).Bind();
                 for (int i = 0; i < instruction.textures.size(); ++i)
                 {
                     GetTexture2D(instruction.textures[i]).Bind(i);
                 }
-                instruction.vao.Bind();
                 
-                m_Context.GetGlad().DrawElements(GL_TRIANGLES, instruction.vao.GetNumVertices(), GL_UNSIGNED_INT, nullptr);
+                for (auto& selection : instruction.vao.GetIndicesSections())
+                {
+                    m_Context.GetGlad().DrawElements(GL_TRIANGLES, selection.count, selection.type, (const void*)selection.offset);
+                }
             }
         }
     }
@@ -178,9 +202,10 @@ namespace GoombaRender
                         const auto bufferIdx = bufferView.buffer;
                         
                         DEBUG_ASSERT(GL_ARRAY_BUFFER == bufferView.target, "It's gotta be an array buffer");
-                        mesh.vao.BindAttribute(model.GetBuffers()[bufferIdx], attribute_indexes[i], accessor.type, accessor.componentType,
-                                          GL_FALSE, GLsizei(bufferView.byteStride),
-                                          accessor.byteOffset + bufferView.byteOffset);
+                        mesh.vao.BindAttribute(model.GetBuffers()[bufferIdx], attribute_indexes[i],
+                                               accessor.type, accessor.componentType,
+                                                    GL_FALSE, bufferView.byteStride,
+                                                        accessor.byteOffset + bufferView.byteOffset);
                     }
                 }
                 
@@ -192,8 +217,9 @@ namespace GoombaRender
                     const auto bufferIdx = bufferView.buffer;
                     
                     unsigned int count = accessor.count;
+                    unsigned int type = accessor.componentType;
                     
-                    IndicesSection section = {accessor.byteOffset + bufferView.byteOffset, count};
+                    IndicesSection section = {accessor.byteOffset + bufferView.byteOffset, count, type};
                     mesh.vao.SetIndexBuffer(model.GetBuffers()[bufferIdx], { section });
                     
                     DEBUG_ASSERT(GL_ELEMENT_ARRAY_BUFFER == bufferView.target, "It's gotta be an index buffer");
@@ -226,11 +252,12 @@ namespace GoombaRender
         
         // todo
         // - [x] load in meshes from all nodes and their buffers
+        // - [ ] proper uniforms
         // - [ ] transforms
         // - [ ] materials
         
         unsigned int id = m_LoadedModels.size();
-        m_LoadedModels.insert(std::make_pair(id, model));
+        m_LoadedModels.insert(std::make_pair(id, std::move(model)));
         
         return { id };
     }

@@ -13,6 +13,7 @@
 namespace GoombaRender
 {
     PerspectiveCamera camera({0.0, 0.0, 1.0});
+    Scene testScene;
     
     RendererApplication::RendererApplication()
     {
@@ -47,12 +48,9 @@ namespace GoombaRender
                 2, 3, 0
         };
         
-        Scene testScene;
-        testScene.m_ModelsToLoad.emplace_back("resources/models/testcube.gltf");
+        testScene.m_ModelsToLoad.emplace_back("resources/models/testthing.gltf");
         
-        m_Renderer->LoadScene(testScene);
-        
-        GLogInfo(m_Renderer->GetModel(testScene.m_Objects[0]).GetMeshCount());
+        m_Renderer->LoadScene(testScene, "resources/shaders/test.glsl");
         
         // LOOP
         m_Loop.Run();
@@ -68,7 +66,10 @@ namespace GoombaRender
         
         {
             m_Context.GetGlad().ClearColor(.1f, .2f, .3f, 1.0f);
-            m_Context.GetGlad().Clear(GL_COLOR_BUFFER_BIT);
+            m_Context.GetGlad().Clear(GL_COLOR_BUFFER_BIT); // TODO - move screen clearing to renderer
+            
+            m_Renderer->AddScenePass(camera, testScene);
+            m_Renderer->Render();
         }
 
         ImGui::Begin("Loop Debug");

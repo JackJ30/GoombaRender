@@ -21,9 +21,11 @@ namespace GoombaRender
         void Delete();
         
         void AddMesh(const Mesh& mesh);
-        inline std::vector<unsigned int>& GetBuffers() { return m_Buffers; }
         
-        inline size_t GetMeshCount() const { return m_Meshes.size(); }
+        // TODO - these should really be const
+        inline std::vector<unsigned int>& GetBuffers() { return m_Buffers; }
+        const inline std::vector<Mesh>& GetMeshes() { return m_Meshes; }
+        
         
     private:
         std::vector<unsigned int> m_Buffers;

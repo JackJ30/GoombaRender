@@ -120,6 +120,6 @@ void GLDebugMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severi
             break;
     }
     
-    if (severe) GLogError("|||OPENGL ISSUE||| ID: ({}), Type: ({}), Severity : ({}), raised from {} --> {}", id, _type, _severity, _source, msg);
-    else GLogTrace("|||OPENGL ISSUE||| ID: ({}), Type: ({}), Severity : ({}), raised from {} --> {}", id, _type, _severity, _source, msg);
+    if (severe) { GLogCritical("|||OPENGL ISSUE||| ID: ({}), Type: ({}), Severity : ({}), raised from {} --> {}", id, _type, _severity, _source, msg); }
+    else { GLogTrace("|||OPENGL ISSUE||| ID: ({}), Type: ({}), Severity : ({}), raised from {} --> {}", id, _type, _severity, _source, msg); }
 }
