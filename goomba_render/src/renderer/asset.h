@@ -1,15 +1,17 @@
-#include <utility>
-
 #ifndef GOOMBARENDER_ASSET_H
 #define GOOMBARENDER_ASSET_H
 
 // TODO - unloading
 // TODO - non unique loading (sharing assets from same path)
 
+#include <utility>
+
 namespace GoombaRender
 {
     template<class T>
     std::unordered_map<unsigned int, T> loadedAssets;
+    
+    inline unsigned int numLoaded = 0;
     
     template<class T>
     class Asset
@@ -27,7 +29,8 @@ namespace GoombaRender
         void AssignLoaded(T&& loaded)
         {
             m_Loaded = true;
-            m_Id = loadedAssets<T>.size(); // TODO - switch with UUID to support unloading
+            m_Id = numLoaded;
+            numLoaded++;
             loadedAssets<T>[m_Id] = loaded;
         }
         

@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 //      - [x] Model class (contains meshes, which have materials)
 //      - [x] GLTF model loading (go through and load everything)
 //      - [x] Scene to render instruction
-// - [ ] Assetloader functions, template argument assets
+// - [x] Assetloader functions, template argument assets
 // - [ ] Materials + Scene default material + scene objects (with transform)
 // - [ ] Scene system (lights + camera ubo)
 // - [ ] JSON based scene system (material override)
