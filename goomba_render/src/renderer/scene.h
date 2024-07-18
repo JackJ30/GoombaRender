@@ -3,13 +3,18 @@
 
 #include "renderer/asset.h"
 #include "renderer/camera.h"
+#include "model.h"
+#include "shader.h"
 
 namespace GoombaRender
 {
-    struct Scene
+    class Scene
     {
-        std::vector<std::string> m_ModelsToLoad;
-        std::vector<ModelAsset> m_Objects;
+    public:
+        std::vector<Asset<Model>> m_Objects; // Temp
+        Asset<Shader> m_MainShader = Asset<Shader>("resources/shaders/test.glsl"); // Temp, also should be material
+        
+        void LoadAssets(GoombaEngine::GraphicsContext& context);
     };
 }
 

@@ -1,11 +1,16 @@
 #ifndef GOOMBARENDER_SHADER_H
 #define GOOMBARENDER_SHADER_H
 
+#include "renderer/ogl_obj.h"
+
+#include "renderer/asset.h"
+
 #include <glm/glm.hpp>
 #include <string>
 #include <unordered_map>
 
-#include "renderer/ogl_obj.h"
+#include <sstream>
+#include <fstream>
 
 namespace GoombaRender
 {
@@ -55,6 +60,8 @@ namespace GoombaRender
         
         int GetUniformLocation(const std::string& name);
     };
+    
+    void LoadShader(Asset<Shader>& asset, GoombaEngine::GraphicsContext& context);
 }
 
 #endif

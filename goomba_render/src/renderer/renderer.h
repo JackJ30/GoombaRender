@@ -14,8 +14,8 @@ namespace GoombaRender
     struct RenderInstruction // TODO - these should be references
     {
         VertexArray vao;
-        ShaderAsset shader;
-        std::vector<std::pair<Texture2DAsset, unsigned int>> textures;
+        Asset<Shader> shader;
+        std::vector<std::pair<Asset<Texture2D>, unsigned int>> textures;
         UniformSetting uniformSetting;
     };
     
@@ -29,26 +29,12 @@ namespace GoombaRender
     {
     public:
         explicit Renderer(GoombaEngine::GraphicsContext& context);
-        ~Renderer();
         
-        void LoadScene(Scene& scene, const std::string& mainShaderPath);
         void AddScenePass(const Camera& camera, const Scene& scene); // TODO - include framebuffer
         void Render();
-        
-        Texture2DAsset LoadTexture2D(const std::string& path);
-        ShaderAsset LoadShader(const std::string& path);
-        ModelAsset LoadModel(const std::string& path);
-        
-        inline Texture2D& GetTexture2D(Texture2DAsset handle) { return m_LoadedTexture2Ds[handle.id]; }
-        inline Shader& GetShader(ShaderAsset handle) { return m_LoadedShaders[handle.id]; }
-        inline Model& GetModel(ModelAsset handle) { return m_LoadedModels[handle.id]; }
     
     private:
         GoombaEngine::GraphicsContext m_Context;
-        
-        std::unordered_map<unsigned int, Texture2D> m_LoadedTexture2Ds;
-        std::unordered_map<unsigned int, Shader> m_LoadedShaders;
-        std::unordered_map<unsigned int, Model> m_LoadedModels;
         
         std::queue<RenderPass> m_RenderQueue;
     };

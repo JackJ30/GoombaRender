@@ -210,4 +210,38 @@ namespace GoombaRender
             SetUniformMat4(uniform.first, uniform.second);
         }
     }
+    
+    void LoadShader(Asset<Shader>& asset, GoombaEngine::GraphicsContext& context)
+    {
+        std::ifstream stream(asset.GetPath());
+        
+        enum class ShaderType
+        {
+            NONE = 1, VERTEX = 0, FRAGMENT = 1
+        };
+        
+        std::string line;
+        std::stringstream ss[2];
+        ShaderType type = ShaderType::NONE;
+        while (getline(stream, line))
+        {
+            if (line.find("#shader") != std::string::npos)
+            {
+                if (line.find("vertex") != std::string::npos)
+                    type = ShaderType::VERTEX;
+                else if (line.find("fragment") != std::string::npos)
+                    type = ShaderType::FRAGMENT;
+            }
+            else
+            {
+                ss[(int)type] << line << "\n";
+            }
+        }
+        
+        Shader shader;
+        shader.AssignContext(context);
+        shader.Create(ss[0].str(), ss[1].str());
+        
+        asset.AssignLoaded(std::move(shader));
+    }
 }

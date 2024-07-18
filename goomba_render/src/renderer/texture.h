@@ -2,6 +2,7 @@
 #define GOOMBARENDER_TEXTURE_H
 
 #include "renderer/ogl_obj.h"
+#include "renderer/asset.h"
 
 // TODO - Support mipmapping, and mipmapping filters
 // TODO - Support creating with pure data, image loading should not be essential to creating a texture
@@ -49,6 +50,9 @@ namespace GoombaRender
         unsigned int m_Width, m_Height;
         TextureFilterType m_MinFilter, m_MagFilter;
     };
+    
+    void LoadTexture2D(Asset<Texture2D>& asset, GoombaEngine::GraphicsContext& context);
+    
 } // GoombaRender
 
 #endif //GOOMBARENDER_TEXTURE_H
