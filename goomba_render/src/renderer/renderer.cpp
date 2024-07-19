@@ -53,13 +53,13 @@ namespace GoombaRender
                 // Draw based on type
                 if (instruction.vao.GetDrawType() == DrawType::Arrays)
                 {
-                    m_Context.GetGlad().DrawArrays(GL_TRIANGLES, 0, instruction.vao.GetNumVertices());
+                    m_Context.GetGlad().DrawArrays(instruction.vao.GetDrawMode(), 0, instruction.vao.GetNumVertices());
                 }
                 else if (instruction.vao.GetDrawType() == DrawType::Indices)
                 {
                     for (auto& selection : instruction.vao.GetIndicesSections())
                     {
-                        m_Context.GetGlad().DrawElements(GL_TRIANGLES, selection.count, selection.type, (const void*)selection.offset);
+                        m_Context.GetGlad().DrawElements(instruction.vao.GetDrawMode(), selection.count, selection.type, (const void*)selection.offset);
                     }
                 }
             }

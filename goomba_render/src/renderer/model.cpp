@@ -100,7 +100,8 @@ namespace GoombaRender
                     // deal with mesh (primitive)
                     Mesh mesh;
                     mesh.vao.AssignContext(context);
-                    mesh.vao.Create(primitive.indices >= 0 ? DrawType::Indices : DrawType::Arrays);
+                    GLogInfo(primitive.mode);
+                    mesh.vao.Create(primitive.indices >= 0 ? DrawType::Indices : DrawType::Arrays, primitive.mode);
                     mesh.localTransform = localTransform;
                     
                     // go through attributes

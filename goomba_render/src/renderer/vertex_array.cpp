@@ -8,11 +8,12 @@
 
 namespace GoombaRender
 {
-    void VertexArray::Create(DrawType drawType)
+    void VertexArray::Create(DrawType drawType, GLenum drawMode)
     {
         RequireContext();
         
         m_DrawType = drawType;
+        m_DrawMode = drawMode;
         m_Context.GetGlad().GenVertexArrays(1, &m_RendererID);
         m_Created = true;
     }

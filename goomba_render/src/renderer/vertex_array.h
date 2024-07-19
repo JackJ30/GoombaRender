@@ -31,7 +31,7 @@ namespace GoombaRender
         VertexArray() = default;
         ~VertexArray() = default;
         
-        void Create(DrawType drawType);
+        void Create(DrawType drawType, GLenum drawMode = GL_TRIANGLES);
         void Delete();
         
         void Bind() const;
@@ -46,6 +46,7 @@ namespace GoombaRender
         void SetIndexBuffer(unsigned int buffer, std::vector<IndicesSection> indicesInfo);
         
         inline DrawType GetDrawType() const { return m_DrawType; };
+        inline GLenum GetDrawMode() const { return m_DrawMode; };
         
         inline const std::vector<IndicesSection>& GetIndicesSections() const { return m_IndicesInfo; }
         
@@ -55,6 +56,7 @@ namespace GoombaRender
     private:
         unsigned int m_RendererID;
         DrawType m_DrawType;
+        GLenum m_DrawMode;
         
         unsigned int m_NumVertices = 0; // Arrays
         std::vector<IndicesSection> m_IndicesInfo; // Indices
