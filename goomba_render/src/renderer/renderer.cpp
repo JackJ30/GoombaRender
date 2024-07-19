@@ -12,13 +12,13 @@ namespace GoombaRender
     {
         RenderPass pass;
         
-        for (const Asset<Model>& model : scene.m_Objects)
+        for (const SceneObject& object : scene.m_Objects)
         {
-            for (const Mesh& mesh : model.Get().GetMeshes())
+            for (const Mesh& mesh : object.model.Get().GetMeshes())
             {
                 // temp uniforms
                 UniformSetting setting;
-                setting.mat4s.emplace_back("u_Transform", mesh.localTransform);
+                setting.mat4s.emplace_back("u_Transform", mesh.localTransform * object.transform.GetTransformationMatrix());
                 setting.mat4s.emplace_back("u_View", glm::mat4(camera.GetViewMatrix()));
                 setting.mat4s.emplace_back("u_Projection", camera.GetProjectionMatrix());
                 

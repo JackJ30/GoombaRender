@@ -35,6 +35,7 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/renderer/texture.cpp
 	${GOOMBARENDERDIR}/src/renderer/material.cpp
 	${GOOMBARENDERDIR}/src/renderer/perspective_camera.cpp
+	${GOOMBARENDERDIR}/src/renderer/transform.cpp
 )
 
 set(IMGUI_SOURCES

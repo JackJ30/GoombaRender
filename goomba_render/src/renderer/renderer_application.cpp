@@ -49,7 +49,7 @@ namespace GoombaRender
                 2, 3, 0
         };
         
-        testScene.m_Objects.emplace_back("resources/models/testcube.gltf");
+        testScene.m_Objects.push_back({Asset<Model>("resources/models/testcube.gltf"), Transform()});
         testScene.LoadAssets(m_Context);
         
         // LOOP

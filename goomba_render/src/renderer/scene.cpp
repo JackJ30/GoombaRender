@@ -4,9 +4,9 @@ namespace GoombaRender
 {
     void Scene::LoadAssets(GoombaEngine::GraphicsContext &context)
     {
-        for (Asset<Model>& model : m_Objects)
+        for (SceneObject& object : m_Objects)
         {
-            LoadModel(model, context);
+            LoadModel(object.model, context);
         }
         LoadShader(m_MainShader, context);
     }

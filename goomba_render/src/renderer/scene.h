@@ -5,19 +5,20 @@
 #include "renderer/camera.h"
 #include "model.h"
 #include "shader.h"
+#include "transform.h"
 
 namespace GoombaRender
 {
     struct SceneObject
     {
         Asset<Model> model;
-        glm::
+        Transform transform;
     };
     
     class Scene
     {
     public:
-        std::vector<Asset<Model>> m_Objects; // Temp
+        std::vector<SceneObject> m_Objects; // Temp
         Asset<Shader> m_MainShader = Asset<Shader>("resources/shaders/test.glsl"); // Temp, also should be material
         
         void LoadAssets(GoombaEngine::GraphicsContext& context);

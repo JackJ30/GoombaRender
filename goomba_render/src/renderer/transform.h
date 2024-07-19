@@ -9,6 +9,8 @@ namespace GoombaRender
     class Transform
     {
     public:
+        Transform();
+        explicit Transform(glm::vec3 translation);
         
         inline glm::vec3 GetTranslation() const { return m_Translation; }
         inline void SetTranslation(glm::vec3 translation) { m_Translation = translation; CalculateMatrix(); }

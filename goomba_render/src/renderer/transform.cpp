@@ -4,6 +4,17 @@
 
 namespace GoombaRender
 {
+    Transform::Transform()
+    {
+        SetTransformationMatrix(glm::mat4(1.0));
+    }
+    
+    Transform::Transform(glm::vec3 translation)
+    {
+        SetTransformationMatrix(glm::mat4(1.0));
+        SetTranslation(translation);
+    }
+    
     void Transform::CalculateMatrix()
     {
         m_Matrix = glm::translate(glm::scale(glm::mat4_cast(m_Rotation), m_Scale), m_Translation);
