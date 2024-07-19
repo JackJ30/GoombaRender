@@ -8,6 +8,12 @@
 
 namespace GoombaRender
 {
+    struct SceneObject
+    {
+        Asset<Model> model;
+        glm::
+    };
+    
     class Scene
     {
     public:
