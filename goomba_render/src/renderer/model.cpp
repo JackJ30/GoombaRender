@@ -29,6 +29,8 @@ namespace GoombaRender
     
     void LoadModel(Asset<Model> &asset, GoombaEngine::GraphicsContext &context)
     {
+        if (asset.TryUseCached()) return;
+        
         tinygltf::TinyGLTF loader;
         std::string error;
         std::string warn;

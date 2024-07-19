@@ -38,7 +38,8 @@ int main(int argc, char *argv[])
 //      - [x] GLTF model loading (go through and load everything)
 //      - [x] Scene to render instruction
 // - [x] Assetloader functions, template argument assets
-// - [ ] Materials + Scene default material + scene objects (with transform)
+// - [x] Scene objects and transforms
+// - [ ] Materials + Scene default material
 // - [ ] Scene system (lights + camera ubo)
 // - [ ] Time system and ms timing
 // - [ ] Frame buffers

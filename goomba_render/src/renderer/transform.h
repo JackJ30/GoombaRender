@@ -20,7 +20,7 @@ namespace GoombaRender
         inline void SetScale(glm::vec3 scale) { m_Scale = scale; CalculateMatrix(); }
         
         inline glm::mat4 GetTransformationMatrix() const { return m_Matrix; }
-        inline void SetTransformationMatrix(glm::mat4 matrix) { m_Matrix = matrix; DecomposeMatrix(); }
+        inline void SetTransformationMatrix(glm::mat4 matrix) { m_Matrix = matrix; CalculateComponents(); }
         
     private:
         glm::vec3 m_Translation;
@@ -30,7 +30,7 @@ namespace GoombaRender
         glm::mat4 m_Matrix;
         
         void CalculateMatrix();
-        void DecomposeMatrix();
+        void CalculateComponents();
     };
     
 } // GoombaRender

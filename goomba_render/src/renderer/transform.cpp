@@ -20,7 +20,7 @@ namespace GoombaRender
         m_Matrix = glm::translate(glm::scale(glm::mat4_cast(m_Rotation), m_Scale), m_Translation);
     }
     
-    void Transform::DecomposeMatrix()
+    void Transform::CalculateComponents()
     {
         glm::vec3 skew;
         glm::vec4 perspective;

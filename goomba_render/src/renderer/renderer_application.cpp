@@ -50,6 +50,7 @@ namespace GoombaRender
         };
         
         testScene.m_Objects.push_back({Asset<Model>("resources/models/testcube.gltf"), Transform()});
+        testScene.m_Objects.push_back({Asset<Model>("resources/models/testcube.gltf"), Transform({0.0, 3.0, 0.0})});
         testScene.LoadAssets(m_Context);
         
         // LOOP
