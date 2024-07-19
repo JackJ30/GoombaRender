@@ -37,11 +37,11 @@ namespace GoombaRender
         bool ret = false;
         if (asset.GetPath().extension() == ".gltf")
         {
-            ret = loader.LoadASCIIFromFile(&loadedGLTF, &error, &warn, asset.GetPath());
+            ret = loader.LoadASCIIFromFile(&loadedGLTF, &error, &warn, asset.GetPath().string());
         }
         else if (asset.GetPath().extension() == ".glb")
         {
-            ret = loader.LoadBinaryFromFile(&loadedGLTF, &error, &warn, asset.GetPath());
+            ret = loader.LoadBinaryFromFile(&loadedGLTF, &error, &warn, asset.GetPath().string());
         }
         else { GLogError("Model must have glb or gltf file extension."); return; }
         

@@ -80,7 +80,7 @@ namespace GoombaRender
     {
         int width, height, channels;
         stbi_set_flip_vertically_on_load(1);
-        stbi_uc* data = stbi_load(asset.GetPath().c_str(), &width, &height, &channels, 0);
+        stbi_uc* data = stbi_load(asset.GetPath().string().c_str(), &width, &height, &channels, 0);
         DEBUG_ASSERT(data != nullptr, fmt::format("Could not load image at path: '{}'", asset.GetPath().string()));
         DEBUG_ASSERT(channels == 3 || channels == 4, "Loaded images must have 3 or 4 channels.");
         
