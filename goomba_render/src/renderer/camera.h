@@ -21,6 +21,11 @@ namespace GoombaRender
         inline void SetAspect(float aspect) { m_Aspect = aspect; }
         inline void SetSensitivity(float sensitivity) {m_Sensitivity = sensitivity; }
         inline void SetSpeed(float speed) { m_Speed = speed; }
+        
+        inline const glm::vec3& GetPosition() const { return m_Position; };
+        inline const glm::vec3& GetForward() const { return m_Front; };
+        inline const glm::vec3& GetRight() const { return m_Right; };
+        inline const glm::vec3& GetUp() const { return m_Up; };
     protected:
         glm::vec3 m_Position, m_Front, m_Up, m_Right, m_WorldUp;
         float m_Pitch, m_Yaw;

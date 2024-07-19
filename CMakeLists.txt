@@ -71,4 +71,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${GOOMBARENDERDIR}/src ${CMAKE
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${GOOMBARENDERDIR}/src/goombapch.h)
 
 # add debug definition
-target_compile_definitions(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:DEBUG>")
+target_compile_definitions(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:DEBUG>" "GLM_ENABLE_EXPERIMENTAL")

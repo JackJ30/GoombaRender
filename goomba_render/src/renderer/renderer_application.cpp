@@ -3,6 +3,7 @@
 
 #include <imgui.h>
 
+#include "glm/gtx/string_cast.hpp"
 #include "renderer/vertex_array.h"
 #include "renderer/shader.h"
 #include "renderer/perspective_camera.h"
@@ -48,7 +49,7 @@ namespace GoombaRender
                 2, 3, 0
         };
         
-        testScene.m_Objects.emplace_back("resources/models/cubes.gltf");
+        testScene.m_Objects.emplace_back("resources/models/testcube.gltf");
         testScene.LoadAssets(m_Context);
         
         // LOOP
@@ -74,6 +75,11 @@ namespace GoombaRender
         ImGui::Begin("Loop Debug");
         ImGui::Text("Frame time: %f seconds", m_Loop.GetFrameTime());
         ImGui::Text("Tick rate : %f seconds", m_Loop.GetTickRate());
+        ImGui::End();
+        
+        ImGui::Begin("Camera Debug");
+        ImGui::Text("Camera Forward: %s", glm::to_string(camera.GetForward()).c_str());
+        ImGui::Text("Camera Position: %s", glm::to_string(camera.GetPosition()).c_str());
         ImGui::End();
 
         GoombaEngine::ImGUIRender();

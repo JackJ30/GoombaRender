@@ -34,16 +34,26 @@ namespace GoombaRender
         std::string warn;
         
         tinygltf::Model loadedGLTF;
-        bool ret = loader.LoadASCIIFromFile(&loadedGLTF, &error, &warn, asset.GetPath());
+        bool ret = false;
+        if (asset.GetPath().extension() == ".gltf")
+        {
+            ret = loader.LoadASCIIFromFile(&loadedGLTF, &error, &warn, asset.GetPath());
+        }
+        else if (asset.GetPath().extension() == ".glb")
+        {
+            ret = loader.LoadBinaryFromFile(&loadedGLTF, &error, &warn, asset.GetPath());
+        }
+        else { GLogError("Model must have glb or gltf file extension."); return; }
         
         if (!warn.empty()) {
-            GLogError("GLTF loading warning for file '{}' :\n{}", asset.GetPath(), warn);
+            GLogError("GLTF loading warning for file '{}' :\n{}", asset.GetPath().string(), warn);
         }
         if (!error.empty()) {
-            GLogError("GLTF loading error for file '{}' :\n{}", asset.GetPath(), error);
+            GLogError("GLTF loading error for file '{}' :\n{}", asset.GetPath().string(), error);
+            return;
         }
         
-        if (!ret) { GLogCritical("Could not load GLTF file with path '{}'", asset.GetPath()); }
+        if (!ret) { GLogCritical("Could not load GLTF file with path '{}'", asset.GetPath().string()); return; }
         
         Model model;
         model.AssignContext(context);
@@ -83,52 +93,55 @@ namespace GoombaRender
                 if (!node.translation.empty()) { localTransform = glm::translate(localTransform, {node.translation[0], node.translation[1], node.translation[2]} ); }
             }
             
-            for (tinygltf::Primitive primitive : loadedGLTF.meshes[node.mesh].primitives)
+            if (node.mesh >= 0)
             {
-                // deal with mesh (primitive)
-                Mesh mesh;
-                mesh.vao.AssignContext(context);
-                mesh.vao.Create(primitive.indices >= 0 ? DrawType::Indices : DrawType::Arrays);
-                mesh.localTransform = localTransform;
-                
-                // go through attributes
-                std::string attributes[3] = {"POSITION", "NORMAL", "TEXCOORD_0"};
-                unsigned int attribute_indexes[3] = {0, 1, 2};
-                
-                for (int i = 0; i < 3; ++i)
+                for (tinygltf::Primitive primitive : loadedGLTF.meshes[node.mesh].primitives)
                 {
-                    if (primitive.attributes.count(attributes[i]) > 0)
+                    // deal with mesh (primitive)
+                    Mesh mesh;
+                    mesh.vao.AssignContext(context);
+                    mesh.vao.Create(primitive.indices >= 0 ? DrawType::Indices : DrawType::Arrays);
+                    mesh.localTransform = localTransform;
+                    
+                    // go through attributes
+                    std::string attributes[3] = {"POSITION", "NORMAL", "TEXCOORD_0"};
+                    unsigned int attribute_indexes[3] = {0, 1, 2};
+                    
+                    for (int i = 0; i < 3; ++i)
                     {
-                        const auto accessorIdx = primitive.attributes[attributes[i]];
+                        if (primitive.attributes.count(attributes[i]) > 0)
+                        {
+                            const auto accessorIdx = primitive.attributes[attributes[i]];
+                            const auto &accessor = loadedGLTF.accessors[accessorIdx];
+                            const auto &bufferView = loadedGLTF.bufferViews[accessor.bufferView];
+                            const auto bufferIdx = bufferView.buffer;
+                            
+                            DEBUG_ASSERT(GL_ARRAY_BUFFER == bufferView.target, "It's gotta be an array buffer");
+                            mesh.vao.BindAttribute(model.GetBuffers()[bufferIdx], attribute_indexes[i],
+                                                   accessor.type, accessor.componentType,
+                                                   GL_FALSE, bufferView.byteStride,
+                                                   accessor.byteOffset + bufferView.byteOffset);
+                        }
+                    }
+                    
+                    if (primitive.indices >= 0)
+                    {
+                        const auto accessorIdx = primitive.indices;
                         const auto &accessor = loadedGLTF.accessors[accessorIdx];
                         const auto &bufferView = loadedGLTF.bufferViews[accessor.bufferView];
                         const auto bufferIdx = bufferView.buffer;
                         
-                        DEBUG_ASSERT(GL_ARRAY_BUFFER == bufferView.target, "It's gotta be an array buffer");
-                        mesh.vao.BindAttribute(model.GetBuffers()[bufferIdx], attribute_indexes[i],
-                                               accessor.type, accessor.componentType,
-                                               GL_FALSE, bufferView.byteStride,
-                                               accessor.byteOffset + bufferView.byteOffset);
+                        unsigned int count = accessor.count;
+                        unsigned int type = accessor.componentType;
+                        
+                        IndicesSection section = {accessor.byteOffset + bufferView.byteOffset, count, type};
+                        mesh.vao.SetIndexBuffer(model.GetBuffers()[bufferIdx], { section });
+                        
+                        DEBUG_ASSERT(GL_ELEMENT_ARRAY_BUFFER == bufferView.target, "It's gotta be an index buffer");
                     }
+                    
+                    model.AddMesh(mesh);
                 }
-                
-                if (primitive.indices >= 0)
-                {
-                    const auto accessorIdx = primitive.indices;
-                    const auto &accessor = loadedGLTF.accessors[accessorIdx];
-                    const auto &bufferView = loadedGLTF.bufferViews[accessor.bufferView];
-                    const auto bufferIdx = bufferView.buffer;
-                    
-                    unsigned int count = accessor.count;
-                    unsigned int type = accessor.componentType;
-                    
-                    IndicesSection section = {accessor.byteOffset + bufferView.byteOffset, count, type};
-                    mesh.vao.SetIndexBuffer(model.GetBuffers()[bufferIdx], { section });
-                    
-                    DEBUG_ASSERT(GL_ELEMENT_ARRAY_BUFFER == bufferView.target, "It's gotta be an index buffer");
-                }
-                
-                model.AddMesh(mesh);
             }
             
             // Traverse children recursively

@@ -40,10 +40,10 @@ int main(int argc, char *argv[])
 // - [x] Assetloader functions, template argument assets
 // - [ ] Materials + Scene default material + scene objects (with transform)
 // - [ ] Scene system (lights + camera ubo)
-// - [ ] JSON based scene system (material override)
 // - [ ] Time system and ms timing
 // - [ ] Frame buffers
 // - [ ] Hierarchy system
+// - [ ] JSON based scene system (material override)
 // - [ ] Documentation for style, includes, etc
 // - [ ] Forward rendering lighting
 //

@@ -5,6 +5,7 @@
 // TODO - non unique loading (sharing assets from same path)
 
 #include <utility>
+#include <filesystem>
 
 namespace GoombaRender
 {
@@ -17,11 +18,11 @@ namespace GoombaRender
     class Asset
     {
     public:
-        explicit Asset(std::string path) : m_Path(std::move(path)) {};
+        explicit Asset(std::string path) : m_Path(path) {};
         
         T& Get() const
         {
-            if (!m_Loaded) { GLogError("Asset at path '{}' must be loaded before accessing.", m_Path); }
+            if (!m_Loaded) { GLogError("Asset at path '{}' must be loaded before accessing.", m_Path.string()); }
             
             return loadedAssets<T>[m_Id];
         }
@@ -34,10 +35,10 @@ namespace GoombaRender
             loadedAssets<T>[m_Id] = loaded;
         }
         
-        inline const std::string& GetPath() const { return m_Path; }
+        inline const std::filesystem::path& GetPath() const { return m_Path; }
     
     private:
-        std::string m_Path;
+        std::filesystem::path m_Path;
         bool m_Loaded = false;
         unsigned int m_Id;
     };
