@@ -213,9 +213,10 @@ namespace GoombaRender
     
     void LoadShader(Asset<Shader>& asset, GoombaEngine::GraphicsContext& context)
     {
-        if (asset.TryUseCached()) return;
+        if (asset.TryLoadFromCache()) return;
+        if (!asset.GetPath().has_value()) { GLogError("Can not load shader with no path."); return; }
         
-        std::ifstream stream(asset.GetPath());
+        std::ifstream stream(asset.GetPath().value());
         
         enum class ShaderType
         {

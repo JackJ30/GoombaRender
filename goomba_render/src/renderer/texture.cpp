@@ -78,12 +78,13 @@ namespace GoombaRender
     
     void LoadTexture2D(Asset<Texture2D>& asset, GoombaEngine::GraphicsContext& context)
     {
-        if (asset.TryUseCached()) return;
+        if (asset.TryLoadFromCache()) return;
+        if (!asset.GetPath().has_value()) { GLogError("Can not load texture with no path."); return; }
         
         int width, height, channels;
         stbi_set_flip_vertically_on_load(1);
-        stbi_uc* data = stbi_load(asset.GetPath().string().c_str(), &width, &height, &channels, 0);
-        DEBUG_ASSERT(data != nullptr, fmt::format("Could not load image at path: '{}'", asset.GetPath().string()));
+        stbi_uc* data = stbi_load(asset.GetPath().value().c_str(), &width, &height, &channels, 0);
+        DEBUG_ASSERT(data != nullptr, fmt::format("Could not load image at path: '{}'", asset.GetPath().value()));
         DEBUG_ASSERT(channels == 3 || channels == 4, "Loaded images must have 3 or 4 channels.");
         
         Texture2D texture;

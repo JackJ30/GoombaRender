@@ -29,7 +29,8 @@ namespace GoombaRender
     
     void LoadModel(Asset<Model> &asset, GoombaEngine::GraphicsContext &context)
     {
-        if (asset.TryUseCached()) return;
+        if (asset.TryLoadFromCache()) return;
+        if (!asset.GetPath().has_value()) { GLogError("Can not load model with no path."); return; }
         
         tinygltf::TinyGLTF loader;
         std::string error;
@@ -37,25 +38,27 @@ namespace GoombaRender
         
         tinygltf::Model loadedGLTF;
         bool ret = false;
-        if (asset.GetPath().extension() == ".gltf")
+        
+        std::string extension = std::filesystem::path(asset.GetPath().value()).extension();
+        if (extension == ".gltf")
         {
-            ret = loader.LoadASCIIFromFile(&loadedGLTF, &error, &warn, asset.GetPath().string());
+            ret = loader.LoadASCIIFromFile(&loadedGLTF, &error, &warn, asset.GetPath().value());
         }
-        else if (asset.GetPath().extension() == ".glb")
+        else if (extension == ".glb")
         {
-            ret = loader.LoadBinaryFromFile(&loadedGLTF, &error, &warn, asset.GetPath().string());
+            ret = loader.LoadBinaryFromFile(&loadedGLTF, &error, &warn, asset.GetPath().value());
         }
         else { GLogError("Model must have glb or gltf file extension."); return; }
         
         if (!warn.empty()) {
-            GLogError("GLTF loading warning for file '{}' :\n{}", asset.GetPath().string(), warn);
+            GLogError("GLTF loading warning for file '{}' :\n{}", asset.GetPath().value(), warn);
         }
         if (!error.empty()) {
-            GLogError("GLTF loading error for file '{}' :\n{}", asset.GetPath().string(), error);
+            GLogError("GLTF loading error for file '{}' :\n{}", asset.GetPath().value(), error);
             return;
         }
         
-        if (!ret) { GLogCritical("Could not load GLTF file with path '{}'", asset.GetPath().string()); return; }
+        if (!ret) { GLogCritical("Could not load GLTF file with path '{}'", asset.GetPath().value()); return; }
         
         Model model;
         model.AssignContext(context);
