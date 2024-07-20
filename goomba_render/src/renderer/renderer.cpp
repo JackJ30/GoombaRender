@@ -22,7 +22,7 @@ namespace GoombaRender
                 setting.mat4s.emplace_back("u_View", glm::mat4(camera.GetViewMatrix()));
                 setting.mat4s.emplace_back("u_Projection", camera.GetProjectionMatrix());
                 
-                pass.queue.push({mesh.vao, scene.m_MainShader, std::vector<std::pair<Asset<Texture2D>, unsigned int>>(), setting});
+                pass.queue.emplace(mesh.vao, mesh.material.Get());
             }
         }
         
@@ -40,15 +40,7 @@ namespace GoombaRender
                 const RenderInstruction& instruction = pass.queue.front();
                 
                 instruction.vao.Bind();
-                
-                Shader& shader = instruction.shader.Get();
-                shader.Bind();
-                shader.SetUniforms(instruction.uniformSetting);
-                
-                for (auto& texture : instruction.textures)
-                {
-                    texture.first.Get().Bind(texture.second);
-                }
+                instruction.material.Bind();
                 
                 // Draw based on type
                 if (instruction.vao.GetDrawType() == DrawType::Arrays)
@@ -65,5 +57,4 @@ namespace GoombaRender
             }
         }
     }
-    
 } // GoombaRender

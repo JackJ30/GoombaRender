@@ -4,6 +4,7 @@
 #include "renderer/asset.h"
 #include "renderer/texture.h"
 #include "renderer/vertex_array.h"
+#include "renderer/material.h"
 
 #include <tiny_gltf.h>
 #include <glm/glm.hpp>
@@ -13,7 +14,7 @@ namespace GoombaRender
     struct Mesh
     {
         VertexArray vao;
-        std::vector<Asset<Texture2D>> textures; // replace with material
+        Asset<Material> material;
         glm::mat4 localTransform = glm::mat4(1.0);
     };
     
@@ -25,9 +26,8 @@ namespace GoombaRender
         
         void AddMesh(const Mesh& mesh);
         
-        // TODO - these should really be const
-        inline std::vector<unsigned int>& GetBuffers() { return m_Buffers; }
-        const inline std::vector<Mesh>& GetMeshes() { return m_Meshes; }
+        inline std::vector<unsigned int>& GetBuffers() { return m_Buffers; } // TODO - this should really be const
+        inline const std::vector<Mesh>& GetMeshes() const { return m_Meshes; }
         
         
     private:
@@ -35,6 +35,7 @@ namespace GoombaRender
         std::vector<Mesh> m_Meshes;
     };
     
+    // TODO - support multiple uv maps
     void LoadModel(Asset<Model>& asset, GoombaEngine::GraphicsContext& context);
     
 } // GoombaRender

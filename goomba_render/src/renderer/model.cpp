@@ -75,6 +75,14 @@ namespace GoombaRender
             context.GetGlad().BufferData(GL_ARRAY_BUFFER, loadedGLTF.buffers[i].data.size(), loadedGLTF.buffers[i].data.data(), GL_STATIC_DRAW);
         }
         
+        // Create images
+        for (size_t i = 0; i < loadedGLTF.textures.size(); ++i)
+        {
+        
+        }
+        
+        // Create materials
+        
         // Helper lambda functions
         const std::function<void(const tinygltf::Node&, glm::mat4)> traverseNode = [&](const tinygltf::Node& node, glm::mat4 parentTransform)
         {
@@ -107,6 +115,8 @@ namespace GoombaRender
                     mesh.vao.AssignContext(context);
                     mesh.vao.Create(primitive.indices >= 0 ? DrawType::Indices : DrawType::Arrays, primitive.mode);
                     mesh.localTransform = localTransform;
+                    
+                    
                     
                     // go through attributes
                     std::string attributes[3] = {"POSITION", "NORMAL", "TEXCOORD_0"};

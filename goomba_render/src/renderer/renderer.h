@@ -7,16 +7,18 @@
 #include "renderer/texture.h"
 #include "renderer/shader.h"
 #include "renderer/model.h"
+#include "renderer/material.h"
 #include "renderer/asset.h"
 
 namespace GoombaRender
 {
-    struct RenderInstruction // TODO - these should be references
+    struct RenderInstruction
     {
-        VertexArray vao;
-        Asset<Shader> shader;
-        std::vector<std::pair<Asset<Texture2D>, unsigned int>> textures;
-        UniformSetting uniformSetting;
+        RenderInstruction(const VertexArray& vao, const Material& material)
+                : vao(vao), material(material) {}
+        
+        const VertexArray& vao;
+        const Material& material;
     };
     
     struct RenderPass

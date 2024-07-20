@@ -1,8 +1,8 @@
 #ifndef GOOMBARENDER_ASSET_H
 #define GOOMBARENDER_ASSET_H
 
+// TODO - "sub assets"
 // TODO - unloading
-// TODO - non unique loading (sharing assets from same path)
 
 #include <utility>
 #include <filesystem>

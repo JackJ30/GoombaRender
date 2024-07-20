@@ -5,7 +5,6 @@
 #include "renderer/asset.h"
 
 // TODO - Support mipmapping, and mipmapping filters
-// TODO - Support creating with pure data, image loading should not be essential to creating a texture
 
 namespace GoombaRender
 {
