@@ -39,14 +39,17 @@ int main(int argc, char *argv[])
 //      - [x] Scene to render instruction
 // - [x] Assetloader functions, template argument assets
 // - [x] Scene objects and transforms
-// - [ ] Materials + Scene default material
+// - [ ] Materials and gltf material loading
+// - [ ] Basic PBR lighting
+// - [ ] Asset rework
 // - [ ] Scene system (lights + camera ubo)
 // - [ ] Time system and ms timing
+// - [ ] Shadow mapping
 // - [ ] Frame buffers
 // - [ ] Hierarchy system
 // - [ ] JSON based scene system (material override)
 // - [ ] Documentation for style, includes, etc
-// - [ ] Forward rendering lighting
+// - [ ] Phase 1 Completed. Evaluate, rewrite goals and phases, adjust project organization, ask for feedback
 //
 // Wishlist
 // --------

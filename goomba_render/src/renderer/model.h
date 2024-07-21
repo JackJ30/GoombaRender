@@ -36,6 +36,7 @@ namespace GoombaRender
     };
     
     // TODO - support multiple uv maps
+    void InitializeModelLoader(std::string pbrShaderPath);
     void LoadModel(Asset<Model>& asset, GoombaEngine::GraphicsContext& context);
     
 } // GoombaRender

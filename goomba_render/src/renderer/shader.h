@@ -14,19 +14,6 @@
 
 namespace GoombaRender
 {
-    struct UniformSetting
-    {
-        std::vector<std::pair<std::string, bool>> bools;
-        std::vector<std::pair<std::string, int>> ints;
-        std::vector<std::pair<std::string, float>> floats;
-        std::vector<std::pair<std::string, glm::vec2>> vec2s;
-        std::vector<std::pair<std::string, glm::vec3>> vec3s;
-        std::vector<std::pair<std::string, glm::vec4>> vec4s;
-        std::vector<std::pair<std::string, glm::mat2>> mat2s;
-        std::vector<std::pair<std::string, glm::mat3>> mat3s;
-        std::vector<std::pair<std::string, glm::mat4>> mat4s;
-    };
-    
     class Shader : public OglObj
     {
     public:
@@ -37,6 +24,8 @@ namespace GoombaRender
         
         void Bind() const;
         void Unbind() const;
+        
+        inline const std::vector<std::pair<GLenum, std::string>>& GetUniforms() const { return m_UniformsCache; }
     
         // Set uniforms
         void SetUniformBool(const std::string &name, bool value);
@@ -50,12 +39,12 @@ namespace GoombaRender
         void SetUniformVec4(const std::string &name, float x, float y, float z, float w);
         void SetUniformMat2(const std::string &name, const glm::mat2 &mat);
         void SetUniformMat3(const std::string &name, const glm::mat3 &mat);
-        void SetUniformMat4(const std::string &name, const glm::mat4 &mat);
-        void SetUniforms(const UniformSetting& setting);
+        void SetUniformMat4(const std::string &name, const glm::mat4 &mat);\
     private:
         unsigned int m_RendererID;
         
         std::unordered_map<std::string, int> m_UniformLocationCache;
+        std::vector<std::pair<GLenum, std::string>> m_UniformsCache;
         GLchar m_ErrorMessage[1024];
         
         int GetUniformLocation(const std::string& name);

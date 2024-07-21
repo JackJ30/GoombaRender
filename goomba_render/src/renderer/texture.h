@@ -5,6 +5,7 @@
 #include "renderer/asset.h"
 
 // TODO - Support mipmapping, and mipmapping filters
+// TODO - Support other internal formats
 
 namespace GoombaRender
 {
@@ -32,13 +33,14 @@ namespace GoombaRender
     public:
         Texture2D();
         
-        void Create(const unsigned char* data, int width, int height, int channels);
+        void Create(const unsigned char* data, int width, int height, GLenum format, GLenum dataType);
         void Delete();
         
         inline virtual unsigned int GetWidth() const override { return m_Width; };
         inline virtual unsigned int GetHeight() const override { return m_Height; }
         
         void SetFiltering(TextureFilterType minFilter, TextureFilterType magFilter) override;
+        void SetWrapping(GLint wrapS, GLint wrapT);
         
         void Bind(unsigned int unit = 0) override;
         void Unbind() override;
@@ -47,7 +49,8 @@ namespace GoombaRender
         unsigned int m_BoundUnit = 0;
         
         unsigned int m_Width, m_Height;
-        TextureFilterType m_MinFilter, m_MagFilter;
+        TextureFilterType m_MinFilter, m_MagFilter = TextureFilterType::Linear;
+        GLint m_WrapS, m_WrapT = GL_REPEAT;
     };
     
     void LoadTexture2D(Asset<Texture2D>& asset, GoombaEngine::GraphicsContext& context);

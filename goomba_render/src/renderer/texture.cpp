@@ -16,7 +16,7 @@ namespace GoombaRender
     
     }
     
-    void Texture2D::Create(const unsigned char* data, int width, int height, int channels)
+    void Texture2D::Create(const unsigned char* data, int width, int height, GLenum format, GLenum dataType)
     {
         RequireContext();
         
@@ -30,8 +30,10 @@ namespace GoombaRender
         m_Context.GetGlad().TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetGLFilter(m_MinFilter));
         m_Context.GetGlad().TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetGLFilter(m_MagFilter));
         
-        GLenum format = (channels == 3) ? GL_RGB : GL_RGBA;
-        m_Context.GetGlad().TexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_Width, m_Height, format, GL_UNSIGNED_BYTE, data);
+        m_Context.GetGlad().TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_WrapS);
+        m_Context.GetGlad().TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_WrapT);
+        
+        m_Context.GetGlad().TexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_Width, m_Height, format, dataType, data);
         
         m_Created = true;
     }
@@ -48,6 +50,20 @@ namespace GoombaRender
             m_Context.GetGlad().TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetGLFilter(m_MagFilter));
         }
     }
+    
+    void Texture2D::SetWrapping(GLint wrapS, GLint wrapT)
+    {
+        m_WrapS = wrapS;
+        m_WrapT = wrapT;
+        
+        if (m_HasContext && m_Created)
+        {
+            m_Context.GetGlad().BindTexture(GL_TEXTURE_2D, m_RendererID);
+            m_Context.GetGlad().TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_WrapS);
+            m_Context.GetGlad().TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_WrapT);
+        }
+    }
+    
     
     void Texture2D::Bind(unsigned int unit)
     {
@@ -86,10 +102,11 @@ namespace GoombaRender
         stbi_uc* data = stbi_load(asset.GetPath().value().c_str(), &width, &height, &channels, 0);
         DEBUG_ASSERT(data != nullptr, fmt::format("Could not load image at path: '{}'", asset.GetPath().value()));
         DEBUG_ASSERT(channels == 3 || channels == 4, "Loaded images must have 3 or 4 channels.");
+        GLenum format = (channels == 3) ? GL_RGB : GL_RGBA;
         
         Texture2D texture;
         texture.AssignContext(context);
-        texture.Create(data, width, height, channels);
+        texture.Create(data, width, height, format, GL_UNSIGNED_BYTE);
         
         asset.AssignLoaded(std::move(texture));
         

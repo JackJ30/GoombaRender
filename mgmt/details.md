@@ -40,12 +40,12 @@
 
 ## Phase 2:
 - Event and input system
-- Layer system
 - Deferred rendering
 - Shadow mapping
 - Blending
 - Clearing and framebuffer management
 - Draw call management
+- Layer system
 
 ## Phase 3:
 - Resource importing

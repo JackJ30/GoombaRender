@@ -10,11 +10,10 @@
 
 // TODO - make more user friendly method of setting uniforms
 // TODO - make render flags
-// TODO - system to "try" to set a uniform if it exists
 
 namespace GoombaRender
 {
-    class Material : OglObj
+    class Material : public OglObj
     {
     public:
         void Create(Asset<Shader> shader);
@@ -23,15 +22,15 @@ namespace GoombaRender
         
         inline UniformSetting& GetUniformSettings() { return m_UniformSettings; }
         
-        void AssignTextureUniform(std::string name, Asset<Texture2D> texture);
-        inline const std::vector<Asset<Texture2D>>& GetTextures() const { return m_Textures; }
+        void AssignTextureUniform(const std::string& name, const Asset<Texture2D>& texture);
         
         // flags
         
     private:
         Asset<Shader> m_Shader;
         UniformSetting m_UniformSettings;
-        std::vector<Asset<Texture2D>> m_Textures;
+        std::unordered_map<std::string, Asset<Texture2D>> m_Textures;
+        std::unordered_set<std::string> m_UnassignedTextures;
     };
     
 } // GoombaRender

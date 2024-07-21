@@ -16,8 +16,7 @@ namespace GoombaRender
         {
             for (const Mesh& mesh : object.model.Get().GetMeshes())
             {
-                // temp uniforms
-                UniformSetting setting;
+                // Set temp material uniforms (will be replaced with ubo)
                 setting.mat4s.emplace_back("u_Transform", mesh.localTransform * object.transform.GetTransformationMatrix());
                 setting.mat4s.emplace_back("u_View", glm::mat4(camera.GetViewMatrix()));
                 setting.mat4s.emplace_back("u_Projection", camera.GetProjectionMatrix());

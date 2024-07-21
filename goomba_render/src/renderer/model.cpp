@@ -27,9 +27,28 @@ namespace GoombaRender
         m_Meshes.push_back(mesh); // TODO - move this
     }
     
+    // Loading
+    
+    struct ModelLoaderSettings
+    {
+        Asset<Shader> pbrShader;
+        Material defaultMaterial;
+        
+        bool initialized = false;
+    } modelLoaderSettings;
+    
+    void InitializeModelLoader(Asset<Shader> pbrShader, GoombaEngine::GraphicsContext& context)
+    {
+        modelLoaderSettings.pbrShader = pbrShader;
+        modelLoaderSettings.defaultMaterial.Create(pbrShader);
+        
+        modelLoaderSettings.initialized = true;
+    } // TODO - use a tailored pbr shader with only the features (textures) that the material has
+    
     void LoadModel(Asset<Model> &asset, GoombaEngine::GraphicsContext &context)
     {
-        if (asset.TryLoadFromCache()) return;
+        DEBUG_ASSERT(modelLoaderSettings.initialized, "Model loader must be initialized before loading a model.");
+        if (asset.TryLoadFromCache()) { return; }
         if (!asset.GetPath().has_value()) { GLogError("Can not load model with no path."); return; }
         
         tinygltf::TinyGLTF loader;
@@ -58,7 +77,7 @@ namespace GoombaRender
             return;
         }
         
-        if (!ret) { GLogCritical("Could not load GLTF file with path '{}'", asset.GetPath().value()); return; }
+        if (!ret) { GLogError("Could not load GLTF file with path '{}'", asset.GetPath().value()); return; }
         
         Model model;
         model.AssignContext(context);
@@ -76,12 +95,63 @@ namespace GoombaRender
         }
         
         // Create images
+        tinygltf::Sampler defaultSampler;
+        defaultSampler.minFilter = GL_LINEAR;
+        defaultSampler.magFilter = GL_LINEAR;
+        defaultSampler.wrapS = GL_REPEAT;
+        defaultSampler.wrapT = GL_REPEAT;
+        
+        std::vector<Asset<Texture2D>> textures;
+        textures.resize(loadedGLTF.textures.size());
         for (size_t i = 0; i < loadedGLTF.textures.size(); ++i)
         {
-        
+            const tinygltf::Texture& texture = loadedGLTF.textures[i];
+            DEBUG_ASSERT(texture.source >= 0, "Textures must have an image");
+            const tinygltf::Image& image = loadedGLTF.images[texture.source];
+            const tinygltf::Sampler& sampler = texture.sampler >= 0 ? loadedGLTF.samplers[texture.sampler] : defaultSampler;
+            
+            Texture2D oglTexture;
+            oglTexture.AssignContext(context);
+            
+            TextureFilterType min, mag; // TODO - support mipmapping
+            if (sampler.minFilter >= 0 && (sampler.minFilter == GL_NEAREST || sampler.minFilter == GL_NEAREST_MIPMAP_LINEAR || sampler.minFilter == GL_NEAREST_MIPMAP_NEAREST)) { min = TextureFilterType::Nearest; }
+            else { min = TextureFilterType::Linear; }
+            if (sampler.magFilter >= 0 && (sampler.magFilter == GL_NEAREST || sampler.magFilter == GL_NEAREST_MIPMAP_LINEAR || sampler.magFilter == GL_NEAREST_MIPMAP_NEAREST)) { mag = TextureFilterType::Nearest; }
+            else { mag = TextureFilterType::Linear; }
+            oglTexture.SetFiltering(min, mag);
+            
+            DEBUG_ASSERT(image.component == 3 || image.component == 4, "Loaded images must have 3 or 4 channels.");
+            GLenum format = (image.component == 3) ? GL_RGB : GL_RGBA;
+            
+            oglTexture.SetWrapping(sampler.wrapS, sampler.wrapT);
+            oglTexture.Create(image.image.data(), image.width, image.height, format, image.pixel_type);
+            // TODO - support mipmapping
+            
+            textures[i].AssignLoaded(std::move(oglTexture));
         }
         
-        // Create materials
+        // Create Materials
+        std::vector<Asset<Material>> materials;
+        materials.resize(loadedGLTF.materials.size());
+        for (size_t i = 0; i < loadedGLTF.materials.size(); ++i)
+        {
+            // Get default texture
+            const tinygltf::Material& material = loadedGLTF.materials[i];
+            const tinygltf::PbrMetallicRoughness& pbrMetallicRoughness = material.pbrMetallicRoughness;
+            
+            Material oglMaterial;
+            oglMaterial.AssignContext(context);
+            oglMaterial.Create(modelLoaderSettings.pbrShader);
+            
+            // set uniforms and textures
+            // base color (texture + factor)
+            // metallic roughness (texture + factors)
+            // normal (texture + scale)
+            // occlusion (texture + strength)
+            // emissions (texture + factor)
+            
+            materials[i].AssignLoaded(std::move(oglMaterial));
+        }
         
         // Helper lambda functions
         const std::function<void(const tinygltf::Node&, glm::mat4)> traverseNode = [&](const tinygltf::Node& node, glm::mat4 parentTransform)
@@ -116,8 +186,6 @@ namespace GoombaRender
                     mesh.vao.Create(primitive.indices >= 0 ? DrawType::Indices : DrawType::Arrays, primitive.mode);
                     mesh.localTransform = localTransform;
                     
-                    
-                    
                     // go through attributes
                     std::string attributes[3] = {"POSITION", "NORMAL", "TEXCOORD_0"};
                     unsigned int attribute_indexes[3] = {0, 1, 2};
@@ -139,6 +207,7 @@ namespace GoombaRender
                         }
                     }
                     
+                    // add index buffer
                     if (primitive.indices >= 0)
                     {
                         const auto accessorIdx = primitive.indices;
@@ -154,6 +223,8 @@ namespace GoombaRender
                         
                         DEBUG_ASSERT(GL_ELEMENT_ARRAY_BUFFER == bufferView.target, "It's gotta be an index buffer");
                     }
+                    
+                    // add materials (or default material)
                     
                     model.AddMesh(mesh);
                 }

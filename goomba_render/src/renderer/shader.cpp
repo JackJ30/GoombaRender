@@ -69,6 +69,23 @@ namespace GoombaRender
         m_Context.GetGlad().DeleteShader(vertexShader);
         m_Context.GetGlad().DeleteShader(fragmentShader);
         
+        // Cache uniforms
+        int count;
+        m_Context.GetGlad().GetProgramiv(m_RendererID, GL_ACTIVE_UNIFORMS, &count);
+        m_UniformsCache.reserve(count);
+        
+        const GLsizei bufSize = 64;
+        GLchar name[bufSize];
+        GLsizei length;
+        GLint size;
+        GLenum type;
+        
+        for (int i = 0; i < count; ++i)
+        {
+            m_Context.GetGlad().GetActiveUniform(m_RendererID, i, bufSize, &length, &size, &type, name);
+            m_UniformsCache.emplace_back(type, name);
+        }
+        
         m_Created = true;
     }
     
@@ -169,46 +186,6 @@ namespace GoombaRender
     void Shader::SetUniformMat4(const std::string &name, const glm::mat4 &mat)
     {
         m_Context.GetGlad().UniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
-    }
-    
-    void Shader::SetUniforms(const UniformSetting &setting)
-    {
-        for (auto& uniform : setting.bools)
-        {
-            SetUniformBool(uniform.first, uniform.second);
-        }
-        for (auto& uniform : setting.ints)
-        {
-            SetUniformInt(uniform.first, uniform.second);
-        }
-        for (auto& uniform : setting.floats)
-        {
-            SetUniformFloat(uniform.first, uniform.second);
-        }
-        for (auto& uniform : setting.vec2s)
-        {
-            SetUniformVec2(uniform.first, uniform.second);
-        }
-        for (auto& uniform : setting.vec3s)
-        {
-            SetUniformVec3(uniform.first, uniform.second);
-        }
-        for (auto& uniform : setting.vec4s)
-        {
-            SetUniformVec4(uniform.first, uniform.second);
-        }
-        for (auto& uniform : setting.mat2s)
-        {
-            SetUniformMat2(uniform.first, uniform.second);
-        }
-        for (auto& uniform : setting.mat3s)
-        {
-            SetUniformMat3(uniform.first, uniform.second);
-        }
-        for (auto& uniform : setting.mat4s)
-        {
-            SetUniformMat4(uniform.first, uniform.second);
-        }
     }
     
     void LoadShader(Asset<Shader>& asset, GoombaEngine::GraphicsContext& context)

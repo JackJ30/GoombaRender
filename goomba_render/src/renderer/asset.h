@@ -1,8 +1,15 @@
 #ifndef GOOMBARENDER_ASSET_H
 #define GOOMBARENDER_ASSET_H
 
-// TODO - "sub assets"
-// TODO - unloading
+// TODO - "sub assets" with sub asset caching
+// TODO - unloading (unloads sub assets too (eventually scenes will be an asset))
+// TODO - asset rework (remove template nonesense. Asset shoud be a class, with a list of sub assets. Assets don't need to also hold their path, their load functions should return the path. Asset memory should be managed by owners. Asset loaders can handle caching)
+
+// Asset usage
+// Assets have two main functions:
+// - They behave as cache-able glorified pointers to objects which are managed by this system
+// - They make it easy to use the filepath and actual object as one. This way a scene doesn't need a list of model filepaths to load, and a list of models after they are loaded. It can just use a list of model assets, and load them all with the function.
+// Assets should be loaded with specific load functions, or created as a sub asset in the load function of another assets.
 
 #include <utility>
 #include <filesystem>
@@ -59,6 +66,7 @@ namespace GoombaRender
         }
         
         inline const std::optional<std::string>& GetPath() const { return m_Path; }
+        inline std::optional<std::string>& SetPath(std::string path) { m_Path = path; }
     
     private:
         std::optional<std::string> m_Path;
