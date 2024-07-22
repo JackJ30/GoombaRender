@@ -39,7 +39,7 @@ namespace GoombaRender
         void SetUniformVec4(const std::string &name, float x, float y, float z, float w);
         void SetUniformMat2(const std::string &name, const glm::mat2 &mat);
         void SetUniformMat3(const std::string &name, const glm::mat3 &mat);
-        void SetUniformMat4(const std::string &name, const glm::mat4 &mat);\
+        void SetUniformMat4(const std::string &name, const glm::mat4 &mat);
     private:
         unsigned int m_RendererID;
         

@@ -2,6 +2,7 @@
 #define GOOMBARENDER_MATERIAL_H
 
 #include "renderer/asset.h"
+#include "renderer/uniform_settings.h"
 #include "renderer/shader.h"
 #include "renderer/texture.h"
 
@@ -18,9 +19,9 @@ namespace GoombaRender
     public:
         void Create(Asset<Shader> shader);
     
-        void Bind() const;
+        void Bind();
         
-        inline UniformSetting& GetUniformSettings() { return m_UniformSettings; }
+        inline UniformSettings& GetUniformSettings() { return m_UniformSettings; }
         
         void AssignTextureUniform(const std::string& name, const Asset<Texture2D>& texture);
         
@@ -28,7 +29,7 @@ namespace GoombaRender
         
     private:
         Asset<Shader> m_Shader;
-        UniformSetting m_UniformSettings;
+        UniformSettings m_UniformSettings;
         std::unordered_map<std::string, Asset<Texture2D>> m_Textures;
         std::unordered_set<std::string> m_UnassignedTextures;
     };

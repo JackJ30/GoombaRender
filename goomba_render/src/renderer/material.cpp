@@ -31,20 +31,22 @@ namespace GoombaRender
         m_Created = true;
     }
     
-    // TODO - better system for assigning uniforms. Should detect missing texture uniforms and assign to white 1x1 square.
     void Material::AssignTextureUniform(const std::string& name, const Asset<Texture2D>& texture)
     {
         RequireContext();
         DEBUG_ASSERT(m_Created, "Model must be created assigning texture uniform.");
         
-        m_Textures[name] = texture;
-        m_UnassignedTextures.erase(name);
+        if (m_UnassignedTextures.find(name) != m_UnassignedTextures.end())
+        {
+            m_Textures[name] = texture;
+            m_UnassignedTextures.erase(name);
+        }
     }
     
-    void Material::Bind() const
+    void Material::Bind()
     {
         m_Shader.Get().Bind();
-        m_Shader.Get().SetUniforms(m_UniformSettings);
+        m_UniformSettings.SetUniforms();
         
         int i = 0;
         for (const auto& texture : m_Textures)

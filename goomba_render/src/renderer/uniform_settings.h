@@ -1,6 +1,8 @@
 #ifndef GOOMBARENDER_UNIFORM_SETTINGS_H
 #define GOOMBARENDER_UNIFORM_SETTINGS_H
 
+#include "renderer/shader.h"
+
 namespace GoombaRender
 {
     // TODO - uniform settings
@@ -9,6 +11,28 @@ namespace GoombaRender
     
     class UniformSettings
     {
+    public:
+        UniformSettings(Shader test);
+        // TODO - fix shader assignment, add checks or redo system
+        void AssignShader(Shader& shader);
+        void SetUniforms();
+        
+        void AssignUniformBool(const std::string &name, bool value);
+        void AssignUniformInt(const std::string &name, int value);
+        void AssignUniformFloat(const std::string &name, float value);
+        void AssignUniformVec2(const std::string &name, const glm::vec2 &value);
+        void AssignUniformVec2(const std::string &name, float x, float y);
+        void AssignUniformVec3(const std::string &name, const glm::vec3 &value);
+        void AssignUniformVec3(const std::string &name, float x, float y, float z);
+        void AssignUniformVec4(const std::string &name, const glm::vec4 &value);
+        void AssignUniformVec4(const std::string &name, float x, float y, float z, float w);
+        void AssignUniformMat2(const std::string &name, const glm::mat2 &mat);
+        void AssignUniformMat3(const std::string &name, const glm::mat3 &mat);
+        void AssignUniformMat4(const std::string &name, const glm::mat4 &mat);
+        
+    private:
+        Shader& m_Shader;
+        
         std::vector<std::pair<std::string, bool>> bools;
         std::vector<std::pair<std::string, int>> ints;
         std::vector<std::pair<std::string, float>> floats;

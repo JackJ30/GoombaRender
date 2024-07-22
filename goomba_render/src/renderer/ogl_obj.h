@@ -3,6 +3,8 @@
 
 #include "engine/graphics_context.h"
 
+// TODO remove copy constructor
+
 namespace GoombaRender
 {
     class OglObj

@@ -16,10 +16,10 @@ namespace GoombaRender
         {
             for (const Mesh& mesh : object.model.Get().GetMeshes())
             {
-                // Set temp material uniforms (will be replaced with ubo)
-                setting.mat4s.emplace_back("u_Transform", mesh.localTransform * object.transform.GetTransformationMatrix());
-                setting.mat4s.emplace_back("u_View", glm::mat4(camera.GetViewMatrix()));
-                setting.mat4s.emplace_back("u_Projection", camera.GetProjectionMatrix());
+                // Set temp material uniforms (will be replaced with ubo and other system for "renderer uniform")
+                mesh.material.Get().GetUniformSettings().AssignUniformMat4("u_Transform", mesh.localTransform * object.transform.GetTransformationMatrix());
+                mesh.material.Get().GetUniformSettings().AssignUniformMat4("u_View", glm::mat4(camera.GetViewMatrix()));
+                mesh.material.Get().GetUniformSettings().AssignUniformMat4("u_Projection", camera.GetProjectionMatrix());
                 
                 pass.queue.emplace(mesh.vao, mesh.material.Get());
             }

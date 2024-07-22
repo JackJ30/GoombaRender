@@ -66,7 +66,7 @@ namespace GoombaRender
         }
         
         inline const std::optional<std::string>& GetPath() const { return m_Path; }
-        inline std::optional<std::string>& SetPath(std::string path) { m_Path = path; }
+        inline void SetPath(std::string path) { m_Path = path; }
     
     private:
         std::optional<std::string> m_Path;
