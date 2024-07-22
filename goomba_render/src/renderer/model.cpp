@@ -29,7 +29,7 @@ namespace GoombaRender
     
     // Loading
     
-    struct ModelLoaderSettings
+    /*struct ModelLoaderSettings
     {
         Asset<Shader> pbrShader;
         Material defaultMaterial;
@@ -40,14 +40,14 @@ namespace GoombaRender
     void InitializeModelLoader(Asset<Shader> pbrShader, GoombaEngine::GraphicsContext& context)
     {
         modelLoaderSettings.pbrShader = pbrShader;
-        modelLoaderSettings.defaultMaterial.Create(pbrShader);
+        //modelLoaderSettings.defaultMaterial.Create(pbrShader);
         
         modelLoaderSettings.initialized = true;
-    } // TODO - use a tailored pbr shader with only the features (textures) that the material has
+    }*/ // TODO - use a tailored pbr shader with only the features (textures) that the material has
     
     void LoadModel(Asset<Model> &asset, GoombaEngine::GraphicsContext &context)
     {
-        DEBUG_ASSERT(modelLoaderSettings.initialized, "Model loader must be initialized before loading a model.");
+        //DEBUG_ASSERT(modelLoaderSettings.initialized, "Model loader must be initialized before loading a model.");
         if (asset.TryLoadFromCache()) { return; }
         if (!asset.GetPath().has_value()) { GLogError("Can not load model with no path."); return; }
         
@@ -130,6 +130,7 @@ namespace GoombaRender
             textures[i].AssignLoaded(std::move(oglTexture));
         }
         
+        /*
         // Create Materials
         std::vector<Asset<Material>> materials;
         materials.resize(loadedGLTF.materials.size());
@@ -151,7 +152,7 @@ namespace GoombaRender
             // emissions (texture + factor)
             
             materials[i].AssignLoaded(std::move(oglMaterial));
-        }
+        }*/
         
         // Helper lambda functions
         const std::function<void(const tinygltf::Node&, glm::mat4)> traverseNode = [&](const tinygltf::Node& node, glm::mat4 parentTransform)

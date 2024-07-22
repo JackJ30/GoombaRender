@@ -4,7 +4,7 @@
 #include "renderer/asset.h"
 #include "renderer/texture.h"
 #include "renderer/vertex_array.h"
-#include "renderer/material.h"
+//#include "renderer/material.h"
 
 #include <tiny_gltf.h>
 #include <glm/glm.hpp>
@@ -14,7 +14,7 @@ namespace GoombaRender
     struct Mesh
     {
         VertexArray vao;
-        Asset<Material> material;
+        //Asset<Material> material;
         glm::mat4 localTransform = glm::mat4(1.0);
     };
     

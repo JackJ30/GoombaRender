@@ -14,7 +14,7 @@
 namespace GoombaRender
 {
     PerspectiveCamera camera({0.0, 0.0, 1.0});
-    Scene testScene;
+    //Scene testScene;
     
     RendererApplication::RendererApplication()
     {
@@ -30,7 +30,7 @@ namespace GoombaRender
         m_Context.LoadContext(m_Window->GetProcAddress());
         
         // Setup Renderer
-        m_Renderer = std::make_unique<Renderer>(m_Context);
+        //m_Renderer = std::make_unique<Renderer>(m_Context);
         
         // Setup Loop
         m_Loop.RegisterRenderCallback(std::bind(&RendererApplication::Render, this, std::placeholders::_1, std::placeholders::_2));
@@ -49,9 +49,9 @@ namespace GoombaRender
                 2, 3, 0
         };
         
-        testScene.m_Objects.push_back({Asset<Model>("resources/models/AntiqueCamera.glb"), Transform()});
-        testScene.m_Objects.push_back({Asset<Model>("resources/models/testcube.gltf"), Transform({0.0, 3.0, 0.0})});
-        testScene.LoadAssets(m_Context);
+        //testScene.m_Objects.push_back({Asset<Model>("resources/models/AntiqueCamera.glb"), Transform()});
+        //testScene.m_Objects.push_back({Asset<Model>("resources/models/testcube.gltf"), Transform({0.0, 3.0, 0.0})});
+        //testScene.LoadAssets(m_Context);
         
         // LOOP
         m_Loop.Run();
@@ -69,8 +69,8 @@ namespace GoombaRender
             m_Context.GetGlad().ClearColor(.1f, .2f, .3f, 1.0f);
             m_Context.GetGlad().Clear(GL_COLOR_BUFFER_BIT); // TODO - move screen clearing to renderer
             
-            m_Renderer->AddScenePass(camera, testScene);
-            m_Renderer->Render();
+            //m_Renderer->AddScenePass(camera, testScene);
+            //m_Renderer->Render();
         }
 
         ImGui::Begin("Loop Debug");
