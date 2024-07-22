@@ -42,15 +42,15 @@ namespace GoombaRender
                 instruction.material.Bind();
                 
                 // Draw based on type
-                if (instruction.vao.GetDrawType() == DrawType::Arrays)
+                if (instruction.vao.GetDrawType() == LayoutType::Arrays)
                 {
-                    m_Context.GetGlad().DrawArrays(instruction.vao.GetDrawMode(), 0, instruction.vao.GetNumVertices());
+                    glad.DrawArrays(instruction.vao.GetDrawMode(), 0, instruction.vao.GetNumVertices());
                 }
-                else if (instruction.vao.GetDrawType() == DrawType::Indices)
+                else if (instruction.vao.GetDrawType() == LayoutType::Indices)
                 {
                     for (auto& selection : instruction.vao.GetIndicesSections())
                     {
-                        m_Context.GetGlad().DrawElements(instruction.vao.GetDrawMode(), selection.count, selection.type, (const void*)selection.offset);
+                        glad.DrawElements(instruction.vao.GetDrawMode(), selection.count, selection.type, (const void*)selection.offset);
                     }
                 }
             }

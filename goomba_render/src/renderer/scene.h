@@ -21,7 +21,7 @@ namespace GoombaRender
         std::vector<SceneObject> m_Objects; // Temp
         Asset<Shader> m_MainShader = Asset<Shader>("resources/shaders/test.glsl"); // Temp, also should be material
         
-        void LoadAssets(GoombaEngine::GraphicsContext& context);
+        void LoadAssets();
     };
 }
 

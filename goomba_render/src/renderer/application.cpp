@@ -1,23 +1,22 @@
 #include "application.h"
 
-#include "engine/graphics_context.h"
+#include "graphics_context.h"
 #include "engine/application_loop.h"
 #include "engine/input.h"
 #include "engine/imgui_layer.h"
+#include "renderer/neorenderer.h"
 #include "renderer/perspective_camera.h"
-#include "renderer/scene.h"
 
 #include <glm/gtx/string_cast.hpp>
 
 namespace GoombaRender
 {
     std::unique_ptr<GoombaEngine::Window> window;
-    GoombaEngine::GraphicsContext context;
     GoombaEngine::ApplicationLoop loop;
     GoombaEngine::Input input;
     
-    Scene testScene;
     PerspectiveCamera camera{{0.0, 0.0, 1.0}};
+    std::unique_ptr<VertexArray> array;
     
     void RunApplication()
     {
@@ -28,7 +27,7 @@ namespace GoombaRender
         GoombaEngine::ImGUISetup(*window);
         
         // Load GLAD functions pointers for the context
-        context.LoadContext(window->GetProcAddress());
+        LoadGraphicsContext(window->GetProcAddress());
         
         // Setup Renderer
         //m_Renderer = std::make_unique<Renderer>(context);
@@ -45,14 +44,31 @@ namespace GoombaRender
                 1.0, 1.0, 0.0, 1.0f, 1.0f,
                 -1.0, 1.0, 0.0,0.0f, 1.0f,
         };
+        BufferLayout layout({
+            {ShaderDataType::Float3, "v_Position"},
+            {ShaderDataType::Float2, "v_TexCoord"}
+        });
         unsigned int indices[6] = {
                 0, 1, 2,
                 2, 3, 0
         };
         
-        testScene.m_Objects.push_back({Asset<Model>("resources/models/AntiqueCamera.glb"), Transform()});
-        testScene.m_Objects.push_back({Asset<Model>("resources/models/testcube.gltf"), Transform({0.0, 3.0, 0.0})});
-        testScene.LoadAssets(context);
+        unsigned int vbo, ibo;
+        glad.GenBuffers(1, &vbo);
+        glad.BindBuffer(GL_ARRAY_BUFFER, vbo);
+        glad.BufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        glad.GenBuffers(1, &ibo);
+        glad.BindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+        glad.BufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+        
+        
+        array = std::make_unique<VertexArray>();
+        array->BindBufferLayout(vbo, layout);
+        IndicesSection indicesSection = {0, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT};
+        array->SetIndexBuffer(ibo, {indicesSection});
+        //testScene.m_Objects.push_back({Asset<Model>("resources/models/AntiqueCamera.glb"), Transform()});
+        //testScene.m_Objects.push_back({Asset<Model>("resources/models/testcube.gltf"), Transform({0.0, 3.0, 0.0})});
+        //testScene.LoadAssets();
         
         // LOOP
         loop.Run();
@@ -68,9 +84,10 @@ namespace GoombaRender
         GoombaEngine::ImGUIStartFrame();
         
         {
-            context.GetGlad().ClearColor(.1f, .2f, .3f, 1.0f);
-            context.GetGlad().Clear(GL_COLOR_BUFFER_BIT); // TODO - move screen clearing to renderer
+            glad.ClearColor(.1f, .2f, .3f, 1.0f);
+            glad.Clear(GL_COLOR_BUFFER_BIT); // TODO - move screen clearing to renderer
             
+            glad.DrawElements(array->drawMode, array->indicesInfo[0].count, array->indicesInfo[0].type, (const void*)array->indicesInfo[0].offset);
             //m_Renderer->AddScenePass(camera, testScene);
             //m_Renderer->Render();
         }
@@ -116,7 +133,7 @@ namespace GoombaRender
             {
                 unsigned int w = window->GetWidth();
                 unsigned int h = window->GetHeight();
-                context.GetGlad().Viewport(0,0,static_cast<int>(w),static_cast<int>(h));
+                glad.Viewport(0,0,static_cast<int>(w),static_cast<int>(h));
                 camera.SetAspect(static_cast<float>(w) / static_cast<float>(h));
             }
             case SDL_EVENT_MOUSE_BUTTON_DOWN:

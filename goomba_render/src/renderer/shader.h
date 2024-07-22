@@ -1,8 +1,6 @@
 #ifndef GOOMBARENDER_SHADER_H
 #define GOOMBARENDER_SHADER_H
 
-#include "renderer/ogl_obj.h"
-
 #include "renderer/asset.h"
 
 #include <glm/glm.hpp>
@@ -14,7 +12,7 @@
 
 namespace GoombaRender
 {
-    class Shader : public OglObj
+    class Shader
     {
     public:
         Shader() = default;

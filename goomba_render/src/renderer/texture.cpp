@@ -23,17 +23,17 @@ namespace GoombaRender
         m_Width = width;
         m_Height = height;
         
-        m_Context.GetGlad().GenTextures(1, &m_RendererID);
-        m_Context.GetGlad().BindTexture(GL_TEXTURE_2D, m_RendererID);
-        m_Context.GetGlad().TexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, m_Width, m_Height);
+        glad.GenTextures(1, &m_RendererID);
+        glad.BindTexture(GL_TEXTURE_2D, m_RendererID);
+        glad.TexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, m_Width, m_Height);
         
-        m_Context.GetGlad().TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetGLFilter(m_MinFilter));
-        m_Context.GetGlad().TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetGLFilter(m_MagFilter));
+        glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetGLFilter(m_MinFilter));
+        glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetGLFilter(m_MagFilter));
         
-        m_Context.GetGlad().TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_WrapS);
-        m_Context.GetGlad().TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_WrapT);
+        glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_WrapS);
+        glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_WrapT);
         
-        m_Context.GetGlad().TexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_Width, m_Height, format, dataType, data);
+        glad.TexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_Width, m_Height, format, dataType, data);
         
         m_Created = true;
     }
@@ -45,9 +45,9 @@ namespace GoombaRender
         
         if (m_HasContext && m_Created)
         {
-            m_Context.GetGlad().BindTexture(GL_TEXTURE_2D, m_RendererID);
-            m_Context.GetGlad().TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetGLFilter(m_MinFilter));
-            m_Context.GetGlad().TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetGLFilter(m_MagFilter));
+            glad.BindTexture(GL_TEXTURE_2D, m_RendererID);
+            glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetGLFilter(m_MinFilter));
+            glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetGLFilter(m_MagFilter));
         }
     }
     
@@ -58,9 +58,9 @@ namespace GoombaRender
         
         if (m_HasContext && m_Created)
         {
-            m_Context.GetGlad().BindTexture(GL_TEXTURE_2D, m_RendererID);
-            m_Context.GetGlad().TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_WrapS);
-            m_Context.GetGlad().TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_WrapT);
+            glad.BindTexture(GL_TEXTURE_2D, m_RendererID);
+            glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_WrapS);
+            glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_WrapT);
         }
     }
     
@@ -71,8 +71,8 @@ namespace GoombaRender
         DEBUG_ASSERT(m_Created, "Texture must be created before binding.");
         
         m_BoundUnit = unit;
-        m_Context.GetGlad().ActiveTexture(GL_TEXTURE0 + m_BoundUnit);
-        m_Context.GetGlad().BindTexture(GL_TEXTURE_2D, m_RendererID);
+        glad.ActiveTexture(GL_TEXTURE0 + m_BoundUnit);
+        glad.BindTexture(GL_TEXTURE_2D, m_RendererID);
     }
     
     void Texture2D::Unbind()
@@ -80,8 +80,8 @@ namespace GoombaRender
         RequireContext();
         DEBUG_ASSERT(m_Created, "Texture must be created before unbinding.");
         
-        m_Context.GetGlad().ActiveTexture(GL_TEXTURE0 + m_BoundUnit);
-        m_Context.GetGlad().BindTexture(GL_TEXTURE_2D, 0);
+        glad.ActiveTexture(GL_TEXTURE0 + m_BoundUnit);
+        glad.BindTexture(GL_TEXTURE_2D, 0);
     }
     
     void Texture2D::Delete()
@@ -89,7 +89,7 @@ namespace GoombaRender
         RequireContext();
         DEBUG_ASSERT(m_Created, "Texture must be created before deleting.");
         
-        m_Context.GetGlad().DeleteTextures(1, &m_RendererID);
+        glad.DeleteTextures(1, &m_RendererID);
     }
     
     void LoadTexture2D(Asset<Texture2D>& asset, GoombaEngine::GraphicsContext& context)

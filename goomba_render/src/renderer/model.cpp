@@ -19,7 +19,7 @@ namespace GoombaRender
         {
             mesh.vao.Delete();
         }
-        m_Context.GetGlad().DeleteBuffers(m_Buffers.size(), m_Buffers.data());
+        glad.DeleteBuffers(m_Buffers.size(), m_Buffers.data());
     }
     
     void Model::AddMesh(const Mesh& mesh)
@@ -184,7 +184,7 @@ namespace GoombaRender
                     // deal with mesh (primitive)
                     Mesh mesh;
                     mesh.vao.AssignContext(context);
-                    mesh.vao.Create(primitive.indices >= 0 ? DrawType::Indices : DrawType::Arrays, primitive.mode);
+                    mesh.vao.Create(primitive.indices >= 0 ? LayoutType::Indices : LayoutType::Arrays, primitive.mode);
                     mesh.localTransform = localTransform;
                     
                     // go through attributes

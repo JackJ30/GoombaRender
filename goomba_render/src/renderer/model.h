@@ -18,7 +18,7 @@ namespace GoombaRender
         glm::mat4 localTransform = glm::mat4(1.0);
     };
     
-    class Model : public OglObj
+    class Model
     {
     public:
         void Create();

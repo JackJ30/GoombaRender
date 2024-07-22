@@ -1,7 +1,6 @@
 #ifndef GOOMBARENDER_TEXTURE_H
 #define GOOMBARENDER_TEXTURE_H
 
-#include "renderer/ogl_obj.h"
 #include "renderer/asset.h"
 
 // TODO - Support mipmapping, and mipmapping filters
@@ -14,7 +13,7 @@ namespace GoombaRender
         Linear, Nearest
     };
     
-    class Texture : public OglObj
+    class Texture
     {
     public:
         virtual ~Texture() = default;

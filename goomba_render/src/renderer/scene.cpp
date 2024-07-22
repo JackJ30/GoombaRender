@@ -2,7 +2,7 @@
 
 namespace GoombaRender
 {
-    void Scene::LoadAssets(GoombaEngine::GraphicsContext &context)
+    void Scene::LoadAssets()
     {
         for (SceneObject& object : m_Objects)
         {
