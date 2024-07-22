@@ -2,13 +2,12 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 
-#include "engine/engine.h"
-#include "renderer/renderer_application.h"
+#include "renderer/application.h"
 
 int main(int argc, char *argv[])
 {
-    GoombaRender::RendererApplication game;
-    GoombaEngine::RunApplication(game);
+    GoombaEngine::InitLogger();
+    GoombaRender::RunApplication();
 
     return 0;
 }
@@ -39,6 +38,10 @@ int main(int argc, char *argv[])
 //      - [x] Scene to render instruction
 // - [x] Assetloader functions, template argument assets
 // - [x] Scene objects and transforms
+// - [ ] Rewrite
+//      - [x] Application system
+//      - [ ] OGL abstractions
+//      - [ ] Asset system
 // - [ ] Materials and gltf material loading
 // - [ ] Basic PBR lighting
 // - [ ] Asset rework

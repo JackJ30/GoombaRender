@@ -17,17 +17,15 @@ set(GOOMBARENDERDIR ${CMAKE_SOURCE_DIR}/goomba_render)
 
 set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/main.cpp
-	${GOOMBARENDERDIR}/src/engine/engine.cpp
-	${GOOMBARENDERDIR}/src/engine/application.cpp
 	${GOOMBARENDERDIR}/src/engine/window.cpp
 	${GOOMBARENDERDIR}/src/engine/imgui_layer.cpp
 	${GOOMBARENDERDIR}/src/engine/log.cpp
 	${GOOMBARENDERDIR}/src/engine/graphics_context.cpp
 	${GOOMBARENDERDIR}/src/engine/input.cpp
 	${GOOMBARENDERDIR}/src/engine/application_loop.cpp
+	${GOOMBARENDERDIR}/src/renderer/application.cpp
 	#${GOOMBARENDERDIR}/src/renderer/renderer.cpp
 	${GOOMBARENDERDIR}/src/renderer/scene.cpp
-	${GOOMBARENDERDIR}/src/renderer/renderer_application.cpp
 	${GOOMBARENDERDIR}/src/renderer/shader.cpp
 	${GOOMBARENDERDIR}/src/renderer/vertex_array.cpp
 	${GOOMBARENDERDIR}/src/renderer/model.cpp
