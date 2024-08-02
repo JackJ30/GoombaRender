@@ -31,13 +31,13 @@ namespace GoombaRender
     
     /*struct ModelLoaderSettings
     {
-        Asset<Shader> pbrShader;
+        Asset<ShaderInfo> pbrShader;
         Material defaultMaterial;
         
         bool initialized = false;
     } modelLoaderSettings;
     
-    void InitializeModelLoader(Asset<Shader> pbrShader, GoombaEngine::GraphicsContext& context)
+    void InitializeModelLoader(Asset<ShaderInfo> pbrShader, GoombaEngine::GraphicsContext& context)
     {
         modelLoaderSettings.pbrShader = pbrShader;
         //modelLoaderSettings.defaultMaterial.Create(pbrShader);

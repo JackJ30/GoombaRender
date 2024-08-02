@@ -12,7 +12,7 @@ namespace GoombaRender
         defaultTexture.Create((unsigned char*)white, 1, 1, GL_RGBA, GL_FLOAT);
     }
     
-    void Material::Create(Asset<Shader> shader)
+    void Material::Create(Asset<ShaderInfo> shader)
     {
         RequireContext();
         

@@ -3,10 +3,8 @@
 
 namespace GoombaRender
 {
-    void Shader::Create(const std::string &vertexSource, const std::string &fragmentSource)
+    ShaderInfo::ShaderInfo(const std::string &vertexSource, const std::string &fragmentSource)
     {
-        RequireContext();
-        
         const char* vertexSrc = vertexSource.c_str();
         const char* fragmentSrc = fragmentSource.c_str();
         GLint success;
@@ -50,7 +48,7 @@ namespace GoombaRender
         if(!success)
         {
             glad.GetProgramInfoLog(m_RendererID, 1024, nullptr, m_ErrorMessage);
-            GLogError("Shader from failed to link:\n{}", m_ErrorMessage);
+            GLogError("ShaderInfo from failed to link:\n{}", m_ErrorMessage);
         }
 #endif
         
@@ -62,7 +60,7 @@ namespace GoombaRender
         if(!success)
         {
             glad.GetProgramInfoLog(m_RendererID, 1024, nullptr, m_ErrorMessage);
-            GLogError("Shader from '{}' failed to validate:\n{}", m_ErrorMessage);
+            GLogError("ShaderInfo from '{}' failed to validate:\n{}", m_ErrorMessage);
         }
 #endif
         
@@ -85,39 +83,15 @@ namespace GoombaRender
             glad.GetActiveUniform(m_RendererID, i, bufSize, &length, &size, &type, name);
             m_UniformsCache.emplace_back(type, name);
         }
-        
-        m_Created = true;
     }
     
-    void Shader::Bind() const
+    void ShaderInfo::Delete()
     {
-        RequireContext();
-        DEBUG_ASSERT(m_Created, "Shader must be created before binding.");
-        
-        glad.UseProgram(m_RendererID);
-    }
-    
-    void Shader::Unbind() const
-    {
-        RequireContext();
-        DEBUG_ASSERT(m_Created, "Shader must be created before binding.");
-        
-        glad.UseProgram(0);
-    }
-    
-    void Shader::Delete()
-    {
-        RequireContext();
-        DEBUG_ASSERT(m_Created, "Shader must be created before using uniforms.");
-        
         glad.DeleteProgram(m_RendererID);
     }
     
-    int Shader::GetUniformLocation(const std::string& name)
+    int ShaderInfo::GetUniformLocation(const std::string& name)
     {
-        RequireContext();
-        DEBUG_ASSERT(m_Created, "Shader must be created before using uniforms.");
-        
         if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end())
             return m_UniformLocationCache[name];
         
@@ -128,100 +102,63 @@ namespace GoombaRender
         return location;
     }
     
-    void Shader::SetUniformBool(const std::string &name, bool value)
+    void ShaderInfo::SetUniformBool(const std::string &name, bool value)
     {
         glad.Uniform1i(GetUniformLocation(name), (int)value);
     }
     
-    void Shader::SetUniformInt(const std::string &name, int value)
+    void ShaderInfo::SetUniformInt(const std::string &name, int value)
     {
         glad.Uniform1i(GetUniformLocation(name), value);
     }
     
-    void Shader::SetUniformFloat(const std::string &name, float value)
+    void ShaderInfo::SetUniformFloat(const std::string &name, float value)
     {
         glad.Uniform1f(GetUniformLocation(name), value);
     }
     
-    void Shader::SetUniformVec2(const std::string &name, const glm::vec2 &value)
+    void ShaderInfo::SetUniformVec2(const std::string &name, const glm::vec2 &value)
     {
         glad.Uniform2fv(GetUniformLocation(name), 1, &value[0]);
     }
     
-    void Shader::SetUniformVec2(const std::string &name, float x, float y)
+    void ShaderInfo::SetUniformVec2(const std::string &name, float x, float y)
     {
         glad.Uniform2f(GetUniformLocation(name), x, y);
     }
     
-    void Shader::SetUniformVec3(const std::string &name, const glm::vec3 &value)
+    void ShaderInfo::SetUniformVec3(const std::string &name, const glm::vec3 &value)
     {
         glad.Uniform3fv(GetUniformLocation(name), 1, &value[0]);
     }
     
-    void Shader::SetUniformVec3(const std::string &name, float x, float y, float z)
+    void ShaderInfo::SetUniformVec3(const std::string &name, float x, float y, float z)
     {
         glad.Uniform3f(GetUniformLocation(name), x, y, z);
     }
     
-    void Shader::SetUniformVec4(const std::string &name, const glm::vec4 &value)
+    void ShaderInfo::SetUniformVec4(const std::string &name, const glm::vec4 &value)
     {
         glad.Uniform4fv(GetUniformLocation(name), 1, &value[0]);
     }
     
-    void Shader::SetUniformVec4(const std::string &name, float x, float y, float z, float w)
+    void ShaderInfo::SetUniformVec4(const std::string &name, float x, float y, float z, float w)
     {
         glad.Uniform4f(GetUniformLocation(name), x, y, z, w);
     }
     
-    void Shader::SetUniformMat2(const std::string &name, const glm::mat2 &mat)
+    void ShaderInfo::SetUniformMat2(const std::string &name, const glm::mat2 &mat)
     {
         glad.UniformMatrix2fv(GetUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
     }
     
-    void Shader::SetUniformMat3(const std::string &name, const glm::mat3 &mat)
+    void ShaderInfo::SetUniformMat3(const std::string &name, const glm::mat3 &mat)
     {
         glad.UniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
     }
     
-    void Shader::SetUniformMat4(const std::string &name, const glm::mat4 &mat)
+    void ShaderInfo::SetUniformMat4(const std::string &name, const glm::mat4 &mat)
     {
         glad.UniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
-    }
-    
-    void LoadShader(Asset<Shader>& asset, GoombaEngine::GraphicsContext& context)
-    {
-        if (asset.TryLoadFromCache()) return;
-        if (!asset.GetPath().has_value()) { GLogError("Can not load shader with no path."); return; }
-        
-        std::ifstream stream(asset.GetPath().value());
-        
-        enum class ShaderType
-        {
-            NONE = 1, VERTEX = 0, FRAGMENT = 1
-        };
-        
-        std::string line;
-        std::stringstream ss[2];
-        ShaderType type = ShaderType::NONE;
-        while (getline(stream, line))
-        {
-            if (line.find("#shader") != std::string::npos)
-            {
-                if (line.find("vertex") != std::string::npos)
-                    type = ShaderType::VERTEX;
-                else if (line.find("fragment") != std::string::npos)
-                    type = ShaderType::FRAGMENT;
-            }
-            else
-            {
-                ss[(int)type] << line << "\n";
-            }
-        }
-        
-        Shader shader;
-        shader.AssignContext(context);
-        shader.Create(ss[0].str(), ss[1].str());
-        
-        asset.AssignLoaded(std::move(shader));
     }
 }

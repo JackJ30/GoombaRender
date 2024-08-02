@@ -17,7 +17,7 @@ namespace GoombaRender
     class Material : public OglObj
     {
     public:
-        void Create(Asset<Shader> shader);
+        void Create(Asset<ShaderInfo> shader);
     
         void Bind();
         
@@ -28,7 +28,7 @@ namespace GoombaRender
         // flags
         
     private:
-        Asset<Shader> m_Shader;
+        Asset<ShaderInfo> m_Shader;
         UniformSettings m_UniformSettings;
         std::unordered_map<std::string, Asset<Texture2D>> m_Textures;
         std::unordered_set<std::string> m_UnassignedTextures;

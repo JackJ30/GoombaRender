@@ -40,8 +40,8 @@ int main(int argc, char *argv[])
 // - [x] Scene objects and transforms
 // - [ ] Rewrite
 //      - [x] Application system
-//      - [ ] OGL abstractions
 //      - [ ] Asset system
+//      - [ ] OGL abstractions
 // - [ ] Materials and gltf material loading
 // - [ ] Basic PBR lighting
 // - [ ] Asset rework

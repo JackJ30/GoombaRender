@@ -2,7 +2,7 @@
 
 namespace GoombaRender
 {
-    void UniformSettings::AssignShader(Shader& shader)
+    void UniformSettings::AssignShader(ShaderInfo& shader)
     {
         m_Shader = shader;
     }
@@ -107,7 +107,7 @@ namespace GoombaRender
     
     }
     
-    UniformSettings::UniformSettings(Shader test)
+    UniformSettings::UniformSettings(ShaderInfo test)
         : m_Shader(test)
     {
     

@@ -4,6 +4,7 @@
 #include "engine/application_loop.h"
 #include "engine/input.h"
 #include "engine/imgui_layer.h"
+#include "renderer/resource_manager.h"
 #include "renderer/neorenderer.h"
 #include "renderer/perspective_camera.h"
 
@@ -16,7 +17,8 @@ namespace GoombaRender
     GoombaEngine::Input input;
     
     PerspectiveCamera camera{{0.0, 0.0, 1.0}};
-    std::unique_ptr<VertexArray> array;
+    std::unique_ptr<VertexArrayInfo> array;
+    std::shared_ptr<ShaderInfo> shader;
     
     void RunApplication()
     {
@@ -61,14 +63,15 @@ namespace GoombaRender
         glad.BindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
         glad.BufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
         
-        
-        array = std::make_unique<VertexArray>();
+        array = std::unique_ptr<VertexArrayInfo>(CreateVertexArray());
         array->BindBufferLayout(vbo, layout);
         IndicesSection indicesSection = {0, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT};
         array->SetIndexBuffer(ibo, {indicesSection});
         //testScene.m_Objects.push_back({Asset<Model>("resources/models/AntiqueCamera.glb"), Transform()});
         //testScene.m_Objects.push_back({Asset<Model>("resources/models/testcube.gltf"), Transform({0.0, 3.0, 0.0})});
         //testScene.LoadAssets();
+        
+        shader = LoadShader("resources/shaders/test.glsl");
         
         // LOOP
         loop.Run();

@@ -1,27 +1,20 @@
 #ifndef GOOMBARENDER_SHADER_H
 #define GOOMBARENDER_SHADER_H
 
-#include "renderer/asset.h"
-
 #include <glm/glm.hpp>
-#include <string>
-#include <unordered_map>
 
-#include <sstream>
-#include <fstream>
+#include "renderer/graphics_context.h"
+
+// ShaderInfo abstraction GOAL
+// - Shaders should be interfaced with through this class
 
 namespace GoombaRender
 {
-    class Shader
+    class ShaderInfo
     {
     public:
-        Shader() = default;
-    
-        void Create(const std::string &vertexSource, const std::string &fragmentSource);
+        ShaderInfo(const std::string &vertexSource, const std::string &fragmentSource);
         void Delete();
-        
-        void Bind() const;
-        void Unbind() const;
         
         inline const std::vector<std::pair<GLenum, std::string>>& GetUniforms() const { return m_UniformsCache; }
     
@@ -47,8 +40,6 @@ namespace GoombaRender
         
         int GetUniformLocation(const std::string& name);
     };
-    
-    void LoadShader(Asset<Shader>& asset, GoombaEngine::GraphicsContext& context);
 }
 
 #endif

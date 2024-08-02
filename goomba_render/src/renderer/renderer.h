@@ -14,10 +14,10 @@ namespace GoombaRender
 {
     struct RenderInstruction
     {
-        RenderInstruction(const VertexArray& vao, const Material& material)
+        RenderInstruction(const VertexArrayInfo& vao, const Material& material)
                 : vao(vao), material(material) {}
         
-        const VertexArray& vao;
+        const VertexArrayInfo& vao;
         const Material& material;
     };
     

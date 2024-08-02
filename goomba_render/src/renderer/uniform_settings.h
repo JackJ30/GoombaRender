@@ -12,9 +12,9 @@ namespace GoombaRender
     class UniformSettings
     {
     public:
-        UniformSettings(Shader test);
+        UniformSettings(ShaderInfo test);
         // TODO - fix shader assignment, add checks or redo system
-        void AssignShader(Shader& shader);
+        void AssignShader(ShaderInfo& shader);
         void SetUniforms();
         
         void AssignUniformBool(const std::string &name, bool value);
@@ -31,7 +31,7 @@ namespace GoombaRender
         void AssignUniformMat4(const std::string &name, const glm::mat4 &mat);
         
     private:
-        Shader& m_Shader;
+        ShaderInfo& m_Shader;
         
         std::vector<std::pair<std::string, bool>> bools;
         std::vector<std::pair<std::string, int>> ints;

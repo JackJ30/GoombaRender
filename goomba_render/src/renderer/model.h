@@ -13,7 +13,7 @@ namespace GoombaRender
 {
     struct Mesh
     {
-        VertexArray vao;
+        VertexArrayInfo vao;
         //Asset<Material> material;
         glm::mat4 localTransform = glm::mat4(1.0);
     };
