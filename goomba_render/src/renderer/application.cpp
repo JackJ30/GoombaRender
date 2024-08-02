@@ -90,6 +90,7 @@ namespace GoombaRender
             glad.ClearColor(.1f, .2f, .3f, 1.0f);
             glad.Clear(GL_COLOR_BUFFER_BIT); // TODO - move screen clearing to renderer
             
+            glad.UseProgram(shader->GetRendererID());
             glad.DrawElements(array->drawMode, array->indicesInfo[0].count, array->indicesInfo[0].type, (const void*)array->indicesInfo[0].offset);
             //m_Renderer->AddScenePass(camera, testScene);
             //m_Renderer->Render();

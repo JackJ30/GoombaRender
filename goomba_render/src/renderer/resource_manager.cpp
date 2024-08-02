@@ -62,7 +62,7 @@ namespace GoombaRender
             }
         }
         
-        std::shared_ptr<ShaderInfo> shader = std::make_shared<ShaderInfo>(ss[0].str(), ss[1].str());
+        std::shared_ptr<ShaderInfo> shader = std::shared_ptr<ShaderInfo>(CreateShader(ss[0].str(), ss[1].str()));
         
         if (cache) { assetCache<ShaderInfo>[path] = shader; }
         return shader;

@@ -3,7 +3,13 @@
 
 namespace GoombaRender
 {
-    ShaderInfo::ShaderInfo(const std::string &vertexSource, const std::string &fragmentSource)
+    ShaderInfo::ShaderInfo(unsigned int rendererID)
+        : rendererID(rendererID)
+    {
+    
+    }
+    
+    void ShaderInfo::CompileAndLink(const std::string &vertexSource, const std::string &fragmentSource)
     {
         const char* vertexSrc = vertexSource.c_str();
         const char* fragmentSrc = fragmentSource.c_str();
@@ -18,8 +24,8 @@ namespace GoombaRender
         glad.GetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
         if(!success)
         {
-            glad.GetShaderInfoLog(vertexShader, 1024, nullptr, m_ErrorMessage);
-            GLogError("Vertex shader compilation failed:\n{}", m_ErrorMessage);
+            glad.GetShaderInfoLog(vertexShader, 1024, nullptr, errorMessage);
+            GLogError("Vertex shader compilation failed:\n{}", errorMessage);
         }
 #endif
         
@@ -32,45 +38,47 @@ namespace GoombaRender
         glad.GetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
         if(!success)
         {
-            glad.GetShaderInfoLog(fragmentShader, 1024, nullptr, m_ErrorMessage);
-            GLogError("Fragment shader compilation failed:\n{}", m_ErrorMessage);
+            glad.GetShaderInfoLog(fragmentShader, 1024, nullptr, errorMessage);
+            GLogError("Fragment shader compilation failed:\n{}", errorMessage);
         }
 #endif
         
         // Program and linking
-        m_RendererID = glad.CreateProgram();
-        glad.AttachShader(m_RendererID, vertexShader);
-        glad.AttachShader(m_RendererID, fragmentShader);
-        glad.LinkProgram(m_RendererID);
+        glad.AttachShader(rendererID, vertexShader);
+        glad.AttachShader(rendererID, fragmentShader);
+        glad.LinkProgram(rendererID);
 
 #ifdef DEBUG
-        glad.GetProgramiv(m_RendererID, GL_LINK_STATUS, &success);
+        glad.GetProgramiv(rendererID, GL_LINK_STATUS, &success);
         if(!success)
         {
-            glad.GetProgramInfoLog(m_RendererID, 1024, nullptr, m_ErrorMessage);
-            GLogError("ShaderInfo from failed to link:\n{}", m_ErrorMessage);
+            glad.GetProgramInfoLog(rendererID, 1024, nullptr, errorMessage);
+            GLogError("ShaderInfo from failed to link:\n{}", errorMessage);
         }
 #endif
         
         // Validation
-        glad.ValidateProgram(m_RendererID);
+        glad.ValidateProgram(rendererID);
 
 #ifdef DEBUG
-        glad.GetProgramiv(m_RendererID, GL_VALIDATE_STATUS, &success);
+        glad.GetProgramiv(rendererID, GL_VALIDATE_STATUS, &success);
         if(!success)
         {
-            glad.GetProgramInfoLog(m_RendererID, 1024, nullptr, m_ErrorMessage);
-            GLogError("ShaderInfo from '{}' failed to validate:\n{}", m_ErrorMessage);
+            glad.GetProgramInfoLog(rendererID, 1024, nullptr, errorMessage);
+            GLogError("ShaderInfo from '{}' failed to validate:\n{}", errorMessage);
         }
 #endif
         
         glad.DeleteShader(vertexShader);
         glad.DeleteShader(fragmentShader);
         
+        uniformsCache.clear();
+        uniformLocationCache.clear();
+        
         // Cache uniforms
         int count;
-        glad.GetProgramiv(m_RendererID, GL_ACTIVE_UNIFORMS, &count);
-        m_UniformsCache.reserve(count);
+        glad.GetProgramiv(rendererID, GL_ACTIVE_UNIFORMS, &count);
+        uniformsCache.reserve(count);
         
         const GLsizei bufSize = 64;
         GLchar name[bufSize];
@@ -80,25 +88,20 @@ namespace GoombaRender
         
         for (int i = 0; i < count; ++i)
         {
-            glad.GetActiveUniform(m_RendererID, i, bufSize, &length, &size, &type, name);
-            m_UniformsCache.emplace_back(type, name);
+            glad.GetActiveUniform(rendererID, i, bufSize, &length, &size, &type, name);
+            uniformsCache.emplace_back(type, name);
         }
-    }
-    
-    void ShaderInfo::Delete()
-    {
-        glad.DeleteProgram(m_RendererID);
     }
     
     int ShaderInfo::GetUniformLocation(const std::string& name)
     {
-        if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end())
-            return m_UniformLocationCache[name];
+        if (uniformLocationCache.find(name) != uniformLocationCache.end())
+            return uniformLocationCache[name];
         
-        int location = glad.GetUniformLocation(m_RendererID, name.c_str());
+        int location = glad.GetUniformLocation(rendererID, name.c_str());
         if (location == -1) std::cout << "Warning: uniform '" << name << "' doesn't exist!" << std::endl;
         
-        m_UniformLocationCache[name] = location;
+        uniformLocationCache[name] = location;
         return location;
     }
     
@@ -160,5 +163,12 @@ namespace GoombaRender
     void ShaderInfo::SetUniformMat4(const std::string &name, const glm::mat4 &mat)
     {
         glad.UniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
+    }
+    
+    ShaderInfo *CreateShader(const std::string &vertexSource, const std::string &fragmentSource)
+    {
+        ShaderInfo* shader = new ShaderInfo(glad.CreateProgram());
+        shader->CompileAndLink(vertexSource, fragmentSource);
+        return shader;
     }
 }

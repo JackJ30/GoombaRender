@@ -5,18 +5,22 @@
 
 #include "renderer/graphics_context.h"
 
-// ShaderInfo abstraction GOAL
-// - Shaders should be interfaced with through this class
-
 namespace GoombaRender
 {
-    class ShaderInfo
+    struct ShaderInfo
     {
     public:
-        ShaderInfo(const std::string &vertexSource, const std::string &fragmentSource);
-        void Delete();
+        explicit ShaderInfo(unsigned int rendererID);
         
-        inline const std::vector<std::pair<GLenum, std::string>>& GetUniforms() const { return m_UniformsCache; }
+        ShaderInfo(const ShaderInfo&) = delete;
+        ShaderInfo& operator=(const ShaderInfo&) = delete;
+        
+        inline void Delete() { glad.DeleteProgram(rendererID); }
+        
+        void CompileAndLink(const std::string &vertexSource, const std::string &fragmentSource);
+        
+        inline unsigned int GetRendererID() const { return rendererID; }
+        inline const std::vector<std::pair<GLenum, std::string>>& GetUniforms() const { return uniformsCache; }
     
         // Set uniforms
         void SetUniformBool(const std::string &name, bool value);
@@ -32,14 +36,16 @@ namespace GoombaRender
         void SetUniformMat3(const std::string &name, const glm::mat3 &mat);
         void SetUniformMat4(const std::string &name, const glm::mat4 &mat);
     private:
-        unsigned int m_RendererID;
+        unsigned int rendererID;
         
-        std::unordered_map<std::string, int> m_UniformLocationCache;
-        std::vector<std::pair<GLenum, std::string>> m_UniformsCache;
-        GLchar m_ErrorMessage[1024];
+        std::unordered_map<std::string, int> uniformLocationCache;
+        std::vector<std::pair<GLenum, std::string>> uniformsCache;
+        GLchar errorMessage[1024];
         
         int GetUniformLocation(const std::string& name);
     };
+    
+    ShaderInfo* CreateShader(const std::string &vertexSource, const std::string &fragmentSource);
 }
 
 #endif

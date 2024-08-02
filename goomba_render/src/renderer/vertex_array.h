@@ -8,11 +8,6 @@
 
 // TODO - support dynamic and stream draw
 
-// VA abstraction GOAL
-// - Store information about the buffer, how it is drawn and used
-// - Make setting attributes easier (also keep track of how it is set
-// - Metadata and methods for VAO
-
 namespace GoombaRender
 {
     enum LayoutType
@@ -36,6 +31,8 @@ namespace GoombaRender
         VertexArrayInfo(const VertexArrayInfo&) = delete;
         VertexArrayInfo& operator=(const VertexArrayInfo&) = delete;
         
+        inline void Delete() { glad.DeleteVertexArrays(1, &rendererID); }
+        
         GLenum drawMode;
         std::vector<size_t> usedAttributes;
         
@@ -52,9 +49,7 @@ namespace GoombaRender
         void BindAttribute(unsigned int buffer, size_t attributeIndex, unsigned int componentCount, GLenum glType, bool normalized, size_t stride, size_t offset);
         void SetIndexBuffer(unsigned int buffer, std::vector<IndicesSection> indicesInfo);
         
-        inline const unsigned int GetRendererID() const { return rendererID; }
-        
-        inline void Delete() { glad.DeleteVertexArrays(1, &rendererID); }
+        inline unsigned int GetRendererID() const { return rendererID; }
     };
     
     // Creation functions
