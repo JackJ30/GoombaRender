@@ -1,115 +1,61 @@
 #include "texture.h"
 
 #include <glad/gl.h>
-#include <stb/stb_image.h>
 
 namespace GoombaRender
 {
-    GLint GetGLFilter(TextureFilterType filter) {
-        if (filter == TextureFilterType::Linear) return GL_LINEAR;
-        else                                     return GL_NEAREST;
-    }
-    
-    Texture2D::Texture2D()
-        : m_MinFilter(TextureFilterType::Linear), m_MagFilter(TextureFilterType::Linear)
+    Texture2DInfo::Texture2DInfo(unsigned int rendererID)
+        : rendererID(rendererID)
     {
     
     }
     
-    void Texture2D::Create(const unsigned char* data, int width, int height, GLenum format, GLenum dataType)
+    void Texture2DInfo::Upload(const unsigned char* data, int width, int height, GLenum format, GLenum dataType)
     {
-        RequireContext();
+        width = width;
+        height = height;
         
-        m_Width = width;
-        m_Height = height;
+        glad.GenTextures(1, &rendererID);
+        glad.BindTexture(GL_TEXTURE_2D, rendererID);
+        glad.TexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, width, height);
         
-        glad.GenTextures(1, &m_RendererID);
-        glad.BindTexture(GL_TEXTURE_2D, m_RendererID);
-        glad.TexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, m_Width, m_Height);
-        
-        glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetGLFilter(m_MinFilter));
-        glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetGLFilter(m_MagFilter));
-        
-        glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_WrapS);
-        glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_WrapT);
-        
-        glad.TexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_Width, m_Height, format, dataType, data);
-        
-        m_Created = true;
+        glad.TexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, dataType, data);
     }
     
-    void Texture2D::SetFiltering(TextureFilterType minFilter, TextureFilterType magFilter)
+    void Texture2DInfo::SetFiltering(GLint minFilter, GLint magFilter)
     {
-        m_MinFilter = minFilter;
-        m_MagFilter = magFilter;
-        
-        if (m_HasContext && m_Created)
-        {
-            glad.BindTexture(GL_TEXTURE_2D, m_RendererID);
-            glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetGLFilter(m_MinFilter));
-            glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetGLFilter(m_MagFilter));
-        }
+        glad.BindTexture(GL_TEXTURE_2D, rendererID);
+        glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+        glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
     }
     
-    void Texture2D::SetWrapping(GLint wrapS, GLint wrapT)
+    void Texture2DInfo::SetWrapping(GLint wrapS, GLint wrapT)
     {
-        m_WrapS = wrapS;
-        m_WrapT = wrapT;
-        
-        if (m_HasContext && m_Created)
-        {
-            glad.BindTexture(GL_TEXTURE_2D, m_RendererID);
-            glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_WrapS);
-            glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_WrapT);
-        }
+        glad.BindTexture(GL_TEXTURE_2D, rendererID);
+        glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapS);
+        glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapT);
     }
     
-    
-    void Texture2D::Bind(unsigned int unit)
+    void Texture2DInfo::Bind(unsigned int unit)
     {
-        RequireContext();
-        DEBUG_ASSERT(m_Created, "Texture must be created before binding.");
-        
-        m_BoundUnit = unit;
-        glad.ActiveTexture(GL_TEXTURE0 + m_BoundUnit);
-        glad.BindTexture(GL_TEXTURE_2D, m_RendererID);
+        glad.ActiveTexture(GL_TEXTURE0 + unit);
+        glad.BindTexture(GL_TEXTURE_2D, rendererID);
     }
     
-    void Texture2D::Unbind()
+    void Texture2DInfo::Delete()
     {
-        RequireContext();
-        DEBUG_ASSERT(m_Created, "Texture must be created before unbinding.");
-        
-        glad.ActiveTexture(GL_TEXTURE0 + m_BoundUnit);
-        glad.BindTexture(GL_TEXTURE_2D, 0);
+        glad.DeleteTextures(1, &rendererID);
     }
     
-    void Texture2D::Delete()
+    Texture2DInfo CreateTexture2D(const unsigned char *data, int width, int height, GLenum format, GLenum dataType, GLint minFilter,
+                    GLint magFilter, GLint wrapS, GLint wrapT)
     {
-        RequireContext();
-        DEBUG_ASSERT(m_Created, "Texture must be created before deleting.");
-        
-        glad.DeleteTextures(1, &m_RendererID);
-    }
-    
-    void LoadTexture2D(Asset<Texture2D>& asset, GoombaEngine::GraphicsContext& context)
-    {
-        if (asset.TryLoadFromCache()) return;
-        if (!asset.GetPath().has_value()) { GLogError("Can not load texture with no path."); return; }
-        
-        int width, height, channels;
-        stbi_set_flip_vertically_on_load(1);
-        stbi_uc* data = stbi_load(asset.GetPath().value().c_str(), &width, &height, &channels, 0);
-        DEBUG_ASSERT(data != nullptr, fmt::format("Could not load image at path: '{}'", asset.GetPath().value()));
-        DEBUG_ASSERT(channels == 3 || channels == 4, "Loaded images must have 3 or 4 channels.");
-        GLenum format = (channels == 3) ? GL_RGB : GL_RGBA;
-        
-        Texture2D texture;
-        texture.AssignContext(context);
-        texture.Create(data, width, height, format, GL_UNSIGNED_BYTE);
-        
-        asset.AssignLoaded(std::move(texture));
-        
-        stbi_image_free(data);
+        unsigned int id;
+        glad.GenTextures(1, &id);
+        Texture2DInfo texture(id);
+        texture.SetFiltering(minFilter, magFilter);
+        texture.SetWrapping(wrapS, wrapT);
+        texture.Upload(data, width, height, format, dataType);
+        return texture;
     }
 } // GoombaRender

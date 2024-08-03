@@ -110,7 +110,7 @@ namespace GoombaRender
             const tinygltf::Image& image = loadedGLTF.images[texture.source];
             const tinygltf::Sampler& sampler = texture.sampler >= 0 ? loadedGLTF.samplers[texture.sampler] : defaultSampler;
             
-            Texture2D oglTexture;
+            Texture2DInfo oglTexture;
             oglTexture.AssignContext(context);
             
             TextureFilterType min, mag; // TODO - support mipmapping

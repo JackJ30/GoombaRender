@@ -14,6 +14,8 @@ namespace GoombaRender
         
         ShaderInfo(const ShaderInfo&) = delete;
         ShaderInfo& operator=(const ShaderInfo&) = delete;
+        ShaderInfo(ShaderInfo&&) = default;
+        ShaderInfo& operator=(ShaderInfo&&) = default;
         
         inline void Delete() { glad.DeleteProgram(rendererID); }
         
@@ -45,7 +47,7 @@ namespace GoombaRender
         int GetUniformLocation(const std::string& name);
     };
     
-    ShaderInfo* CreateShader(const std::string &vertexSource, const std::string &fragmentSource);
+    ShaderInfo CreateShader(const std::string &vertexSource, const std::string &fragmentSource);
 }
 
 #endif

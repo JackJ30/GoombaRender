@@ -23,7 +23,7 @@ namespace GoombaRender
         
         inline UniformSettings& GetUniformSettings() { return m_UniformSettings; }
         
-        void AssignTextureUniform(const std::string& name, const Asset<Texture2D>& texture);
+        void AssignTextureUniform(const std::string& name, const Asset<Texture2DInfo>& texture);
         
         // flags
         

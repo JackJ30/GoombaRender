@@ -51,10 +51,11 @@ namespace GoombaRender
         this->indicesInfo = std::move(indicesInfo);
     }
     
-    VertexArrayInfo* CreateVertexArray(LayoutType layoutType, GLenum drawMode)
+    VertexArrayInfo CreateVertexArray(LayoutType layoutType, GLenum drawMode)
     {
         unsigned int id;
         glad.GenVertexArrays(1, &id);
-        return new VertexArrayInfo(id, layoutType, drawMode);
+        VertexArrayInfo vertexArrayInfo(id, layoutType, drawMode);
+        return vertexArrayInfo;
     }
 } // GoombaRender

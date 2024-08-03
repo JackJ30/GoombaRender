@@ -2,7 +2,7 @@
 
 namespace GoombaRender
 {
-    Texture2D defaultTexture;
+    Texture2DInfo defaultTexture;
     bool defaultTextureInitialized = false;
     
     void CreateDefaultTexture(GoombaEngine::GraphicsContext& context)
@@ -31,7 +31,7 @@ namespace GoombaRender
         m_Created = true;
     }
     
-    void Material::AssignTextureUniform(const std::string& name, const Asset<Texture2D>& texture)
+    void Material::AssignTextureUniform(const std::string& name, const Asset<Texture2DInfo>& texture)
     {
         RequireContext();
         DEBUG_ASSERT(m_Created, "Model must be created assigning texture uniform.");

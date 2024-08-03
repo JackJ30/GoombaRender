@@ -165,10 +165,10 @@ namespace GoombaRender
         glad.UniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
     }
     
-    ShaderInfo *CreateShader(const std::string &vertexSource, const std::string &fragmentSource)
+    ShaderInfo CreateShader(const std::string &vertexSource, const std::string &fragmentSource)
     {
-        ShaderInfo* shader = new ShaderInfo(glad.CreateProgram());
-        shader->CompileAndLink(vertexSource, fragmentSource);
+        ShaderInfo shader(glad.CreateProgram());
+        shader.CompileAndLink(vertexSource, fragmentSource);
         return shader;
     }
 }

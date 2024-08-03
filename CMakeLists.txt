@@ -29,7 +29,7 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/renderer/vertex_array.cpp
 	${GOOMBARENDERDIR}/src/renderer/resource_manager.cpp
 	${GOOMBARENDERDIR}/src/renderer/shader.cpp
-	#${GOOMBARENDERDIR}/src/renderer/texture.cpp
+	${GOOMBARENDERDIR}/src/renderer/texture.cpp
 	#${GOOMBARENDERDIR}/src/renderer/model.cpp
 	#${GOOMBARENDERDIR}/src/renderer/material.cpp
 	#${GOOMBARENDERDIR}/src/renderer/uniform_settings.cpp

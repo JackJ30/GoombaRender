@@ -63,7 +63,7 @@ namespace GoombaRender
         glad.BindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
         glad.BufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
         
-        array = std::unique_ptr<VertexArrayInfo>(CreateVertexArray());
+        array = std::make_unique<VertexArrayInfo>(CreateVertexArray());
         array->BindBufferLayout(vbo, layout);
         IndicesSection indicesSection = {0, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT};
         array->SetIndexBuffer(ibo, {indicesSection});

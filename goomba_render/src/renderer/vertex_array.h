@@ -30,6 +30,8 @@ namespace GoombaRender
         
         VertexArrayInfo(const VertexArrayInfo&) = delete;
         VertexArrayInfo& operator=(const VertexArrayInfo&) = delete;
+        VertexArrayInfo(VertexArrayInfo&& other) = default;
+        VertexArrayInfo& operator=(VertexArrayInfo&&) = default;
         
         inline void Delete() { glad.DeleteVertexArrays(1, &rendererID); }
         
@@ -53,7 +55,7 @@ namespace GoombaRender
     };
     
     // Creation functions
-    VertexArrayInfo* CreateVertexArray(LayoutType layoutType = LayoutType::Indices, GLenum drawMode = GL_TRIANGLES);
+    VertexArrayInfo CreateVertexArray(LayoutType layoutType = LayoutType::Indices, GLenum drawMode = GL_TRIANGLES);
     
 } // GoombaRender
 
