@@ -19,6 +19,7 @@ namespace GoombaRender
     PerspectiveCamera camera{{0.0, 0.0, 1.0}};
     std::unique_ptr<VertexArrayInfo> array;
     std::shared_ptr<ShaderInfo> shader;
+    std::shared_ptr<Texture2DInfo> texture;
     
     void RunApplication()
     {
@@ -72,6 +73,7 @@ namespace GoombaRender
         //testScene.LoadAssets();
         
         shader = LoadShader("resources/shaders/test.glsl");
+        texture = LoadTexture2D("resources/images/goomba.png", GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT);
         
         // LOOP
         loop.Run();
@@ -81,7 +83,7 @@ namespace GoombaRender
         GoombaEngine::ImGUIShutdown();
     }
     
-    void Tick(double delta)
+    void Render(double delta, double interpolation)
     {
         window->PollEvents();
         GoombaEngine::ImGUIStartFrame();
@@ -90,7 +92,9 @@ namespace GoombaRender
             glad.ClearColor(.1f, .2f, .3f, 1.0f);
             glad.Clear(GL_COLOR_BUFFER_BIT); // TODO - move screen clearing to renderer
             
-            glad.UseProgram(shader->GetRendererID());
+            texture->Bind(0);
+            shader->Bind();
+            shader->SetUniformInt("u_Texture", 0);
             glad.DrawElements(array->drawMode, array->indicesInfo[0].count, array->indicesInfo[0].type, (const void*)array->indicesInfo[0].offset);
             //m_Renderer->AddScenePass(camera, testScene);
             //m_Renderer->Render();
@@ -110,7 +114,7 @@ namespace GoombaRender
         window->SwapBuffers();
     }
     
-    void Render(double delta, double interpolation)
+    void Tick(double delta)
     {
         glm::vec3 move_direction(input.IsKeyPressed(SDLK_d) - input.IsKeyPressed(SDLK_a), input.IsKeyPressed(SDLK_e) - input.IsKeyPressed(SDLK_q), input.IsKeyPressed(SDLK_w) - input.IsKeyPressed(SDLK_s));
         camera.ProcessMovementInput(move_direction, delta);

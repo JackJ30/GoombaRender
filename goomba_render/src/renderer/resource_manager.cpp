@@ -35,7 +35,7 @@ namespace GoombaRender
         if (cache)
         {
             auto cached = CheckCache<ShaderInfo>(path);
-            if (cached.has_value()) return cached.value();
+            if (cached.has_value()) { return cached.value(); }
         }
         
         std::ifstream stream(path);
@@ -75,7 +75,7 @@ namespace GoombaRender
         if (cache)
         {
             auto cached = CheckCache<Texture2DInfo>(path);
-            if (cached.has_value()) return cached.value();
+            if (cached.has_value()) { return cached.value(); }
         }
         
         int width, height, channels;
