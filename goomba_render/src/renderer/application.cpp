@@ -5,7 +5,7 @@
 #include "engine/input.h"
 #include "engine/imgui_layer.h"
 #include "renderer/resource_manager.h"
-#include "renderer/neorenderer.h"
+#include "renderer/renderer.h"
 #include "renderer/perspective_camera.h"
 
 #include <glm/gtx/string_cast.hpp>

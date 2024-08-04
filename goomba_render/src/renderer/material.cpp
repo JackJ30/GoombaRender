@@ -43,7 +43,7 @@ namespace GoombaRender
         }
     }
     
-    void Material::Bind()
+    void Material::Bind() const
     {
         m_Shader.Get().Bind();
         m_UniformSettings.SetUniforms();

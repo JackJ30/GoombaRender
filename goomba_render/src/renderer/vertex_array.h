@@ -34,6 +34,7 @@ namespace GoombaRender
         VertexArrayInfo& operator=(VertexArrayInfo&&) = default;
         
         inline void Delete() { glad.DeleteVertexArrays(1, &rendererID); }
+        inline void Bind() const { glad.BindVertexArray(rendererID); }
         
         GLenum drawMode;
         std::vector<size_t> usedAttributes;

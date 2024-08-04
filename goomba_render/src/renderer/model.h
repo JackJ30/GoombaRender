@@ -1,12 +1,10 @@
 #ifndef GOOMBARENDER_MODEL_H
 #define GOOMBARENDER_MODEL_H
 
-#include "renderer/asset.h"
 #include "renderer/texture.h"
 #include "renderer/vertex_array.h"
-//#include "renderer/material.h"
+#include "renderer/material.h"
 
-#include <tiny_gltf.h>
 #include <glm/glm.hpp>
 
 namespace GoombaRender
@@ -14,30 +12,21 @@ namespace GoombaRender
     struct Mesh
     {
         VertexArrayInfo vao;
-        //Asset<Material> material;
+        std::shared_ptr<Material> material;
         glm::mat4 localTransform = glm::mat4(1.0);
     };
     
     class Model
     {
     public:
-        void Create();
+        Model(std::vector<Mesh> meshes, std::vector<unsigned int> buffers);
         void Delete();
         
-        void AddMesh(const Mesh& mesh);
-        
-        inline std::vector<unsigned int>& GetBuffers() { return m_Buffers; } // TODO - this should really be const
         inline const std::vector<Mesh>& GetMeshes() const { return m_Meshes; }
-        
-        
     private:
-        std::vector<unsigned int> m_Buffers;
         std::vector<Mesh> m_Meshes;
+        std::vector<unsigned int> m_Buffers;
     };
-    
-    // TODO - support multiple uv maps
-    void InitializeModelLoader(std::string pbrShaderPath);
-    void LoadModel(Asset<Model>& asset, GoombaEngine::GraphicsContext& context);
     
 } // GoombaRender
 

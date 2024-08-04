@@ -1,7 +1,6 @@
 #ifndef GOOMBARENDER_MATERIAL_H
 #define GOOMBARENDER_MATERIAL_H
 
-#include "renderer/asset.h"
 #include "renderer/uniform_settings.h"
 #include "renderer/shader.h"
 #include "renderer/texture.h"
@@ -14,12 +13,12 @@
 
 namespace GoombaRender
 {
-    class Material : public OglObj
+    class Material
     {
     public:
-        void Create(Asset<ShaderInfo> shader);
+        void Create(std::shared_ptr<ShaderInfo> shader);
     
-        void Bind();
+        void Bind() const;
         
         inline UniformSettings& GetUniformSettings() { return m_UniformSettings; }
         
@@ -28,9 +27,9 @@ namespace GoombaRender
         // flags
         
     private:
-        Asset<ShaderInfo> m_Shader;
+        std::shared_ptr<ShaderInfo> m_Shader;
         UniformSettings m_UniformSettings;
-        std::unordered_map<std::string, Asset<Texture2D>> m_Textures;
+        std::unordered_map<std::string, std::shared_ptr<Texture2D>> m_Textures;
         std::unordered_set<std::string> m_UnassignedTextures;
     };
     

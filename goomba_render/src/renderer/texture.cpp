@@ -36,7 +36,7 @@ namespace GoombaRender
         glad.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapT);
     }
     
-    void Texture2DInfo::Bind(unsigned int unit)
+    void Texture2DInfo::Bind(unsigned int unit) const
     {
         glad.ActiveTexture(GL_TEXTURE0 + unit);
         glad.BindTexture(GL_TEXTURE_2D, rendererID);

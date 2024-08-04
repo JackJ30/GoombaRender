@@ -24,15 +24,15 @@ set(SOURCE_FILES
 	${GOOMBARENDERDIR}/src/engine/application_loop.cpp
 	${GOOMBARENDERDIR}/src/renderer/application.cpp
 	${GOOMBARENDERDIR}/src/renderer/graphics_context.cpp
-	${GOOMBARENDERDIR}/src/renderer/neorenderer.cpp
-	#${GOOMBARENDERDIR}/src/renderer/scene.cpp
+	${GOOMBARENDERDIR}/src/renderer/renderer.cpp
 	${GOOMBARENDERDIR}/src/renderer/vertex_array.cpp
 	${GOOMBARENDERDIR}/src/renderer/resource_manager.cpp
 	${GOOMBARENDERDIR}/src/renderer/shader.cpp
 	${GOOMBARENDERDIR}/src/renderer/texture.cpp
-	#${GOOMBARENDERDIR}/src/renderer/model.cpp
-	#${GOOMBARENDERDIR}/src/renderer/material.cpp
-	#${GOOMBARENDERDIR}/src/renderer/uniform_settings.cpp
+	${GOOMBARENDERDIR}/src/renderer/scene.cpp
+	${GOOMBARENDERDIR}/src/renderer/model.cpp
+	${GOOMBARENDERDIR}/src/renderer/material.cpp
+	${GOOMBARENDERDIR}/src/renderer/uniform_settings.cpp
 	${GOOMBARENDERDIR}/src/renderer/camera.cpp
 	${GOOMBARENDERDIR}/src/renderer/perspective_camera.cpp
 	${GOOMBARENDERDIR}/src/renderer/transform.cpp

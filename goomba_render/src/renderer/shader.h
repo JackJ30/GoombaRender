@@ -20,7 +20,7 @@ namespace GoombaRender
         inline void Delete() { glad.DeleteProgram(rendererID); }
         
         void CompileAndLink(const std::string &vertexSource, const std::string &fragmentSource);
-        inline void Bind() { glad.UseProgram(rendererID); }
+        inline void Bind() const { glad.UseProgram(rendererID); }
         
         inline unsigned int GetRendererID() const { return rendererID; }
         inline const std::vector<std::pair<GLenum, std::string>>& GetUniforms() const { return uniformsCache; }

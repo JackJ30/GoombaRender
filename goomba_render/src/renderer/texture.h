@@ -21,7 +21,7 @@ namespace GoombaRender
         void Delete();
         
         void Upload(const unsigned char* data, int width, int height, GLenum format, GLenum dataType);
-        void Bind(unsigned int unit = 0);
+        void Bind(unsigned int unit = 0) const;
         
         void SetFiltering(GLint minFilter = GL_LINEAR, GLint magFilter = GL_LINEAR);
         void SetWrapping(GLint wrapS = GL_REPEAT, GLint wrapT = GL_REPEAT);
