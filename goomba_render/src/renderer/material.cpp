@@ -1,4 +1,5 @@
 #include "material.h"
+#include <stb_image.h>
 
 namespace GoombaRender
 {
@@ -7,7 +8,7 @@ namespace GoombaRender
     void CreateDefaultTexture()
     {
         float white[] = {1.0, 1.0, 1.0, 1.0};
-        defaultTexture = std::make_unique<Texture2DInfo>(CreateTexture2D((unsigned char*)white, 1, 1));
+        defaultTexture = std::make_unique<Texture2DInfo>(CreateTexture2D((unsigned char*)white, 1, 1, GL_RGBA, GL_FLOAT));
     }
     
     Material::Material(std::shared_ptr<ShaderInfo> shader)
@@ -38,10 +39,10 @@ namespace GoombaRender
             
             ++i;
         }
+        if (!m_UnassignedTextures.empty()) { defaultTexture->Bind(i); };
         for (const std::string& unassigned : m_UnassignedTextures)
         {
             m_Shader->SetUniformInt(unassigned, i);
-            defaultTexture->Bind(i);
         }
         
         m_UniformSettings.SetUniforms(*m_Shader);
