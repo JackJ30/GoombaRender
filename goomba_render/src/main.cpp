@@ -38,13 +38,13 @@ int main(int argc, char *argv[])
 //      - [x] Scene to render instruction
 // - [x] Assetloader functions, template argument assets
 // - [x] Scene objects and transforms
-// - [ ] Rewrite
+// - [x] Rewrite
 //      - [x] Application system
-//      - [ ] Asset system
-//      - [ ] OGL abstractions
-// - [ ] Materials and gltf material loading
+//      - [x] Asset system
+//      - [x] OGL abstractions
+// - [x] Materials and gltf material loading
+// - [ ] Render pass control and material flags
 // - [ ] Basic PBR lighting
-// - [ ] Asset rework
 // - [ ] Scene system (lights + camera ubo)
 // - [ ] Time system and ms timing
 // - [ ] Shadow mapping

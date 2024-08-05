@@ -22,11 +22,19 @@ namespace GoombaRender
         m_RenderQueue.push(pass);
     }
     
+    void Renderer::Initialize()
+    {
+        glad.ClearColor(.1f, .2f, .3f, 1.0f);
+    }
+    
     void Renderer::Render() // TODO - this function should be very optimized, and inputs should be sorted or something
     {
         for (; !m_RenderQueue.empty(); m_RenderQueue.pop()) // go through passes
         {
             RenderPass& pass = m_RenderQueue.front();
+            
+            glad.Enable(GL_DEPTH_TEST);
+            glad.Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             
             for (; !pass.queue.empty(); pass.queue.pop()) // go through instructions
             {

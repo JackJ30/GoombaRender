@@ -11,6 +11,7 @@ namespace GoombaRender
     public:
         Transform();
         explicit Transform(glm::vec3 translation);
+        explicit Transform(glm::mat4 matrix);
         
         inline glm::vec3 GetTranslation() const { return m_Translation; }
         inline void SetTranslation(glm::vec3 translation) { m_Translation = translation; CalculateMatrix(); }

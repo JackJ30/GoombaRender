@@ -28,6 +28,7 @@ namespace GoombaRender
     class Renderer
     {
     public:
+        void Initialize();
         void AddScenePass(const Camera& camera, const Scene& scene); // TODO - include framebuffer
         void Render();
     

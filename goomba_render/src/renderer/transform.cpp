@@ -15,6 +15,11 @@ namespace GoombaRender
         SetTranslation(translation);
     }
     
+    Transform::Transform(glm::mat4 matrix)
+    {
+        SetTransformationMatrix(matrix);
+    }
+    
     void Transform::CalculateMatrix()
     {
         m_Matrix = glm::translate(glm::scale(glm::mat4_cast(m_Rotation), m_Scale), m_Translation);
@@ -26,4 +31,5 @@ namespace GoombaRender
         glm::vec4 perspective;
         glm::decompose(m_Matrix, m_Scale, m_Rotation, m_Translation, skew, perspective);
     }
+    
 } // GoombaRender

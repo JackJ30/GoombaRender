@@ -29,6 +29,9 @@ namespace GoombaRender
     
     void Material::Bind() const
     {
+        if (m_DoubleSided) { glad.Enable(GL_CULL_FACE); } // TODO - flags should probably be set by renderer
+        else { glad.Disable(GL_CULL_FACE); }
+        
         m_Shader->Bind();
         
         int i = 0;

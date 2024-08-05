@@ -32,7 +32,7 @@ namespace GoombaRender
         LoadGraphicsContext(window->GetProcAddress());
         
         // Setup Renderer
-        //m_Renderer = std::make_unique<Renderer>(context);
+        renderer.Initialize();
         
         // Setup Loop
         loop.RegisterRenderCallback(&Render);
@@ -73,9 +73,9 @@ namespace GoombaRender
         Mesh squareMesh(array, material);
         std::shared_ptr<Model> testModel = std::shared_ptr<Model>(new Model({squareMesh}, {vbo, ibo}));
         testScene.m_Objects.emplace_back(testModel, Transform());*/
-        testScene.m_Objects.emplace_back(LoadModel("resources/models/AntiqueCamera.glb", LoadShader("resources/shaders/default.glsl")), Transform());
         
-        glad.Enable(GL_DEPTH_TEST);
+        testScene.m_Objects.emplace_back(LoadModel("resources/models/AntiqueCamera.glb", LoadShader("resources/shaders/default.glsl")), Transform(glm::rotate(glm::mat4(1.0), glm::pi<float>(), {0.0, 0.0, 1.0})));
+        testScene.m_Objects.emplace_back(LoadModel("resources/models/cubes.gltf", LoadShader("resources/shaders/default.glsl")), Transform());
         
         // LOOP
         loop.Run();
@@ -91,9 +91,6 @@ namespace GoombaRender
         GoombaEngine::ImGUIStartFrame();
         
         {
-            glad.ClearColor(.1f, .2f, .3f, 1.0f);
-            glad.Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // TODO - move screen clearing to renderer
-            
             renderer.AddScenePass(camera, testScene);
             renderer.Render();
         }

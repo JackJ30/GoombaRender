@@ -172,11 +172,14 @@ namespace GoombaRender
         materials.resize(loadedGLTF.materials.size());
         for (size_t i = 0; i < loadedGLTF.materials.size(); ++i)
         {
-            const tinygltf::Material& material = loadedGLTF.materials[i];
-            const tinygltf::PbrMetallicRoughness& pbrMetallicRoughness = material.pbrMetallicRoughness;
+            const tinygltf::Material& gltfMat = loadedGLTF.materials[i];
+            const tinygltf::PbrMetallicRoughness& pbrMetallicRoughness = gltfMat.pbrMetallicRoughness;
             
             materials[i] = std::make_shared<Material>(shader);
-            if(material.pbrMetallicRoughness.baseColorTexture.index >= 0) { materials[i]->AssignUniformTexture("u_Albedo", textures[material.pbrMetallicRoughness.baseColorTexture.index]); };
+            Material& material = *materials[i];
+            
+            material.m_DoubleSided = gltfMat.doubleSided;
+            if(gltfMat.pbrMetallicRoughness.baseColorTexture.index >= 0) { material.AssignUniformTexture("u_Albedo", textures[gltfMat.pbrMetallicRoughness.baseColorTexture.index]); };
             // set uniforms and textures
             // base color (texture + factor)
             // metallic roughness (texture + factors)

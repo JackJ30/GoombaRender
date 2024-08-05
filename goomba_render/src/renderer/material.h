@@ -39,10 +39,11 @@ namespace GoombaRender
         void AssignUniformMat4(const std::string &name, const glm::mat4 &mat);
         
         // flags
-        
+        bool m_DoubleSided = false;
     private:
         std::shared_ptr<ShaderInfo> m_Shader;
         UniformSettings m_UniformSettings;
+        
         std::unordered_map<std::string, std::shared_ptr<Texture2DInfo>> m_Textures;
         std::unordered_set<std::string> m_UnassignedTextures;
         std::vector<std::string> m_UniformNames;
