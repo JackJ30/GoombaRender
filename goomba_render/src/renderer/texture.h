@@ -35,7 +35,7 @@ namespace GoombaRender
         unsigned int rendererID;
     };
     
-    Texture2DInfo CreateTexture2D(const unsigned char* data, int width, int height, GLenum format, GLenum dataType, GLint minFilter, GLint magFilter, GLint wrapS, GLint wrapT);
+    Texture2DInfo CreateTexture2D(const unsigned char* data, int width, int height, GLenum format = GL_RGBA, GLenum dataType = GL_UNSIGNED_BYTE, GLint minFilter = GL_LINEAR, GLint magFilter = GL_LINEAR, GLint wrapS = GL_REPEAT, GLint wrapT = GL_REPEAT);
     
 } // GoombaRender
 

@@ -15,6 +15,8 @@ namespace GoombaRender
     std::unique_ptr<GoombaEngine::Window> window;
     GoombaEngine::ApplicationLoop loop;
     GoombaEngine::Input input;
+    Renderer renderer;
+    Scene testScene;
     
     PerspectiveCamera camera{{0.0, 0.0, 1.0}};
     std::unique_ptr<VertexArrayInfo> array;
@@ -68,9 +70,9 @@ namespace GoombaRender
         array->BindBufferLayout(vbo, layout);
         IndicesSection indicesSection = {0, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT};
         array->SetIndexBuffer(ibo, {indicesSection});
+        
         //testScene.m_Objects.push_back({Asset<Model>("resources/models/AntiqueCamera.glb"), Transform()});
-        //testScene.m_Objects.push_back({Asset<Model>("resources/models/testcube.gltf"), Transform({0.0, 3.0, 0.0})});
-        //testScene.LoadAssets();
+        //testScene.m_Objects.emplace_back()
         
         shader = LoadShader("resources/shaders/test.glsl");
         texture = LoadTexture2D("resources/images/goomba.png", GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT);
@@ -96,8 +98,8 @@ namespace GoombaRender
             shader->Bind();
             shader->SetUniformInt("u_Texture", 0);
             glad.DrawElements(array->drawMode, array->indicesInfo[0].count, array->indicesInfo[0].type, (const void*)array->indicesInfo[0].offset);
-            //m_Renderer->AddScenePass(camera, testScene);
-            //m_Renderer->Render();
+            //renderer.AddScenePass(camera, testScene);
+            renderer.Render();
         }
         
         ImGui::Begin("Loop Debug");

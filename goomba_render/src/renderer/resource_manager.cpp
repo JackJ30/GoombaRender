@@ -109,6 +109,7 @@ namespace GoombaRender
         modelLoaderSettings.initialized = true;
     }*/ // TODO - use a tailored pbr shader with only the features (textures) that the material has
     
+    /*
     // TODO - support multiple uv maps
     std::shared_ptr<Model> LoadModel(const std::string& path)
     {
@@ -195,7 +196,7 @@ namespace GoombaRender
             textures[i].AssignLoaded(std::move(oglTexture));
         }
         
-        /*
+        
         // Create Materials
         std::vector<Asset<Material>> materials;
         materials.resize(loadedGLTF.materials.size());
@@ -217,7 +218,7 @@ namespace GoombaRender
             // emissions (texture + factor)
             
             materials[i].AssignLoaded(std::move(oglMaterial));
-        }*/
+        }
         
         // Helper lambda functions
         const std::function<void(const tinygltf::Node&, glm::mat4)> traverseNode = [&](const tinygltf::Node& node, glm::mat4 parentTransform)
@@ -313,5 +314,5 @@ namespace GoombaRender
         }
         
         asset.AssignLoaded(std::move(model));
-    }
+    }*/
 } // GoombaRender
