@@ -19,8 +19,6 @@ namespace GoombaRender
     Scene testScene;
     
     PerspectiveCamera camera{{0.0, 0.0, 1.0}};
-    std::unique_ptr<VertexArrayInfo> array;
-    std::shared_ptr<ShaderInfo> shader;
     std::shared_ptr<Texture2DInfo> texture;
     
     void RunApplication()
@@ -66,16 +64,16 @@ namespace GoombaRender
         glad.BindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
         glad.BufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
         
-        array = std::make_unique<VertexArrayInfo>(CreateVertexArray());
+        std::shared_ptr<VertexArrayInfo> array = std::make_unique<VertexArrayInfo>(CreateVertexArray());
         array->BindBufferLayout(vbo, layout);
         IndicesSection indicesSection = {0, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT};
         array->SetIndexBuffer(ibo, {indicesSection});
         
-        //testScene.m_Objects.push_back({Asset<Model>("resources/models/AntiqueCamera.glb"), Transform()});
-        //testScene.m_Objects.emplace_back()
-        
-        shader = LoadShader("resources/shaders/test.glsl");
-        texture = LoadTexture2D("resources/images/goomba.png", GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT);
+        std::shared_ptr<Material> material = std::make_shared<Material>(LoadShader("resources/shaders/test.glsl"));
+        material->AssignUniformTexture("u_Texture", LoadTexture2D("resources/images/goomba.png", GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT));
+        Mesh squareMesh(array, material);
+        std::shared_ptr<Model> testModel = std::shared_ptr<Model>(new Model({squareMesh}, {vbo, ibo}));
+        testScene.m_Objects.emplace_back(testModel, Transform());
         
         // LOOP
         loop.Run();
@@ -94,11 +92,7 @@ namespace GoombaRender
             glad.ClearColor(.1f, .2f, .3f, 1.0f);
             glad.Clear(GL_COLOR_BUFFER_BIT); // TODO - move screen clearing to renderer
             
-            texture->Bind(0);
-            shader->Bind();
-            shader->SetUniformInt("u_Texture", 0);
-            glad.DrawElements(array->drawMode, array->indicesInfo[0].count, array->indicesInfo[0].type, (const void*)array->indicesInfo[0].offset);
-            //renderer.AddScenePass(camera, testScene);
+            renderer.AddScenePass(camera, testScene);
             renderer.Render();
         }
         

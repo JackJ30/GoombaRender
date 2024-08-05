@@ -20,6 +20,8 @@ namespace GoombaRender
     
         void Bind() const;
         
+        inline bool HasUniform(const std::string& name) const { return std::find(m_UniformNames.begin(),
+                                                                                 m_UniformNames.end(), name) != m_UniformNames.end(); }
         inline UniformSettings& GetUniformSettings() { return m_UniformSettings; }
         
         void AssignUniformTexture(const std::string& name, std::shared_ptr<Texture2DInfo> texture);

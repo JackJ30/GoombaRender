@@ -22,6 +22,8 @@ namespace GoombaRender
                 m_UnassignedTextures.insert(uniform.second);
             }
         }
+        
+        if (defaultTexture == nullptr) { CreateDefaultTexture(); }
     }
     
     void Material::Bind() const

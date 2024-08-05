@@ -15,7 +15,7 @@ namespace GoombaRender
     {
         for (auto& mesh : m_Meshes)
         {
-            mesh.vao.Delete();
+            mesh.vao->Delete();
         }
         glad.DeleteBuffers(m_Buffers.size(), m_Buffers.data());
     }
