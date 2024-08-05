@@ -6,20 +6,20 @@
 #include "renderer/material.h"
 
 #include <glm/glm.hpp>
-#include <utility>
 
 namespace GoombaRender
 {
     struct Mesh
     {
+        Mesh() = default;
         Mesh(std::shared_ptr<VertexArrayInfo> vao, std::shared_ptr<Material> material)
             : vao(std::move(vao)), material(std::move(material))
         {
         
         }
         
-        std::shared_ptr<VertexArrayInfo> vao;
-        std::shared_ptr<Material> material;
+        std::shared_ptr<VertexArrayInfo> vao = nullptr;
+        std::shared_ptr<Material> material = nullptr;
         glm::mat4 localTransform = glm::mat4(1.0);
     };
     

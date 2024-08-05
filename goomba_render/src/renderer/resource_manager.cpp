@@ -4,6 +4,10 @@
 #include <fstream>
 #include <stb/stb_image.h>
 #include <tiny_gltf.h>
+#include <filesystem>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace GoombaRender
 {
@@ -93,29 +97,20 @@ namespace GoombaRender
         return texture;
     }
     
-    /*struct ModelLoaderSettings
-    {
-        Asset<ShaderInfo> pbrShader;
-        Material defaultMaterial;
-        
-        bool initialized = false;
-    } modelLoaderSettings;
     
-    void InitializeModelLoader(Asset<ShaderInfo> pbrShader, GoombaEngine::GraphicsContext& context)
-    {
-        modelLoaderSettings.pbrShader = pbrShader;
-        //modelLoaderSettings.defaultMaterial.Create(pbrShader);
-        
-        modelLoaderSettings.initialized = true;
-    }*/ // TODO - use a tailored pbr shader with only the features (textures) that the material has
-    
-    /*
     // TODO - support multiple uv maps
-    std::shared_ptr<Model> LoadModel(const std::string& path)
+    std::shared_ptr<Material> defaultMaterial;
+    std::shared_ptr<Model> LoadModel(const std::string& path, bool cache)
     {
-        //DEBUG_ASSERT(modelLoaderSettings.initialized, "Model loader must be initialized before loading a model.");
-        if (asset.TryLoadFromCache()) { return; }
-        if (!asset.GetPath().has_value()) { GLogError("Can not load model with no path."); return; }
+        if (cache)
+        {
+            auto cached = CheckCache<Model>(path);
+            if (cached.has_value()) { return cached.value(); }
+        }
+        if (defaultMaterial == nullptr)
+        {
+            defaultMaterial = std::make_shared<Material>(LoadShader("resources/shaders/default.glsl"));
+        }
         
         tinygltf::TinyGLTF loader;
         std::string error;
@@ -124,40 +119,35 @@ namespace GoombaRender
         tinygltf::Model loadedGLTF;
         bool ret = false;
         
-        std::string extension = std::filesystem::path(asset.GetPath().value()).extension();
+        std::string extension = std::filesystem::path(path).extension();
         if (extension == ".gltf")
         {
-            ret = loader.LoadASCIIFromFile(&loadedGLTF, &error, &warn, asset.GetPath().value());
+            ret = loader.LoadASCIIFromFile(&loadedGLTF, &error, &warn, path);
         }
         else if (extension == ".glb")
         {
-            ret = loader.LoadBinaryFromFile(&loadedGLTF, &error, &warn, asset.GetPath().value());
+            ret = loader.LoadBinaryFromFile(&loadedGLTF, &error, &warn, path);
         }
-        else { GLogError("Model must have glb or gltf file extension."); return; }
+        else { GLogError("Model must have glb or gltf file extension."); return nullptr; }
         
         if (!warn.empty()) {
-            GLogError("GLTF loading warning for file '{}' :\n{}", asset.GetPath().value(), warn);
+            GLogError("GLTF loading warning for file '{}' :\n{}", path, warn);
         }
         if (!error.empty()) {
-            GLogError("GLTF loading error for file '{}' :\n{}", asset.GetPath().value(), error);
-            return;
+            GLogError("GLTF loading error for file '{}':\n{}", path, error);
+            return nullptr;
         }
         
-        if (!ret) { GLogError("Could not load GLTF file with path '{}'", asset.GetPath().value()); return; }
-        
-        Model model;
-        model.AssignContext(context);
-        model.Create();
+        if (!ret) { GLogError("Could not load GLTF file with path '{}'", path); return nullptr; }
         
         // --- Converting tinyGLTF to GoombaRender model ---
-        
         // Create buffers
-        model.GetBuffers().reserve(loadedGLTF.buffers.size());
-        context.GetGlad().GenBuffers(loadedGLTF.buffers.size(), model.GetBuffers().data());
+        std::vector<unsigned int> buffers(loadedGLTF.buffers.size());
+        glad.GenBuffers(loadedGLTF.buffers.size(), buffers.data());
         for (size_t i = 0; i < loadedGLTF.buffers.size(); ++i)
         {
-            context.GetGlad().BindBuffer(GL_ARRAY_BUFFER, model.GetBuffers()[i]);
-            context.GetGlad().BufferData(GL_ARRAY_BUFFER, loadedGLTF.buffers[i].data.size(), loadedGLTF.buffers[i].data.data(), GL_STATIC_DRAW);
+            glad.BindBuffer(GL_ARRAY_BUFFER, buffers[i]);
+            glad.BufferData(GL_ARRAY_BUFFER, loadedGLTF.buffers[i].data.size(), loadedGLTF.buffers[i].data.data(), GL_STATIC_DRAW);
         }
         
         // Create images
@@ -167,7 +157,7 @@ namespace GoombaRender
         defaultSampler.wrapS = GL_REPEAT;
         defaultSampler.wrapT = GL_REPEAT;
         
-        std::vector<Asset<Texture2D>> textures;
+        std::vector<std::shared_ptr<Texture2DInfo>> textures;
         textures.resize(loadedGLTF.textures.size());
         for (size_t i = 0; i < loadedGLTF.textures.size(); ++i)
         {
@@ -176,33 +166,16 @@ namespace GoombaRender
             const tinygltf::Image& image = loadedGLTF.images[texture.source];
             const tinygltf::Sampler& sampler = texture.sampler >= 0 ? loadedGLTF.samplers[texture.sampler] : defaultSampler;
             
-            Texture2DInfo oglTexture;
-            oglTexture.AssignContext(context);
-            
-            TextureFilterType min, mag; // TODO - support mipmapping
-            if (sampler.minFilter >= 0 && (sampler.minFilter == GL_NEAREST || sampler.minFilter == GL_NEAREST_MIPMAP_LINEAR || sampler.minFilter == GL_NEAREST_MIPMAP_NEAREST)) { min = TextureFilterType::Nearest; }
-            else { min = TextureFilterType::Linear; }
-            if (sampler.magFilter >= 0 && (sampler.magFilter == GL_NEAREST || sampler.magFilter == GL_NEAREST_MIPMAP_LINEAR || sampler.magFilter == GL_NEAREST_MIPMAP_NEAREST)) { mag = TextureFilterType::Nearest; }
-            else { mag = TextureFilterType::Linear; }
-            oglTexture.SetFiltering(min, mag);
-            
             DEBUG_ASSERT(image.component == 3 || image.component == 4, "Loaded images must have 3 or 4 channels.");
             GLenum format = (image.component == 3) ? GL_RGB : GL_RGBA;
-            
-            oglTexture.SetWrapping(sampler.wrapS, sampler.wrapT);
-            oglTexture.Create(image.image.data(), image.width, image.height, format, image.pixel_type);
-            // TODO - support mipmapping
-            
-            textures[i].AssignLoaded(std::move(oglTexture));
+            textures[i] = std::make_shared<Texture2DInfo>(CreateTexture2D(image.image.data(), image.width, image.height, format, image.pixel_type, sampler.minFilter, sampler.magFilter, sampler.wrapS, sampler.wrapT));
         }
         
-        
-        // Create Materials
-        std::vector<Asset<Material>> materials;
+        /*// Create Materials
+        std::vector<std::shared_ptr<Material>> materials;
         materials.resize(loadedGLTF.materials.size());
         for (size_t i = 0; i < loadedGLTF.materials.size(); ++i)
         {
-            // Get default texture
             const tinygltf::Material& material = loadedGLTF.materials[i];
             const tinygltf::PbrMetallicRoughness& pbrMetallicRoughness = material.pbrMetallicRoughness;
             
@@ -218,7 +191,9 @@ namespace GoombaRender
             // emissions (texture + factor)
             
             materials[i].AssignLoaded(std::move(oglMaterial));
-        }
+        }*/
+        
+        std::vector<Mesh> meshes;
         
         // Helper lambda functions
         const std::function<void(const tinygltf::Node&, glm::mat4)> traverseNode = [&](const tinygltf::Node& node, glm::mat4 parentTransform)
@@ -249,8 +224,7 @@ namespace GoombaRender
                 {
                     // deal with mesh (primitive)
                     Mesh mesh;
-                    mesh.vao.AssignContext(context);
-                    mesh.vao.Create(primitive.indices >= 0 ? LayoutType::Indices : LayoutType::Arrays, primitive.mode);
+                    mesh.vao = std::make_shared<VertexArrayInfo>(CreateVertexArray(primitive.indices >= 0 ? LayoutType::Indices : LayoutType::Arrays, primitive.mode));
                     mesh.localTransform = localTransform;
                     
                     // go through attributes
@@ -267,7 +241,7 @@ namespace GoombaRender
                             const auto bufferIdx = bufferView.buffer;
                             
                             DEBUG_ASSERT(GL_ARRAY_BUFFER == bufferView.target, "It's gotta be an array buffer");
-                            mesh.vao.BindAttribute(model.GetBuffers()[bufferIdx], attribute_indexes[i],
+                            mesh.vao->BindAttribute(buffers[bufferIdx], attribute_indexes[i],
                                                    accessor.type, accessor.componentType,
                                                    GL_FALSE, bufferView.byteStride,
                                                    accessor.byteOffset + bufferView.byteOffset);
@@ -286,14 +260,15 @@ namespace GoombaRender
                         unsigned int type = accessor.componentType;
                         
                         IndicesSection section = {accessor.byteOffset + bufferView.byteOffset, count, type};
-                        mesh.vao.SetIndexBuffer(model.GetBuffers()[bufferIdx], { section });
+                        mesh.vao->SetIndexBuffer(buffers[bufferIdx], { section });
                         
                         DEBUG_ASSERT(GL_ELEMENT_ARRAY_BUFFER == bufferView.target, "It's gotta be an index buffer");
                     }
                     
-                    // add materials (or default material)
+                    if (primitive.material >= 0) { mesh.material = defaultMaterial;/*materials[primitive.material];*/ }
+                    else { mesh.material = defaultMaterial; }
                     
-                    model.AddMesh(mesh);
+                    meshes.push_back(std::move(mesh));
                 }
             }
             
@@ -313,6 +288,9 @@ namespace GoombaRender
             }
         }
         
-        asset.AssignLoaded(std::move(model));
-    }*/
+        std::shared_ptr<Model> model = std::make_shared<Model>(meshes, buffers);
+        if (cache) { assetCache<Model>[path] = model; }
+        
+        return model;
+    }
 } // GoombaRender

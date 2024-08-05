@@ -19,7 +19,6 @@ namespace GoombaRender
     Scene testScene;
     
     PerspectiveCamera camera{{0.0, 0.0, 1.0}};
-    std::shared_ptr<Texture2DInfo> texture;
     
     void RunApplication()
     {
@@ -41,7 +40,7 @@ namespace GoombaRender
         
         camera.SetAspect(static_cast<float>(window->GetWidth()) / static_cast<float>(window->GetHeight()));
         
-        float vertices[4 * 5] = {
+        /*float vertices[4 * 5] = {
                 -1.0, -1.0, 0.0,  0.0f, 0.0f,
                 1.0, -1.0, 0.0,   1.0f, 0.0f,
                 1.0, 1.0, 0.0, 1.0f, 1.0f,
@@ -73,7 +72,8 @@ namespace GoombaRender
         material->AssignUniformTexture("u_Texture", LoadTexture2D("resources/images/goomba.png", GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT));
         Mesh squareMesh(array, material);
         std::shared_ptr<Model> testModel = std::shared_ptr<Model>(new Model({squareMesh}, {vbo, ibo}));
-        testScene.m_Objects.emplace_back(testModel, Transform());
+        testScene.m_Objects.emplace_back(testModel, Transform());*/
+        testScene.m_Objects.emplace_back(LoadModel("resources/models/testcube.gltf"), Transform());
         
         // LOOP
         loop.Run();

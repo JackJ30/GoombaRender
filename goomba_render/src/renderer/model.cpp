@@ -1,6 +1,5 @@
 #include "model.h"
 
-#include <glm/gtc/quaternion.hpp>
 #include <utility>
 
 namespace GoombaRender
