@@ -1,7 +1,8 @@
 #ifndef GOOMBARENDER_SCENE_H
 #define GOOMBARENDER_SCENE_H
 
-#include "renderer/asset.h"
+#include <utility>
+
 #include "renderer/camera.h"
 #include "model.h"
 #include "shader.h"
@@ -11,17 +12,19 @@ namespace GoombaRender
 {
     struct SceneObject
     {
-        Asset<Model> model;
+        SceneObject(std::shared_ptr<Model> model, Transform transform)
+            : model(std::move(model)), transform(transform)
+        {
+        
+        }
+        
+        std::shared_ptr<Model> model;
         Transform transform;
     };
     
-    class Scene
+    struct Scene
     {
-    public:
         std::vector<SceneObject> m_Objects; // Temp
-        Asset<Shader> m_MainShader = Asset<Shader>("resources/shaders/test.glsl"); // Temp, also should be material
-        
-        void LoadAssets(GoombaEngine::GraphicsContext& context);
     };
 }
 

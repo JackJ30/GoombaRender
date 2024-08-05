@@ -3,76 +3,82 @@
 
 namespace GoombaRender
 {
-    void Shader::Create(const std::string &vertexSource, const std::string &fragmentSource)
+    ShaderInfo::ShaderInfo(unsigned int rendererID)
+        : rendererID(rendererID)
     {
-        RequireContext();
-        
+    
+    }
+    
+    void ShaderInfo::CompileAndLink(const std::string &vertexSource, const std::string &fragmentSource)
+    {
         const char* vertexSrc = vertexSource.c_str();
         const char* fragmentSrc = fragmentSource.c_str();
         GLint success;
         
         // Vertex shader
-        GLuint vertexShader = m_Context.GetGlad().CreateShader(GL_VERTEX_SHADER);
-        m_Context.GetGlad().ShaderSource(vertexShader, 1, &vertexSrc, NULL);
-        m_Context.GetGlad().CompileShader(vertexShader);
+        GLuint vertexShader = glad.CreateShader(GL_VERTEX_SHADER);
+        glad.ShaderSource(vertexShader, 1, &vertexSrc, NULL);
+        glad.CompileShader(vertexShader);
 
 #ifdef DEBUG
-        m_Context.GetGlad().GetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+        glad.GetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
         if(!success)
         {
-            m_Context.GetGlad().GetShaderInfoLog(vertexShader, 1024, nullptr, m_ErrorMessage);
-            GLogError("Vertex shader compilation failed:\n{}", m_ErrorMessage);
+            glad.GetShaderInfoLog(vertexShader, 1024, nullptr, errorMessage);
+            GLogError("Vertex shader compilation failed:\n{}", errorMessage);
         }
 #endif
         
         // Fragment shader
-        GLuint fragmentShader = m_Context.GetGlad().CreateShader(GL_FRAGMENT_SHADER);
-        m_Context.GetGlad().ShaderSource(fragmentShader, 1, &fragmentSrc, NULL);
-        m_Context.GetGlad().CompileShader(fragmentShader);
+        GLuint fragmentShader = glad.CreateShader(GL_FRAGMENT_SHADER);
+        glad.ShaderSource(fragmentShader, 1, &fragmentSrc, NULL);
+        glad.CompileShader(fragmentShader);
 
 #ifdef DEBUG
-        m_Context.GetGlad().GetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+        glad.GetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
         if(!success)
         {
-            m_Context.GetGlad().GetShaderInfoLog(fragmentShader, 1024, nullptr, m_ErrorMessage);
-            GLogError("Fragment shader compilation failed:\n{}", m_ErrorMessage);
+            glad.GetShaderInfoLog(fragmentShader, 1024, nullptr, errorMessage);
+            GLogError("Fragment shader compilation failed:\n{}", errorMessage);
         }
 #endif
         
         // Program and linking
-        m_RendererID = m_Context.GetGlad().CreateProgram();
-        m_Context.GetGlad().AttachShader(m_RendererID, vertexShader);
-        m_Context.GetGlad().AttachShader(m_RendererID, fragmentShader);
-        m_Context.GetGlad().LinkProgram(m_RendererID);
+        glad.AttachShader(rendererID, vertexShader);
+        glad.AttachShader(rendererID, fragmentShader);
+        glad.LinkProgram(rendererID);
 
 #ifdef DEBUG
-        m_Context.GetGlad().GetProgramiv(m_RendererID, GL_LINK_STATUS, &success);
+        glad.GetProgramiv(rendererID, GL_LINK_STATUS, &success);
         if(!success)
         {
-            m_Context.GetGlad().GetProgramInfoLog(m_RendererID, 1024, nullptr, m_ErrorMessage);
-            GLogError("Shader from failed to link:\n{}", m_ErrorMessage);
+            glad.GetProgramInfoLog(rendererID, 1024, nullptr, errorMessage);
+            GLogError("ShaderInfo from failed to link:\n{}", errorMessage);
         }
 #endif
         
         // Validation
-        m_Context.GetGlad().ValidateProgram(m_RendererID);
+        glad.ValidateProgram(rendererID);
 
 #ifdef DEBUG
-        m_Context.GetGlad().GetProgramiv(m_RendererID, GL_VALIDATE_STATUS, &success);
+        glad.GetProgramiv(rendererID, GL_VALIDATE_STATUS, &success);
         if(!success)
         {
-            m_Context.GetGlad().GetProgramInfoLog(m_RendererID, 1024, nullptr, m_ErrorMessage);
-            GLogError("Shader from '{}' failed to validate:\n{}", m_ErrorMessage);
+            glad.GetProgramInfoLog(rendererID, 1024, nullptr, errorMessage);
+            GLogError("ShaderInfo from '{}' failed to validate:\n{}", errorMessage);
         }
 #endif
         
-        m_Context.GetGlad().DeleteShader(vertexShader);
-        m_Context.GetGlad().DeleteShader(fragmentShader);
+        glad.DeleteShader(vertexShader);
+        glad.DeleteShader(fragmentShader);
+        
+        uniformsCache.clear();
+        uniformLocationCache.clear();
         
         // Cache uniforms
         int count;
-        m_Context.GetGlad().GetProgramiv(m_RendererID, GL_ACTIVE_UNIFORMS, &count);
-        m_UniformsCache.reserve(count);
+        glad.GetProgramiv(rendererID, GL_ACTIVE_UNIFORMS, &count);
+        uniformsCache.reserve(count);
         
         const GLsizei bufSize = 64;
         GLchar name[bufSize];
@@ -82,146 +88,87 @@ namespace GoombaRender
         
         for (int i = 0; i < count; ++i)
         {
-            m_Context.GetGlad().GetActiveUniform(m_RendererID, i, bufSize, &length, &size, &type, name);
-            m_UniformsCache.emplace_back(type, name);
+            glad.GetActiveUniform(rendererID, i, bufSize, &length, &size, &type, name);
+            uniformsCache.emplace_back(type, name);
         }
-        
-        m_Created = true;
     }
     
-    void Shader::Bind() const
+    int ShaderInfo::GetUniformLocation(const std::string& name)
     {
-        RequireContext();
-        DEBUG_ASSERT(m_Created, "Shader must be created before binding.");
+        if (uniformLocationCache.find(name) != uniformLocationCache.end())
+            return uniformLocationCache[name];
         
-        m_Context.GetGlad().UseProgram(m_RendererID);
-    }
-    
-    void Shader::Unbind() const
-    {
-        RequireContext();
-        DEBUG_ASSERT(m_Created, "Shader must be created before binding.");
-        
-        m_Context.GetGlad().UseProgram(0);
-    }
-    
-    void Shader::Delete()
-    {
-        RequireContext();
-        DEBUG_ASSERT(m_Created, "Shader must be created before using uniforms.");
-        
-        m_Context.GetGlad().DeleteProgram(m_RendererID);
-    }
-    
-    int Shader::GetUniformLocation(const std::string& name)
-    {
-        RequireContext();
-        DEBUG_ASSERT(m_Created, "Shader must be created before using uniforms.");
-        
-        if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end())
-            return m_UniformLocationCache[name];
-        
-        int location = m_Context.GetGlad().GetUniformLocation(m_RendererID, name.c_str());
+        int location = glad.GetUniformLocation(rendererID, name.c_str());
         if (location == -1) std::cout << "Warning: uniform '" << name << "' doesn't exist!" << std::endl;
         
-        m_UniformLocationCache[name] = location;
+        uniformLocationCache[name] = location;
         return location;
     }
     
-    void Shader::SetUniformBool(const std::string &name, bool value)
+    void ShaderInfo::SetUniformBool(const std::string &name, bool value)
     {
-        m_Context.GetGlad().Uniform1i(GetUniformLocation(name), (int)value);
+        glad.Uniform1i(GetUniformLocation(name), (int)value);
     }
     
-    void Shader::SetUniformInt(const std::string &name, int value)
+    void ShaderInfo::SetUniformInt(const std::string &name, int value)
     {
-        m_Context.GetGlad().Uniform1i(GetUniformLocation(name), value);
+        glad.Uniform1i(GetUniformLocation(name), value);
     }
     
-    void Shader::SetUniformFloat(const std::string &name, float value)
+    void ShaderInfo::SetUniformFloat(const std::string &name, float value)
     {
-        m_Context.GetGlad().Uniform1f(GetUniformLocation(name), value);
+        glad.Uniform1f(GetUniformLocation(name), value);
     }
     
-    void Shader::SetUniformVec2(const std::string &name, const glm::vec2 &value)
+    void ShaderInfo::SetUniformVec2(const std::string &name, const glm::vec2 &value)
     {
-        m_Context.GetGlad().Uniform2fv(GetUniformLocation(name), 1, &value[0]);
+        glad.Uniform2fv(GetUniformLocation(name), 1, &value[0]);
     }
     
-    void Shader::SetUniformVec2(const std::string &name, float x, float y)
+    void ShaderInfo::SetUniformVec2(const std::string &name, float x, float y)
     {
-        m_Context.GetGlad().Uniform2f(GetUniformLocation(name), x, y);
+        glad.Uniform2f(GetUniformLocation(name), x, y);
     }
     
-    void Shader::SetUniformVec3(const std::string &name, const glm::vec3 &value)
+    void ShaderInfo::SetUniformVec3(const std::string &name, const glm::vec3 &value)
     {
-        m_Context.GetGlad().Uniform3fv(GetUniformLocation(name), 1, &value[0]);
+        glad.Uniform3fv(GetUniformLocation(name), 1, &value[0]);
     }
     
-    void Shader::SetUniformVec3(const std::string &name, float x, float y, float z)
+    void ShaderInfo::SetUniformVec3(const std::string &name, float x, float y, float z)
     {
-        m_Context.GetGlad().Uniform3f(GetUniformLocation(name), x, y, z);
+        glad.Uniform3f(GetUniformLocation(name), x, y, z);
     }
     
-    void Shader::SetUniformVec4(const std::string &name, const glm::vec4 &value)
+    void ShaderInfo::SetUniformVec4(const std::string &name, const glm::vec4 &value)
     {
-        m_Context.GetGlad().Uniform4fv(GetUniformLocation(name), 1, &value[0]);
+        glad.Uniform4fv(GetUniformLocation(name), 1, &value[0]);
     }
     
-    void Shader::SetUniformVec4(const std::string &name, float x, float y, float z, float w)
+    void ShaderInfo::SetUniformVec4(const std::string &name, float x, float y, float z, float w)
     {
-        m_Context.GetGlad().Uniform4f(GetUniformLocation(name), x, y, z, w);
+        glad.Uniform4f(GetUniformLocation(name), x, y, z, w);
     }
     
-    void Shader::SetUniformMat2(const std::string &name, const glm::mat2 &mat)
+    void ShaderInfo::SetUniformMat2(const std::string &name, const glm::mat2 &mat)
     {
-        m_Context.GetGlad().UniformMatrix2fv(GetUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
+        glad.UniformMatrix2fv(GetUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
     }
     
-    void Shader::SetUniformMat3(const std::string &name, const glm::mat3 &mat)
+    void ShaderInfo::SetUniformMat3(const std::string &name, const glm::mat3 &mat)
     {
-        m_Context.GetGlad().UniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
+        glad.UniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
     }
     
-    void Shader::SetUniformMat4(const std::string &name, const glm::mat4 &mat)
+    void ShaderInfo::SetUniformMat4(const std::string &name, const glm::mat4 &mat)
     {
-        m_Context.GetGlad().UniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
+        glad.UniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
     }
     
-    void LoadShader(Asset<Shader>& asset, GoombaEngine::GraphicsContext& context)
+    ShaderInfo CreateShader(const std::string &vertexSource, const std::string &fragmentSource)
     {
-        if (asset.TryLoadFromCache()) return;
-        if (!asset.GetPath().has_value()) { GLogError("Can not load shader with no path."); return; }
-        
-        std::ifstream stream(asset.GetPath().value());
-        
-        enum class ShaderType
-        {
-            NONE = 1, VERTEX = 0, FRAGMENT = 1
-        };
-        
-        std::string line;
-        std::stringstream ss[2];
-        ShaderType type = ShaderType::NONE;
-        while (getline(stream, line))
-        {
-            if (line.find("#shader") != std::string::npos)
-            {
-                if (line.find("vertex") != std::string::npos)
-                    type = ShaderType::VERTEX;
-                else if (line.find("fragment") != std::string::npos)
-                    type = ShaderType::FRAGMENT;
-            }
-            else
-            {
-                ss[(int)type] << line << "\n";
-            }
-        }
-        
-        Shader shader;
-        shader.AssignContext(context);
-        shader.Create(ss[0].str(), ss[1].str());
-        
-        asset.AssignLoaded(std::move(shader));
+        ShaderInfo shader(glad.CreateProgram());
+        shader.CompileAndLink(vertexSource, fragmentSource);
+        return shader;
     }
 }

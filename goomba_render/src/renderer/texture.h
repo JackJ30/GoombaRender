@@ -1,59 +1,41 @@
 #ifndef GOOMBARENDER_TEXTURE_H
 #define GOOMBARENDER_TEXTURE_H
 
-#include "renderer/ogl_obj.h"
-#include "renderer/asset.h"
+#include "renderer/graphics_context.h"
 
-// TODO - Support mipmapping, and mipmapping filters
+// TODO - Support mipmapping
 // TODO - Support other internal formats
 
 namespace GoombaRender
 {
-    enum TextureFilterType
-    {
-        Linear, Nearest
-    };
-    
-    class Texture : public OglObj
+    struct Texture2DInfo
     {
     public:
-        virtual ~Texture() = default;
+        Texture2DInfo(unsigned int rendererID);
         
-        virtual unsigned int GetWidth() const = 0;
-        virtual unsigned int GetHeight() const = 0;
+        Texture2DInfo(const Texture2DInfo&) = delete;
+        Texture2DInfo& operator=(const Texture2DInfo&) = delete;
+        Texture2DInfo(Texture2DInfo&&) = default;
+        Texture2DInfo& operator=(Texture2DInfo&&) = default;
         
-        virtual void SetFiltering(TextureFilterType minFilter, TextureFilterType magFilter) = 0;
-        
-        virtual void Bind(unsigned int unit = 0) = 0;
-        virtual void Unbind() = 0;
-    };
-    
-    class Texture2D : public Texture
-    {
-    public:
-        Texture2D();
-        
-        void Create(const unsigned char* data, int width, int height, GLenum format, GLenum dataType);
         void Delete();
         
-        inline virtual unsigned int GetWidth() const override { return m_Width; };
-        inline virtual unsigned int GetHeight() const override { return m_Height; }
+        void Upload(const unsigned char* data, int width, int height, GLenum format, GLenum dataType);
+        void Bind(unsigned int unit = 0) const;
         
-        void SetFiltering(TextureFilterType minFilter, TextureFilterType magFilter) override;
-        void SetWrapping(GLint wrapS, GLint wrapT);
+        void SetFiltering(GLint minFilter = GL_LINEAR, GLint magFilter = GL_LINEAR);
+        void SetWrapping(GLint wrapS = GL_REPEAT, GLint wrapT = GL_REPEAT);
         
-        void Bind(unsigned int unit = 0) override;
-        void Unbind() override;
+        inline unsigned int GetRendererID() const { return rendererID; }
+        inline unsigned int GetWidth() const { return width; };
+        inline unsigned int GetHeight() const { return height; }
+        
+        unsigned int width, height;
     private:
-        unsigned int m_RendererID;
-        unsigned int m_BoundUnit = 0;
-        
-        unsigned int m_Width, m_Height;
-        TextureFilterType m_MinFilter, m_MagFilter = TextureFilterType::Linear;
-        GLint m_WrapS, m_WrapT = GL_REPEAT;
+        unsigned int rendererID;
     };
     
-    void LoadTexture2D(Asset<Texture2D>& asset, GoombaEngine::GraphicsContext& context);
+    Texture2DInfo CreateTexture2D(const unsigned char* data, int width, int height, GLenum format = GL_RGBA, GLenum dataType = GL_UNSIGNED_BYTE, GLint minFilter = GL_LINEAR, GLint magFilter = GL_LINEAR, GLint wrapS = GL_REPEAT, GLint wrapT = GL_REPEAT);
     
 } // GoombaRender
 

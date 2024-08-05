@@ -1,31 +1,29 @@
 #ifndef GOOMBARENDER_SHADER_H
 #define GOOMBARENDER_SHADER_H
 
-#include "renderer/ogl_obj.h"
-
-#include "renderer/asset.h"
-
 #include <glm/glm.hpp>
-#include <string>
-#include <unordered_map>
 
-#include <sstream>
-#include <fstream>
+#include "renderer/graphics_context.h"
 
 namespace GoombaRender
 {
-    class Shader : public OglObj
+    struct ShaderInfo
     {
     public:
-        Shader() = default;
-    
-        void Create(const std::string &vertexSource, const std::string &fragmentSource);
-        void Delete();
+        explicit ShaderInfo(unsigned int rendererID);
         
-        void Bind() const;
-        void Unbind() const;
+        ShaderInfo(const ShaderInfo&) = delete;
+        ShaderInfo& operator=(const ShaderInfo&) = delete;
+        ShaderInfo(ShaderInfo&&) = default;
+        ShaderInfo& operator=(ShaderInfo&&) = default;
         
-        inline const std::vector<std::pair<GLenum, std::string>>& GetUniforms() const { return m_UniformsCache; }
+        inline void Delete() { glad.DeleteProgram(rendererID); }
+        
+        void CompileAndLink(const std::string &vertexSource, const std::string &fragmentSource);
+        inline void Bind() const { glad.UseProgram(rendererID); }
+        
+        inline unsigned int GetRendererID() const { return rendererID; }
+        inline const std::vector<std::pair<GLenum, std::string>>& GetUniforms() const { return uniformsCache; }
     
         // Set uniforms
         void SetUniformBool(const std::string &name, bool value);
@@ -39,18 +37,18 @@ namespace GoombaRender
         void SetUniformVec4(const std::string &name, float x, float y, float z, float w);
         void SetUniformMat2(const std::string &name, const glm::mat2 &mat);
         void SetUniformMat3(const std::string &name, const glm::mat3 &mat);
-        void SetUniformMat4(const std::string &name, const glm::mat4 &mat);\
+        void SetUniformMat4(const std::string &name, const glm::mat4 &mat);
     private:
-        unsigned int m_RendererID;
+        unsigned int rendererID;
         
-        std::unordered_map<std::string, int> m_UniformLocationCache;
-        std::vector<std::pair<GLenum, std::string>> m_UniformsCache;
-        GLchar m_ErrorMessage[1024];
+        std::unordered_map<std::string, int> uniformLocationCache;
+        std::vector<std::pair<GLenum, std::string>> uniformsCache;
+        GLchar errorMessage[1024];
         
         int GetUniformLocation(const std::string& name);
     };
     
-    void LoadShader(Asset<Shader>& asset, GoombaEngine::GraphicsContext& context);
+    ShaderInfo CreateShader(const std::string &vertexSource, const std::string &fragmentSource);
 }
 
 #endif

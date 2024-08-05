@@ -2,43 +2,43 @@
 
 namespace GoombaRender
 {
-    void Shader::SetUniforms(const UniformSetting &setting)
+    void UniformSettings::SetUniforms(ShaderInfo& shader) const
     {
-        for (auto& uniform : setting.bools)
+        for (auto& uniform : bools)
         {
-            SetUniformBool(uniform.first, uniform.second);
+            shader.SetUniformBool(uniform.first, uniform.second);
         }
-        for (auto& uniform : setting.ints)
+        for (auto& uniform : ints)
         {
-            SetUniformInt(uniform.first, uniform.second);
+            shader.SetUniformInt(uniform.first, uniform.second);
         }
-        for (auto& uniform : setting.floats)
+        for (auto& uniform : floats)
         {
-            SetUniformFloat(uniform.first, uniform.second);
+            shader.SetUniformFloat(uniform.first, uniform.second);
         }
-        for (auto& uniform : setting.vec2s)
+        for (auto& uniform : vec2s)
         {
-            SetUniformVec2(uniform.first, uniform.second);
+            shader.SetUniformVec2(uniform.first, uniform.second);
         }
-        for (auto& uniform : setting.vec3s)
+        for (auto& uniform : vec3s)
         {
-            SetUniformVec3(uniform.first, uniform.second);
+            shader.SetUniformVec3(uniform.first, uniform.second);
         }
-        for (auto& uniform : setting.vec4s)
+        for (auto& uniform : vec4s)
         {
-            SetUniformVec4(uniform.first, uniform.second);
+            shader.SetUniformVec4(uniform.first, uniform.second);
         }
-        for (auto& uniform : setting.mat2s)
+        for (auto& uniform : mat2s)
         {
-            SetUniformMat2(uniform.first, uniform.second);
+            shader.SetUniformMat2(uniform.first, uniform.second);
         }
-        for (auto& uniform : setting.mat3s)
+        for (auto& uniform : mat3s)
         {
-            SetUniformMat3(uniform.first, uniform.second);
+            shader.SetUniformMat3(uniform.first, uniform.second);
         }
-        for (auto& uniform : setting.mat4s)
+        for (auto& uniform : mat4s)
         {
-            SetUniformMat4(uniform.first, uniform.second);
+            shader.SetUniformMat4(uniform.first, uniform.second);
         }
     }
 } // GoombaRender

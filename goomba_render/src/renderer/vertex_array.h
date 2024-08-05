@@ -1,18 +1,16 @@
-//
-// Created by jack on 6/22/24.
-//
-
 #ifndef GOOMBARENDER_VERTEX_ARRAY_H
 #define GOOMBARENDER_VERTEX_ARRAY_H
 
-#include "renderer/ogl_obj.h"
+#include <cstddef>
+
+#include "renderer/graphics_context.h"
 #include "renderer/buffer_layout.h"
 
 // TODO - support dynamic and stream draw
 
 namespace GoombaRender
 {
-    enum DrawType
+    enum LayoutType
     {
         Arrays,
         Indices
@@ -25,45 +23,40 @@ namespace GoombaRender
         GLenum type;
     };
     
-    class VertexArray : public OglObj
+    struct VertexArrayInfo
     {
     public:
-        VertexArray() = default;
-        ~VertexArray() = default;
+        explicit VertexArrayInfo(unsigned int rendererID, LayoutType layoutType = LayoutType::Indices, GLenum drawMode = GL_TRIANGLES);
         
-        void Create(DrawType drawType, GLenum drawMode = GL_TRIANGLES);
-        void Delete();
+        VertexArrayInfo(const VertexArrayInfo&) = delete;
+        VertexArrayInfo& operator=(const VertexArrayInfo&) = delete;
+        VertexArrayInfo(VertexArrayInfo&& other) = default;
+        VertexArrayInfo& operator=(VertexArrayInfo&&) = default;
         
-        void Bind() const;
-        void Unbind() const;
+        inline void Delete() { glad.DeleteVertexArrays(1, &rendererID); }
+        inline void Bind() const { glad.BindVertexArray(rendererID); }
         
-        // Creation Approach
-        void CreateVertexBuffer(float* vertices, size_t numVertices, const BufferLayout &layout);
-        void CreateIndexBuffer(unsigned int *indices, unsigned int numIndices);
+        GLenum drawMode;
+        std::vector<size_t> usedAttributes;
         
-        // Manual Approach ()
+        // select layoutType, and then pick numVertices or IndicesInfo.
+        // TODO - make "layout type/strategy" object with indexed and arrays
+        LayoutType layoutType;
+        int numVertices;
+        std::vector<IndicesSection> indicesInfo;
+    private:
+        unsigned int rendererID;
+        
+    public:
+        void BindBufferLayout(unsigned int buffer, const BufferLayout& layout, size_t startingAttribute = 0);
         void BindAttribute(unsigned int buffer, size_t attributeIndex, unsigned int componentCount, GLenum glType, bool normalized, size_t stride, size_t offset);
         void SetIndexBuffer(unsigned int buffer, std::vector<IndicesSection> indicesInfo);
         
-        inline DrawType GetDrawType() const { return m_DrawType; };
-        inline GLenum GetDrawMode() const { return m_DrawMode; };
-        
-        inline const std::vector<IndicesSection>& GetIndicesSections() const { return m_IndicesInfo; }
-        
-        // If manual approach is used without setting index buffer, num vertices must be set.
-        inline void SetNumVertices(unsigned int numVertices) { m_NumVertices = numVertices; }
-        inline unsigned int GetNumVertices() const { return m_NumVertices; }
-    private:
-        unsigned int m_RendererID;
-        DrawType m_DrawType;
-        GLenum m_DrawMode;
-        
-        unsigned int m_NumVertices = 0; // Arrays
-        std::vector<IndicesSection> m_IndicesInfo; // Indices
-        
-        std::vector<size_t> m_UsedAttributes;
-        std::unordered_set<unsigned int> m_OwnedBuffers;
+        inline unsigned int GetRendererID() const { return rendererID; }
     };
+    
+    // Creation functions
+    VertexArrayInfo CreateVertexArray(LayoutType layoutType = LayoutType::Indices, GLenum drawMode = GL_TRIANGLES);
     
 } // GoombaRender
 

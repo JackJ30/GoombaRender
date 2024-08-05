@@ -2,6 +2,7 @@
 #define GOOMBARENDER_IMGUI_LAYER_H
 
 #include "window.h"
+#include <imgui.h>
 
 namespace GoombaEngine
 {

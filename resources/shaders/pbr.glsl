@@ -13,20 +13,17 @@ out vec2 v_TexCoord;
 
 void main()
 {
-    gl_Position = u_Projection * u_View * u_Transform * vec4(a_Position.x, a_Position.y, a_Position.z, 1.0);
-    v_TexCoord = a_TexCoord;
+gl_Position = u_Projection * u_View * u_Transform * vec4(a_Position.x, a_Position.y, a_Position.z, 1.0);
+v_TexCoord = a_TexCoord;
 }
 
 #shader fragment
 #version 330 core
 
-in vec2 v_TexCoord;
-
 layout(location = 0) out vec4 fragColor;
-
-
+in vec2 v_TexCoord;
 
 void main()
 {
-    fragColor = vec4(1.0, 1.0, 0.0, 1.0);
+fragColor = vec4(1.0, 1.0, 0.0, 1.0);
 }

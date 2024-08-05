@@ -1,7 +1,7 @@
 #ifndef GOOMBARENDER_MATERIAL_H
 #define GOOMBARENDER_MATERIAL_H
 
-#include "renderer/asset.h"
+#include "renderer/uniform_settings.h"
 #include "renderer/shader.h"
 #include "renderer/texture.h"
 
@@ -13,24 +13,39 @@
 
 namespace GoombaRender
 {
-    class Material : public OglObj
+    class Material
     {
     public:
-        void Create(Asset<Shader> shader);
+        Material(std::shared_ptr<ShaderInfo> shader);
     
         void Bind() const;
         
-        inline UniformSetting& GetUniformSettings() { return m_UniformSettings; }
+        inline bool HasUniform(const std::string& name) const { return std::find(m_UniformNames.begin(),
+                                                                                 m_UniformNames.end(), name) != m_UniformNames.end(); }
+        inline UniformSettings& GetUniformSettings() { return m_UniformSettings; }
         
-        void AssignTextureUniform(const std::string& name, const Asset<Texture2D>& texture);
+        void AssignUniformTexture(const std::string& name, std::shared_ptr<Texture2DInfo> texture);
+        void AssignUniformBool(const std::string &name, bool value);
+        void AssignUniformInt(const std::string &name, int value);
+        void AssignUniformFloat(const std::string &name, float value);
+        void AssignUniformVec2(const std::string &name, const glm::vec2 &value);
+        void AssignUniformVec2(const std::string &name, float x, float y);
+        void AssignUniformVec3(const std::string &name, const glm::vec3 &value);
+        void AssignUniformVec3(const std::string &name, float x, float y, float z);
+        void AssignUniformVec4(const std::string &name, const glm::vec4 &value);
+        void AssignUniformVec4(const std::string &name, float x, float y, float z, float w);
+        void AssignUniformMat2(const std::string &name, const glm::mat2 &mat);
+        void AssignUniformMat3(const std::string &name, const glm::mat3 &mat);
+        void AssignUniformMat4(const std::string &name, const glm::mat4 &mat);
         
         // flags
         
     private:
-        Asset<Shader> m_Shader;
-        UniformSetting m_UniformSettings;
-        std::unordered_map<std::string, Asset<Texture2D>> m_Textures;
+        std::shared_ptr<ShaderInfo> m_Shader;
+        UniformSettings m_UniformSettings;
+        std::unordered_map<std::string, std::shared_ptr<Texture2DInfo>> m_Textures;
         std::unordered_set<std::string> m_UnassignedTextures;
+        std::vector<std::string> m_UniformNames;
     };
     
 } // GoombaRender

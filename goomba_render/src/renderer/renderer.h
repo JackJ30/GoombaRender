@@ -1,23 +1,21 @@
 #ifndef GOOMBARENDER_RENDERER_H
 #define GOOMBARENDER_RENDERER_H
 
-#include "renderer/camera.h"
-#include "renderer/scene.h"
 #include "renderer/vertex_array.h"
 #include "renderer/texture.h"
 #include "renderer/shader.h"
-#include "renderer/model.h"
-#include "renderer/material.h"
-#include "renderer/asset.h"
+#include "renderer/camera.h"
+#include "scene.h"
+#include "material.h"
 
 namespace GoombaRender
 {
     struct RenderInstruction
     {
-        RenderInstruction(const VertexArray& vao, const Material& material)
+        RenderInstruction(const VertexArrayInfo& vao, const Material& material)
                 : vao(vao), material(material) {}
         
-        const VertexArray& vao;
+        const VertexArrayInfo& vao;
         const Material& material;
     };
     
@@ -30,14 +28,10 @@ namespace GoombaRender
     class Renderer
     {
     public:
-        explicit Renderer(GoombaEngine::GraphicsContext& context);
-        
         void AddScenePass(const Camera& camera, const Scene& scene); // TODO - include framebuffer
         void Render();
     
     private:
-        GoombaEngine::GraphicsContext m_Context;
-        
         std::queue<RenderPass> m_RenderQueue;
     };
     
