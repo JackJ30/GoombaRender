@@ -99,18 +99,14 @@ namespace GoombaRender
     
     
     // TODO - support multiple uv maps
-    std::shared_ptr<Material> defaultMaterial;
-    std::shared_ptr<Model> LoadModel(const std::string& path, bool cache)
+    std::shared_ptr<Model> LoadModel(const std::string& path, const std::shared_ptr<ShaderInfo>& shader, bool cache)
     {
         if (cache)
         {
             auto cached = CheckCache<Model>(path);
             if (cached.has_value()) { return cached.value(); }
         }
-        if (defaultMaterial == nullptr)
-        {
-            defaultMaterial = std::make_shared<Material>(LoadShader("resources/shaders/default.glsl"));
-        }
+        std::shared_ptr<Material> defaultMaterial = std::make_shared<Material>(shader);
         
         tinygltf::TinyGLTF loader;
         std::string error;
@@ -168,10 +164,10 @@ namespace GoombaRender
             
             DEBUG_ASSERT(image.component == 3 || image.component == 4, "Loaded images must have 3 or 4 channels.");
             GLenum format = (image.component == 3) ? GL_RGB : GL_RGBA;
-            textures[i] = std::make_shared<Texture2DInfo>(CreateTexture2D(image.image.data(), image.width, image.height, format, image.pixel_type, sampler.minFilter, sampler.magFilter, sampler.wrapS, sampler.wrapT));
+            textures[i] = std::make_shared<Texture2DInfo>(CreateTexture2D(image.image.data(), image.width, image.height, format, image.pixel_type, sampler.minFilter != -1 ? sampler.minFilter : GL_LINEAR, sampler.magFilter != -1 ? sampler.magFilter : GL_LINEAR, sampler.wrapS, sampler.wrapT));
         }
         
-        /*// Create Materials
+        // Create Materials
         std::vector<std::shared_ptr<Material>> materials;
         materials.resize(loadedGLTF.materials.size());
         for (size_t i = 0; i < loadedGLTF.materials.size(); ++i)
@@ -179,19 +175,15 @@ namespace GoombaRender
             const tinygltf::Material& material = loadedGLTF.materials[i];
             const tinygltf::PbrMetallicRoughness& pbrMetallicRoughness = material.pbrMetallicRoughness;
             
-            Material oglMaterial;
-            oglMaterial.AssignContext(context);
-            oglMaterial.Create(modelLoaderSettings.pbrShader);
-            
+            materials[i] = std::make_shared<Material>(shader);
+            if(material.pbrMetallicRoughness.baseColorTexture.index >= 0) { materials[i]->AssignUniformTexture("u_Albedo", textures[material.pbrMetallicRoughness.baseColorTexture.index]); };
             // set uniforms and textures
             // base color (texture + factor)
             // metallic roughness (texture + factors)
             // normal (texture + scale)
             // occlusion (texture + strength)
             // emissions (texture + factor)
-            
-            materials[i].AssignLoaded(std::move(oglMaterial));
-        }*/
+        }
         
         std::vector<Mesh> meshes;
         
@@ -265,7 +257,7 @@ namespace GoombaRender
                         DEBUG_ASSERT(GL_ELEMENT_ARRAY_BUFFER == bufferView.target, "It's gotta be an index buffer");
                     }
                     
-                    if (primitive.material >= 0) { mesh.material = defaultMaterial;/*materials[primitive.material];*/ }
+                    if (primitive.material >= 0) { mesh.material = materials[primitive.material]; }
                     else { mesh.material = defaultMaterial; }
                     
                     meshes.push_back(std::move(mesh));
@@ -289,8 +281,8 @@ namespace GoombaRender
         }
         
         std::shared_ptr<Model> model = std::make_shared<Model>(meshes, buffers);
-        if (cache) { assetCache<Model>[path] = model; }
         
+        if (cache) { assetCache<Model>[path] = model; }
         return model;
     }
 } // GoombaRender

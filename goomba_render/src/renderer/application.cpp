@@ -73,7 +73,9 @@ namespace GoombaRender
         Mesh squareMesh(array, material);
         std::shared_ptr<Model> testModel = std::shared_ptr<Model>(new Model({squareMesh}, {vbo, ibo}));
         testScene.m_Objects.emplace_back(testModel, Transform());*/
-        testScene.m_Objects.emplace_back(LoadModel("resources/models/testcube.gltf"), Transform());
+        testScene.m_Objects.emplace_back(LoadModel("resources/models/AntiqueCamera.glb", LoadShader("resources/shaders/default.glsl")), Transform());
+        
+        glad.Enable(GL_DEPTH_TEST);
         
         // LOOP
         loop.Run();
@@ -90,7 +92,7 @@ namespace GoombaRender
         
         {
             glad.ClearColor(.1f, .2f, .3f, 1.0f);
-            glad.Clear(GL_COLOR_BUFFER_BIT); // TODO - move screen clearing to renderer
+            glad.Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // TODO - move screen clearing to renderer
             
             renderer.AddScenePass(camera, testScene);
             renderer.Render();
