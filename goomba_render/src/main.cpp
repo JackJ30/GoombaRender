@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 //      - [x] Asset system
 //      - [x] OGL abstractions
 // - [x] Materials and gltf material loading
-// - [ ] Render pass control and material flags
+// - [x] Render pass control and material flags
 // - [ ] Basic PBR lighting
 // - [ ] Scene system (lights + camera ubo)
 // - [ ] Time system and ms timing
@@ -64,3 +64,4 @@ int main(int argc, char *argv[])
 // 6/1/2024 - I found a conflict between stb image and the fmt included by spdlog. This is the third times fmt has caused issues for me. I had to add a definition before including spdlog in the pch that I found in some github issue. Don't know what it does.
 // 6/1/2024 - I'm thinking about what to do for events/layers/windows. TheCherno's system from the Hazel series seems a little bit overkill. I will probably add some of it.
 // 7/13/2024 - Just create OglObj, I think it's a pretty good solution to opengl abstractions sucking. Just used it for the texture class. First time in c++ I feel like I made a well-designed class by myself.
+// 8/5/2024 - OglObj was shit
