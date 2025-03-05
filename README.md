@@ -1,4 +1,7 @@
-# Goomba Render + Engine Phase 1 (Extreme WIP)
+# Goomba Render + Engine (Archive)
+I learned OpenGL by creating this project. This was the first time I tried to write a renderer that would be usable for a larger scale application. I also wrote a GLTF loader.
+
+# Old Description
 This is a work in progress repo. The engine doesn't function at this point.
 Read [here](mgmt/details.md) for details about the planned features and development plan.
 
